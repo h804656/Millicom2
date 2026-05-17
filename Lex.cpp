@@ -254,8 +254,14 @@
 			break;
 
 		case 70: // SendToReceiver Переслать лексему из нагрузки получателю (если в нагрузке nil, то посылается текущая лексема)
+			// SendToReceiver always forwards to the current receiver. The
+			// nil-load branch used to call LexOut(), but LexOut re-fires UnicMk
+			// dispatch on the current token -- which infinitely recurses if a
+			// MnemoTable entry attached `Lex.SendToReceiver` (with no payload)
+			// as its program. Dispatch the current LexBuf entry to the receiver
+			// directly to break that loop.
 			if (Load.Point == nullptr)
-				LexOut();
+				Receiver.back()->ProgFU(ReceiverMK.back(), { TIP, &LexBuf[ib] }, this);
 			else
 				Receiver.back()->ProgFU(ReceiverMK.back(), Load, this);
 

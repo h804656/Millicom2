@@ -535,7 +535,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 159: // LastCopyAddPrevLoadSetLoadMov Добавить копию линии перенести нагрузку в на новую строку и добавить в нагрзуку предыдущей строки ссылку на новую строку 
 	{
 		LoadPoint t = { 0, nullptr };
-		if (ListHead.back() != nullptr && ListHead.back()->size() && ListHead.back()->back().Load.isIC())
+		if (!ListHead.empty() && ListHead.back() != nullptr && ListHead.back()->size() && ListHead.back()->back().Load.isIC()
+		    && ListHead.back()->back().Load.Point != nullptr && !((IC_type)ListHead.back()->back().Load.Point)->empty())
 			t = ((IC_type)ListHead.back()->back().Load.Point)->back().Load;
 		if (ListHead.back() == nullptr) 
 			ListHead.back() = new vector<ip>;
@@ -543,13 +544,15 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			ListHead.back()->push_back({ LineAtr, TIC, new vector<ip> });
 		else
 			ListHead.back()->push_back({ LineAtr, TIC, ICCopy(Load).Point });
-		if (ListHead.back()->size() > 1 && ListHead.back()->back().Load.Point != nullptr && ListHead.back()->back().Load.isIC())
+		if (ListHead.back()->size() > 1 && ListHead.back()->back().Load.Point != nullptr && ListHead.back()->back().Load.isIC()
+		    && ListHead.back()->at(ListHead.back()->size() - 2).Load.Point != nullptr
+		    && !((IC_type)ListHead.back()->at(ListHead.back()->size() - 2).Load.Point)->empty())
 			((IC_type)ListHead.back()->at(ListHead.back()->size() - 2).Load.Point)->back().Load = ListHead.back()->back().Load;
 		else if (ListHead.back()->size() == 1) // Добавление в пустой список
 		{
 			ListHead.back()->insert(ListHead.back()->begin(), {LineAtr, ListHead.back()->back().Load});
 		}
-		if (MK == 159)
+		if (MK == 159 && ListHead.back()->back().Load.Point != nullptr && !((IC_type)ListHead.back()->back().Load.Point)->empty())
 			((IC_type)ListHead.back()->back().Load.Point)->back().Load = t;
 		break;
 	}
@@ -742,7 +745,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 189: // LastAtrSet Установить атрибут у последней ИК последней линии 
 	case 199: // LineAtrSet Установить атрибут у последней ИК последней линии 
 	{	IC_type t;
-	if (ListHead.back() == nullptr || ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.isIC()) break;
+	if (ListHead.empty() || ListHead.back() == nullptr || ListHead.back()->empty()) break;
+	if (ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.isIC()) break;
 	if (((IC_type)ListHead.back()->back().Load.Point)->size() == 0) break;
 	if (MK < 190)
 		t = ((IC_type)ListHead.back()->back().Load.Point);
@@ -761,10 +765,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		if (Load.isIC())
 			t->back().Load.Copy(Load);
 		else
-		{
-			t->back().Load.Type = Load.Type;
-			t->back().Load.Point = ICCopy(Load).Point;
-		}
+			t->back().Load = Load.Clone(); // non-IC payloads were ICCopy'd via a bogus cast, asserting in debug iterator code
 		break;
 	case 189:
 	case 199:
@@ -1039,15 +1040,21 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		{
 		//	if (ListHead.back() == nullptr)
 		//		ListHead.back()=new vector<ip>;
-			if (ListHead.size() > 1 && (*(ListHead.end() - 2))->size() > 0 && (*(ListHead.end() - 2))->at(0).Load.isIC())
-				if(MK==243 || MK==244 || MK==245)
-					((IC_type)((*(ListHead.end() - 2))->back().Load.Point))->back().Load = { TIC, ListHead.back() };
-				else
+			{
+				auto prev = (ListHead.size() > 1) ? *(ListHead.end() - 2) : nullptr;
+				if (prev != nullptr && !prev->empty() && prev->at(0).Load.isIC()
+				    && prev->back().Load.Point != nullptr && !((IC_type)prev->back().Load.Point)->empty())
 				{
-					if(!ListHead.back()->size())
-						ListHead.back()->push_back({ LineAtr,TIC, new vector<ip> });
-					((IC_type)((*(ListHead.end() - 2))->back().Load.Point))->back().Load = ListHead.back()->back().Load;
+					if(MK==243 || MK==244 || MK==245)
+						((IC_type)prev->back().Load.Point)->back().Load = { TIC, ListHead.back() };
+					else
+					{
+						if(!ListHead.back()->size())
+							ListHead.back()->push_back({ LineAtr,TIC, new vector<ip> });
+						((IC_type)prev->back().Load.Point)->back().Load = ListHead.back()->back().Load;
+					}
 				}
+			}
 		}
 //		if (ListHead.back()->size() == 0)
 //		{

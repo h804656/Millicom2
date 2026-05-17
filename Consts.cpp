@@ -2376,6 +2376,8 @@ LoadPoint ICCopy(LoadPoint uk, bool Copy) // Копирование ИК (Copy -
 		CapsNew->push_back(*(*(ip*)uk.Point).Clone());
 		return { uk.Type, CapsNew };
 	}
+	if (uk.Point == nullptr || !uk.isIC()) // non-IC payloads cannot be safely cast to vector<ip>*; ICCopy is IC-only
+		return { uk.Type, CapsNew };
 	IC_type Uk = (IC_type)uk.Point;
 	CapsNew->resize(((IC_type)Uk)->size());
 	for (auto i = ((IC_type)Uk)->begin(), j = CapsNew->begin(); j != CapsNew->end(); i++, j++)

@@ -1,0 +1,99 @@
+# NewFU={Mnemo="L" FUType=FUListNew}
+Root Mk/Atr
+NewFU 12228
+EqualWait =
+EqualAfter {
+Root Mk/Atr
+EqualWait =
+EqualAfter Mnemo
+Root Mk/Atr
+MnemoLoad else->Root
+EqualWait =
+EqualAfter Mnemo
+Root }
+MnemoLoad else->Root
+# 4 var-inits
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# Offset*-7
+Root Mnemo
+MnemoAnalysis *
+ConstWait2 Const
+# V#A,B,C -- three-Var vector
+Root Mnemo
+MnemoAnalysis #
+ConstWait -> VectWait
+VectWait ,
+VectNext4 element added
+VectNext5 ,
+VectNext4 element added
+VectNext5 else->Root
+# Atr=A+B*C-D -- three-operator ALE chain
+Root Mk/Atr
+EqualWait =
+EqualAfter Const/Var/Vect
+ALEAfter op
+EqVar Operator -> ALE
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter done -> Root
+# Atr=(A+B)*(C-D) -- two parens joined by a binary op
+Root Mk/Atr
+EqualWait =
+EqualAfter ( -> ALE
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter op
+ALE (
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter done -> Root
+# Cons.OutLn="run"
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+# Cons.OutLn=A+B*C -- FU.MK with ALE arg
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+ALEAfter op
+EqVar Operator -> ALE
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter done -> Root
+# Atr=Bus.MakeFU
+Root Mk/Atr
+EqualWait =
+EqualAfter FU
+FUAfter2 .
+MkWait2 MkForFU
+LoadAfter else->Root
+# Done=42
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const

@@ -1,0 +1,39 @@
+# 6 var decls
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# Atr=A+B*C-D/E%F  -- 5 operators in: + * - / %
+Root Mk/Atr
+EqualWait =
+EqualAfter Const/Var/Vect
+ALEAfter op
+EqVar Operator -> ALE
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter done -> Root
+# Done=42
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const

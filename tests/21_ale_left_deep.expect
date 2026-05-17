@@ -1,0 +1,46 @@
+# 5 var-inits
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# Atr=((((A+B)+C)+D)+E)
+#   Outermost `(` enters ALE via EqualAfter ( -> ALE.
+#   Subsequent inner `(` chars stack up as ALE ( markers.
+#   After A+B reaches ALEAfter, each `)` pops one Stack entry; each `+OP` then
+#   continues to the next operand, building a chain of ALE ( / op / operand /
+#   ) / op / operand pairs.
+Root Mk/Atr
+EqualWait =
+EqualAfter ( -> ALE
+ALE (
+ALE (
+ALE (
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter done -> Root
+# Done=42
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const

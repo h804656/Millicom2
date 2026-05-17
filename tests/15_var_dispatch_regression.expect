@@ -1,0 +1,50 @@
+# A=1, B=2 -- declare two Vars
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# First=A -- A must dispatch as Var, not Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+# Second=B -- same for B
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+# Outer{Sub=A Mid{Deep=B Leaf=A}} -- Vars survive into nested braces
+Root Mnemo
+MnemoAnalysis {
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+Root Mnemo
+MnemoAnalysis {
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+Root }
+Root }
+# Atr={P=A Q=B} -- Vars survive into a brace-subgraph after Mk/Atr LHS
+Root Mk/Atr
+EqualWait =
+EqualAfter {
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Var
+Root }
+# Cons.OutLn=A -- Var as FU.MK arg goes through Const/Var/Vect combined row
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root

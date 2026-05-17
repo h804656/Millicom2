@@ -1,4 +1,4 @@
-﻿// StrGen.cpp: определяет точку входа для консольного приложения.
+// StrGen.cpp: определяет точку входа для консольного приложения.
 
 #include "stdafx.h"
 #include "Consts.h"
@@ -9,96 +9,130 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "MeanShift.h"
 #include "ALU.h"
 #include "StreamFloatALU.h"
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#include <crtdbg.h>
+#endif
 
 
 
 using namespace std;
 
-int main(int argc, char* argv[])
+static void Usage()
+{
+	cerr << "Usage: millicom <index_file> [--lex-file <path>] [--lex <text>]" << endl;
+	cerr << "  --lex-file <path>  After running the index file, feed the contents of <path>" << endl;
+	cerr << "                     into Lex.Lexing (i.e. parse it through the loaded compiler)." << endl;
+	cerr << "  --lex <text>       Same, but the program text is given inline." << endl;
+}
 
+int main(int argc, char* argv[])
+{
+	std::string indPath;
+	if (argc < 2)
 	{
-	system("chcp 1251");
+		Usage();
+		return 1;
+	}
+	else {
+#if defined(_WIN32)
+		// Suppress CRT assertion popups and Windows error dialogs; route asserts to
+		// stderr instead so test automation isn't blocked by modal boxes.
+		SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
+		_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+		_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+		_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+#endif
+	}
+
+	if (argc >= 2) {
+		string a1 = argv[1];
+		if (a1 == "--help" || a1 == "-h") { Usage(); return 0; }
+	}
+
+	indPath = argv[1];
+	string lexInput;
+	bool haveLexInput = false;
+
+	for (int i = 2; i < argc; i++)
+	{
+		string a = argv[i];
+		if (a == "--lex-file" && i + 1 < argc)
+		{
+			ifstream lf(argv[++i], ios::binary);
+			if (!lf)
+			{
+				cerr << "Error: --lex-file not found: " << argv[i] << endl;
+				return 1;
+			}
+			stringstream ss;
+			ss << lf.rdbuf();
+			lexInput = ss.str();
+			haveLexInput = true;
+		}
+		else if (a == "--lex" && i + 1 < argc)
+		{
+			lexInput = argv[++i];
+			haveLexInput = true;
+		}
+		else if (a == "--help" || a == "-h")
+		{
+			Usage();
+			return 0;
+		}
+		else
+		{
+			cerr << "Unknown argument: " << a << endl;
+			Usage();
+			return 1;
+		}
+	}
+
+	ifstream f(indPath);
+	if (!f)
+	{
+		cerr << "Error: file not found: " << indPath << endl;
+		return 1;
+	}
+	f.close();
+
 	BusFU Bus;
 	string STR;
 	StreamFloatALU ALU;
 
-	Bus.ProgFU(200, { Cint, &argc }); // Установить количество параметров командной строки
-	Bus.ProgFU(203, { Cchar, argv }); // Установить параметры командной строки
+	Bus.ProgFU(200, { Cint, &argc });
+	Bus.ProgFU(203, { Cchar, argv });
 
-	//ALU.ProgFU(0, { 0, nullptr });
-	/*
-	* 
-	if (argc == 1)
+	STR = indPath;
+	Bus.ProgFU(10, { Cstring, &STR });
+
+	if (haveLexInput)
 	{
-		cout << "File name is not found in comand line\n";
-		system("pause");
-		return 0;
+		// Find the Lex FU (FUtype == 3) and call its Lexing MK (=100) on the supplied text.
+		long int lexGlobalMk = -1;
+		for (size_t i = 2; i < Bus.FUs.size(); i++) // 0,1 are self/Bus stubs
+		{
+			if (Bus.FUs[i] && Bus.FUs[i]->GetFuType() == 3)
+			{
+				lexGlobalMk = Bus.FUMkRange * (long int)i;
+				break;
+			}
+		}
+		if (lexGlobalMk < 0)
+		{
+			cerr << "Error: --lex-file given but no Lex FU was registered by the .ind. "
+				"Did the index file load a compiler that creates a Lex FU?" << endl;
+			return 2;
+		}
+		Bus.ProgFU(lexGlobalMk + 100, { Cstring, &lexInput });
 	}
-	ifstream f(argv[1]);
-	if (!f)
-	{
-		cout << "File is not found\n";
-		system("pause");
-		return 0;
-	}
-	f.close();
-	LoadPoint LP = LoadPoint();
-	STR = argv[1];
-	Bus.ProgFU(10, { Cstring, &STR }); //Запуск индексного файла
-	return 0;
-//	int t = 10;
-*/
 
-
-//	string STR = "NetTemperat.ind";
-	
-//	string STR = "MeanShift.txt";
-//	string STR = "MeanShift.ind";
-//	string STR = "ProgTest.ind";
-	//	string STR = "FSM.ind";
-	//	STR = "ALE.ind";
-
-//	string STR = "Gauss.ind";
-//	string STR = "ALE3.ind";
-//	string STR = "MeanShift.ind";
-//	string STR = "NetTemperat2.ind";
-//	STR = "CompileC.ind";
-//	STR = "Router.ind";
-//	string STR = "OAGraphOut.ind";
-//	string STR = "MultyList.ind";
-//	STR = "CompLab.ind";
-//	STR = "AlU_test.ind";
-//	string STR = "TabTest.ind";
-//	string STR = "LexTest.ind"; // Имя запускного файла
-//	STR = "Bag3.ind";
-
-//	STR = "StreamFloatALU.ind";
-
-	//	STR = "Bag4.ind";
-//	STR = "Termo.ind";
-	//	string STR = "ControlAoutomat.ind";
-
-//	STR = "StreamFloatALUTest.ind";
-//	STR = "ALUCellular.ind";
-//	STR = "StreamAluTest.ind";
-//	STR = "StreamIntALUTest.ind";
-//	STR = "ALE_Stream_v2.ind";
-//	STR = "ALU_test.ind";
-//	STR = "MatPlot.ind";
-//	STR = "MatrixMul.ind";
-//	STR = "Compil.ind";
-//	STR = "SumVect.ind";
-//	STR = "Lexer.ind";
-//	STR = "Syntaxis.ind";
-//	STR = "JSON-List.ind";
-//	STR = "SumParallel.ind";
-	STR = "ConsoleFormat.ind";
-
-	Bus.ProgFU(10, {Cstring, &STR}); //Запуск индексного файла
-
-	system("pause");
 	return 0;
 }

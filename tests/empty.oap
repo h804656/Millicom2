@@ -1,0 +1,3 @@
+// intentionally empty: used as the --run target when we want --compile-to to
+// dump the bootstrap compiler's declaration state to .ind without adding any
+// new declarations.

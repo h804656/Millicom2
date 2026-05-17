@@ -1,0 +1,361 @@
+Raw export: # Raw Visio Export - 'Разбор ИП 2026 (2).vsd' Page 2
+# Exported: 2026-05-16
+
+## All Shapes (non-connector):
+  ID=1 Text='Root'
+  ID=2 Text='MnemoAnalysis'
+  ID=5 Text='VarIniWait'
+  ID=12 Text='ConstWait'
+  ID=15 Text='ConstWait2'
+  ID=18 Text='EqualWait'
+  ID=30 Text='ALE'
+  ID=39 Text='EqualAfter'
+  ID=41 Text='MnemoLoad'
+  ID=63 Text='FUAfter'
+  ID=72 Text='MkWait'
+  ID=75 Text='FUAfter2'
+  ID=77 Text='MkWait2'
+  ID=80 Text=''
+  ID=84 Text=''
+  ID=99 Text='ListAfter'
+  ID=104 Text='ListAfterMnemo'
+  ID=107 Text='LoadAfter'
+  ID=204 Text='VectWait'
+  ID=205 Text='VectNext4'
+  ID=207 Text='VectNext5'
+  ID=214 Text='ALE'
+  ID=218 Text='LoadVar'
+  ID=221 Text='BrackLoadVar'
+  ID=223 Text='Root'
+  ID=225 Text='AtrAtr'
+  ID=229 Text='AtrAtr2'
+  ID=232 Text='AtrAtr3'
+  ID=238 Text='AtrBrack'
+  ID=241 Text='ALE'
+  ID=245 Text='EqVar'
+  ID=248 Text='HLPL'
+
+## All Connectors (1D shapes):
+  ID=4 Label='Mnemo' From=[1]'Root' To=[2]'MnemoAnalysis'
+  ID=6 Label='=' From=[2]'MnemoAnalysis' To=[5]'VarIniWait'
+  ID=7 Label='Const,, Var, Vect' From=[5]'VarIniWait' To=[80]''
+  ID=8 Label='#' From=[2]'MnemoAnalysis' To=[12]'ConstWait'
+  ID=13 Label='Const, Var, Vect' From=[12]'ConstWait' To=[204]'VectWait'
+  ID=14 Label='*' From=[2]'MnemoAnalysis' To=[15]'ConstWait2'
+  ID=16 Label='Const' From=[15]'ConstWait2' To=[1]'Root'
+  ID=17 Label='else' From=[2]'MnemoAnalysis' To=[1]'Root'
+  ID=19 Label='Mk,Atr' From=[1]'Root' To=[18]'EqualWait'
+  ID=21 Label='Else' From=[18]'EqualWait' To=[1]'Root'
+  ID=23 Label='Var' From=[1]'Root' To=[30]'ALE'
+  ID=38 Label='=' From=[18]'EqualWait' To=[39]'EqualAfter'
+  ID=42 Label='Mnemo' From=[39]'EqualAfter' To=[41]'MnemoLoad'
+  ID=48 Label='{' From=[41]'MnemoLoad' To=[84]''
+  ID=53 Label='else' From=[107]'LoadAfter' To=[1]'Root'
+  ID=54 Label='}' From=[18]'EqualWait' To=[84]''
+  ID=57 Label='else' From=[41]'MnemoLoad' To=[84]''
+  ID=58 Label='>, <' From=[39]'EqualAfter' To=[99]'ListAfter'
+  ID=61 Label='Mk' From=[39]'EqualAfter' To=[107]'LoadAfter'
+  ID=66 Label='FU, FUType' From=[1]'Root' To=[63]'FUAfter'
+  ID=71 Label='.' From=[63]'FUAfter' To=[72]'MkWait'
+  ID=74 Label='FU' From=[39]'EqualAfter' To=[75]'FUAfter2'
+  ID=76 Label='.' From=[75]'FUAfter2' To=[77]'MkWait2'
+  ID=83 Label='' From=[80]'' To=[1]'Root'
+  ID=85 Label='' From=[84]'' To=[1]'Root'
+  ID=86 Label='{' From=[2]'MnemoAnalysis' To=[1]'Root'
+  ID=88 Label='Else' From=[72]'MkWait' To=[80]''
+  ID=89 Label='MkForFU' From=[72]'MkWait' To=[238]'AtrBrack'
+  ID=91 Label='MkForFU' From=[77]'MkWait2' To=[107]'LoadAfter'
+  ID=93 Label='}, >, )' From=[]'' To=[]''
+  ID=94 Label='{' From=[39]'EqualAfter' To=[84]''
+  ID=96 Label='>, <' From=[2]'MnemoAnalysis' To=[99]'ListAfter'
+  ID=100 Label='Мк, Atr,, Const,Var, {' From=[99]'ListAfter' To=[80]''
+  ID=101 Label='>, <' From=[99]'ListAfter' To=[99]'ListAfter'
+  ID=103 Label='>, <' From=[41]'MnemoLoad' To=[99]'ListAfter'
+  ID=105 Label='{' From=[104]'ListAfterMnemo' To=[80]''
+  ID=106 Label='Mnemo' From=[99]'ListAfter' To=[104]'ListAfterMnemo'
+  ID=109 Label='=' From=[107]'LoadAfter' To=[39]'EqualAfter'
+  ID=110 Label='Const,, Var,, Vect' From=[39]'EqualAfter' To=[245]'EqVar'
+  ID=111 Label='[,' From=[5]'VarIniWait' To=[214]'ALE'
+  ID=117 Label='[' From=[12]'ConstWait' To=[214]'ALE'
+  ID=206 Label=',' From=[204]'VectWait' To=[205]'VectNext4'
+  ID=209 Label='Const, Var' From=[205]'VectNext4' To=[207]'VectNext5'
+  ID=212 Label='else' From=[207]'VectNext5' To=[1]'Root'
+  ID=213 Label=',' From=[207]'VectNext5' To=[204]'VectWait'
+  ID=215 Label='' From=[30]'ALE' To=[1]'Root'
+  ID=216 Label='(' From=[63]'FUAfter' To=[1]'Root'
+  ID=217 Label='.' From=[1]'Root' To=[72]'MkWait'
+  ID=219 Label='(' From=[41]'MnemoLoad' To=[218]'LoadVar'
+  ID=220 Label='Const,, Var, Vect' From=[218]'LoadVar' To=[221]'BrackLoadVar'
+  ID=222 Label=')' From=[221]'BrackLoadVar' To=[84]''
+  ID=224 Label='' From=[214]'ALE' To=[223]'Root'
+  ID=226 Label='FU, FUType' From=[225]'AtrAtr' To=[63]'FUAfter'
+  ID=227 Label='(' From=[2]'MnemoAnalysis' To=[225]'AtrAtr'
+  ID=228 Label='Mk,Atr' From=[225]'AtrAtr' To=[238]'AtrBrack'
+  ID=230 Label='Mnemo' From=[225]'AtrAtr' To=[229]'AtrAtr2'
+  ID=231 Label='(' From=[229]'AtrAtr2' To=[232]'AtrAtr3'
+  ID=233 Label='FU' From=[232]'AtrAtr3' To=[63]'FUAfter'
+  ID=234 Label='Mk,Atr' From=[232]'AtrAtr3' To=[238]'AtrBrack'
+  ID=239 Label='' From=[238]'AtrBrack' To=[18]'EqualWait'
+  ID=240 Label=')' From=[238]'AtrBrack' To=[]''
+  ID=243 Label='Operator' From=[221]'BrackLoadVar' To=[241]'ALE'
+  ID=244 Label='' From=[241]'ALE' To=[221]'BrackLoadVar'
+  ID=246 Label='Opertor' From=[245]'EqVar' To=[241]'ALE'
+  ID=247 Label='Else' From=[245]'EqVar' To=[84]''
+  ID=249 Label='HLPLOperator' From=[1]'Root' To=[248]'HLPL'
+  ID=250 Label='' From=[248]'HLPL' To=[1]'Root'
+  ID=251 Label='else' From=[204]'VectWait' To=[1]'Root'
+
+
+
+# Grammar State Machine - Syntax Graph for CompileCC.oap
+# Extracted from: "Разбор ИП 2026 (2).vsd" (Page: Страница-2)
+# Extracted on: 2026-05-16
+# Last updated: 2026-05-17 (added ALE/ALEAfter split, EqualAfter `(` edge,
+#                           VectNext5 `,` loops to VectNext4 not VectWait)
+#
+# This describes the parser automaton for the dataflow language (.oap).
+# Each state is a node. Transitions are labeled with token types.
+# "Root" is the start/return state.
+# Shape IDs 80 and 84 in diagram are unlabeled junction nodes that represent "Root".
+#
+# Deviations from the original Visio diagram, all driven by the working
+# CompileCC.oap implementation (cross-verified against CompileC.oap):
+#   - ALE split into ALE (operand-expecting) + ALEAfter (operator-expecting).
+#   - EqualAfter gained a `(` edge to ALE so `Atr=(expr)` works.
+#   - VectNext5 `,` loops to VectNext4 (not VectWait); the diagram's literal
+#     path supported only 1-2 element vectors because VectWait only accepts
+#     `,`, not Const.
+#   - MkWait / MkWait2 match `Mk` atr (-102), not the diagram's `MkForFU`
+#     (-301); MkTable's success dispatches raw Mk-atr tokens. CompileC.oap
+#     uses the same convention.
+
+## States:
+# Root            - Start state, main dispatch
+# MnemoAnalysis   - After seeing a Mnemo token from Root
+# VarIniWait      - After '=' in MnemoAnalysis, waiting for variable initialization value
+# ConstWait       - After '#' in MnemoAnalysis, waiting for vector constant
+# ConstWait2      - After '*' in MnemoAnalysis, waiting for integer constant (MK offset)
+# EqualWait       - After Mk/Atr from Root, waiting for '='
+# EqualAfter      - After '=' in EqualWait, waiting for value/target
+# MnemoLoad       - After Mnemo in EqualAfter
+# FUAfter         - After FU/FUType from Root or AtrAtr
+# MkWait          - After '.' in FUAfter or Root, waiting for MK name
+# FUAfter2        - After FU in EqualAfter
+# MkWait2         - After '.' in FUAfter2, waiting for MK name
+# LoadAfter       - After Mk in EqualAfter, or MkForFU in MkWait2
+# ListAfter       - After '>,<' in MnemoAnalysis/EqualAfter/MnemoLoad
+# ListAfterMnemo  - After Mnemo in ListAfter
+# VectWait        - After first vector element in ConstWait
+# VectNext4       - After ',' in VectWait, waiting for next element
+# VectNext5       - After element in VectNext4
+# ALE             - Arithmetic expression sub-automaton, operand-expecting state
+# ALEAfter        - Arithmetic expression sub-automaton, operator-expecting state
+# LoadVar         - After '(' in MnemoLoad
+# BrackLoadVar    - After Const/Var/Vect in LoadVar
+# AtrAtr          - After '(' in MnemoAnalysis
+# AtrAtr2         - After Mnemo in AtrAtr
+# AtrAtr3         - After '(' in AtrAtr2
+# AtrBrack        - After MkForFU in MkWait, or Mk/Atr in AtrAtr/AtrAtr3
+# EqVar           - After Const/Var/Vect in EqualAfter
+# HLPL            - External high-level language sub-automaton
+
+## Transitions:
+# Format: State --[token]--> NextState
+#
+# === Root ===
+Root --[Mnemo]--> MnemoAnalysis
+Root --[Mk, Atr]--> EqualWait
+Root --[Var]--> ALE
+Root --[FU, FUType]--> FUAfter
+Root --[.]--> MkWait
+Root --[HLPLOperator]--> HLPL
+Root --[>, <]--> Root (self-loop, pushes to stack + OAList.PushTied)
+Root --[}]--> Root (pops stack matching '{')
+Root --[end ""]--> End of program
+
+# === MnemoAnalysis ===
+MnemoAnalysis --[=]--> VarIniWait
+MnemoAnalysis --[#]--> ConstWait
+MnemoAnalysis --[*]--> ConstWait2
+MnemoAnalysis --[(]--> AtrAtr
+MnemoAnalysis --[{]--> Root (pushes '{' to stack)
+MnemoAnalysis --[>, <]--> ListAfter
+MnemoAnalysis --[else]--> Root (creates Atr entry in MnemoTable)
+
+# === VarIniWait ===
+VarIniWait --[Const, Var, Vect]--> Root
+VarIniWait --[[]--> ALE
+
+# === ConstWait ===
+ConstWait --[Const, Var, Vect]--> VectWait
+ConstWait --[[]--> ALE
+
+# === ConstWait2 ===
+ConstWait2 --[Const]--> Root
+
+# === EqualWait ===
+EqualWait --[=]--> EqualAfter
+EqualWait --[}]--> Root (connector ID=54; '}' while in EqualWait context returns to Root)
+EqualWait --[else]--> Root
+
+# === EqualAfter ===
+EqualAfter --[FU]--> FUAfter2
+EqualAfter --[Mk]--> LoadAfter
+EqualAfter --[Mnemo]--> MnemoLoad
+EqualAfter --[Const, Var, Vect]--> EqVar
+EqualAfter --[{]--> Root (pushes '{', creates OAList subgraph)
+EqualAfter --[>, <]--> ListAfter
+EqualAfter --[(]--> ALE (pushes Sep="(" on Stack; enters ALE in operand-expecting
+                         state -- added in CompileCC.oap so `Atr=(expr)` works)
+
+# === MnemoLoad ===
+MnemoLoad --[(]--> LoadVar
+MnemoLoad --[>, <]--> ListAfter
+MnemoLoad --[{]--> Root (pushes '{', creates OAList entry)
+MnemoLoad --[else]--> Root
+
+# === FUAfter ===
+FUAfter --[.]--> MkWait
+FUAfter --[(]--> Root (pushes MkBrack to stack)
+
+# === MkWait ===
+MkWait --[MkForFU]--> AtrBrack (implementation note: matches by `Mk` atr -102,
+                                not MkForFU -301; MkTable's SuccessProg
+                                dispatches the matched line's raw entries,
+                                of which `Mk=N` has atr=Mk. Trace string is
+                                kept as "MkWait MkForFU" to match the
+                                grammar's label.)
+MkWait --[else]--> Root
+
+# === FUAfter2 ===
+FUAfter2 --[.]--> MkWait2
+FUAfter2 --[else]--> Root (outputs MkCalc result)
+
+# === MkWait2 ===
+MkWait2 --[MkForFU]--> LoadAfter (same caveat as MkWait above: matches `Mk` atr)
+MkWait2 --[else]--> Root (outputs MkCalc result)
+
+# === LoadAfter ===
+LoadAfter --[=]--> EqualAfter
+LoadAfter --[else]--> Root
+
+# === ListAfter ===
+ListAfter --[Mk, Atr, Const, Var, {]--> Root
+ListAfter --[>, <]--> ListAfter (self-loop)
+ListAfter --[Mnemo]--> ListAfterMnemo
+
+# === ListAfterMnemo ===
+ListAfterMnemo --[{]--> Root
+ListAfterMnemo --[else]--> ListAfter
+
+# === VectWait ===
+VectWait --[,]--> VectNext4
+VectWait --[else]--> Root
+
+# === VectNext4 ===
+VectNext4 --[Const, Var]--> VectNext5
+VectNext4 --[else]--> Root
+
+# === VectNext5 ===
+VectNext5 --[,]--> VectNext4 (implementation deviates from the Visio diagram
+                              which had `,` -> VectWait; that path only
+                              supported 1-2 element vectors because VectWait
+                              only accepts `,`. Looping to VectNext4 lets
+                              N-element vectors like V#1,2,3,4,5 work.)
+VectNext5 --[else]--> Root
+
+# === LoadVar ===
+LoadVar --[Const, Var, Vect]--> BrackLoadVar
+LoadVar --[else]--> Root
+
+# === BrackLoadVar ===
+BrackLoadVar --[)]--> Root (via shape 84)
+BrackLoadVar --[Operator]--> ALEAfter (push ALEAfter -- the LHS operand was
+                                       already consumed in LoadVar, so we are
+                                       in operator-position)
+
+# === AtrAtr ===
+AtrAtr --[FU, FUType]--> FUAfter
+AtrAtr --[Mk, Atr]--> AtrBrack
+AtrAtr --[Mnemo]--> AtrAtr2
+
+# === AtrAtr2 ===
+AtrAtr2 --[(]--> AtrAtr3
+AtrAtr2 --[else]--> Root
+
+# === AtrAtr3 ===
+AtrAtr3 --[FU]--> FUAfter
+AtrAtr3 --[Mk, Atr]--> AtrBrack
+
+# === AtrBrack ===
+AtrBrack --[)]--> Root (pops MkBrack from stack if present)
+AtrBrack --[else]--> EqualWait (unlabeled connector ID=239 in diagram)
+
+# === EqVar ===
+EqVar --[Operator]--> ALEAfter (push ALEAfter -- the LHS operand was already
+                                consumed in EqualAfter, so we are in
+                                operator-position; the original Visio diagram
+                                said ALE here but the OAP-runtime convention
+                                is that the receiver is pushed already at the
+                                next state, ALEAfter)
+EqVar --[else]--> Root (via shape 84)
+
+# === ALE (operand-expecting state) ===
+# Pushed onto the receiver stack by:
+#   - Root [Var]           (Root's Var-row pushes ALE; ALE then walks the expr)
+#   - VarIniWait [[]       (per the original Visio diagram)
+#   - ConstWait  [[]       (per the original Visio diagram)
+#   - EqualAfter [(]       (added in CompileCC.oap, see above)
+# ALE expects an operand (or unary prefix or a sub-expression open-paren) next.
+ALE --[Const, Var, Vect]--> ALEAfter
+ALE --[(]--> ALE (pushes Sep="(" on Stack so ALEAfter `)` can pop it; stays
+                  in operand-expecting state for the sub-expression)
+ALE --[+, -]--> ALE (unary prefix; stays in operand-expecting state)
+ALE --[else]--> pop receiver stack and re-dispatch token (returns to caller)
+
+# === ALEAfter (operator-expecting state) ===
+# Pushed onto the receiver stack by:
+#   - EqVar       [Operator]   (LHS operand already consumed in EqualAfter)
+#   - BrackLoadVar [Operator]  (LHS operand already consumed in LoadVar)
+# ALEAfter expects a binary operator or a paren-close next.
+ALEAfter --[Operator, +, -, *, /, %]--> ALE
+ALEAfter --[)]--> ALEAfter (if Stack has a matching Sep="(", pop it and stay
+                            in operator-expecting state for the outer expr;
+                            otherwise the `)` belongs to an outer context --
+                            pop the ALE receiver and re-dispatch the `)`)
+ALEAfter --[else]--> pop receiver stack and re-dispatch token (returns to caller)
+
+# === HLPL return path ===
+# HLPL (id=248) --[done]--> Root (connector ID=250)
+
+## Token Types:
+# Mnemo      - identifier/mnemonic (attribute -2)
+# Sep        - separator characters: . = { } ( ) > < , # * [ ] !
+# Const      - numeric/string constant (attribute -13)
+# Var        - variable reference (attribute -14)
+# Vect       - vector reference (attribute -306)
+# FU         - functional unit reference (attribute -300)
+# FUType     - FU type template (attribute -303)
+# Mk         - millicommand/microcommand (attribute -102)
+# Atr        - attribute (attribute -60 / LineAtr -6)
+# MkForFU    - MK resolved for a specific FU (attribute -301)
+# MkExec     - MK execution marker (attribute -304)
+# Operator   - arithmetic operator (attribute -321)
+# HLPLOperator - high-level language operator (attribute -320)
+# BackVar    - back variable reference (attribute -305)
+# IP         - information pair reference (attribute -309)
+# MkBrack    - bracket marker for MK context (attribute -307)
+
+## Notes:
+# - "else" means any token not matching the other transitions (default/fallback)
+# - Shape 80 in diagram = unlabeled junction = Root (targets of: VarIniWait done,
+#   MkWait else, ListAfter done, ListAfterMnemo '{')
+# - Shape 84 in diagram = unlabeled junction = Root (targets of: MnemoLoad '{',
+#   MnemoLoad else, EqualAfter '{', BrackLoadVar ')', EqVar else, EqualWait '}')
+# - ALE / ALEAfter form the arithmetic-expression sub-automaton. The original
+#   Visio diagram shows a single ALE node; the CompileCC.oap implementation
+#   splits it into operand-expecting (ALE) and operator-expecting (ALEAfter)
+#   states so the dispatch table can stay flat. The paren-balancing uses the
+#   same Stack FU as `{}` braces, with marker Sep="(" instead of Sep="{".
+# - HLPL is an external sub-automaton for high-level language constructs
+# - The parser uses a receiver stack (Lex.ReceiverPush/Pop) for nested parsing

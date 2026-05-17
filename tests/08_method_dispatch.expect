@@ -1,0 +1,51 @@
+# A=1
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# B=2
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# Cons.OutLn="start" -- string literal arg dispatches as Const
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+# Cons.OutLn=A -- var arg (also Const/Var/Vect row, EqVar else)
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+# Cons.Out=B -- different Mk on Cons, same arg-shape
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+# Atr=Bus.MakeFU -- EqualAfter FU chain
+Root Mk/Atr
+EqualWait =
+EqualAfter FU
+FUAfter2 .
+MkWait2 MkForFU
+LoadAfter else->Root
+# Cons.OutLn="end"
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+# Done=42
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const

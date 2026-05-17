@@ -1,0 +1,37 @@
+# A=1 setup
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# Atr={X=1} -- subgraph push
+Root Mk/Atr
+EqualWait =
+EqualAfter {
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root }
+# Atr=>1 -- EqualAfter > <
+Root Mk/Atr
+EqualWait =
+EqualAfter > <
+ListAfter Mk/Atr/Const/Var
+# Atr=Bus.MakeFU -- now reaches MkWait2 MkForFU and LoadAfter else
+Root Mk/Atr
+EqualWait =
+EqualAfter FU
+FUAfter2 .
+MkWait2 MkForFU
+LoadAfter else->Root
+# Atr=1+2 -- pushes ALEAfter (operator-position), ALE consumes the next
+# operand, then ALEAfter pops on the next non-arith token.
+Root Mk/Atr
+EqualWait =
+EqualAfter Const/Var/Vect
+ALEAfter op
+EqVar Operator -> ALE
+ALE operand
+ALEAfter done -> Root
+# X=99 -- back at Root after ALE pop
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const

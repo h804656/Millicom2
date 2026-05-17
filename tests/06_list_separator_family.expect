@@ -1,0 +1,23 @@
+# List1 > 1
+Root Mnemo
+MnemoAnalysis > <
+ListAfter Mk/Atr/Const/Var
+# List2 > > 2 -- ListAfter > self-loop
+Root Mnemo
+MnemoAnalysis > <
+ListAfter > <
+ListAfter Mk/Atr/Const/Var
+# ListN > Item{X=1} -- ListAfter Mnemo -> ListAfterMnemo { subgraph
+Root Mnemo
+MnemoAnalysis > <
+ListAfter Mnemo
+ListAfterMnemo {
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root }
+# > > Foo  -- Root self-loop x2 then Mnemo -> MnemoAnalysis else
+Root > list (self-loop)
+Root > list (self-loop)
+Root Mnemo
+MnemoAnalysis else (Atr)

@@ -2,6 +2,7 @@
 #include "consts.h"
 #include "Bus.h"
 #include "FUini.h"
+#include <iostream>
 #include <string>
 #include <map>
 #include <algorithm>
@@ -18,7 +19,7 @@ void BusFU::FUTypesIni()
 
 void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 {
-	ICVect* ipVect; // Указатель на вектор ИК
+	ICVect* ipVect; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 	if (MK >= FUMkRange*2)
 	{
 		int FU_num = MK / FUMkRange;
@@ -28,21 +29,21 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	else
 		switch (MK%FUMkRange)
 		{
-		case 0: // Сброс
+		case 0: // пїЅпїЅпїЅпїЅпїЅ
 	    	for (int i = 1; i < FUs.size(); i++)
 				delete FUs[i];
 			FUs.clear();
 			FUs.push_back(this);
-			FUs.push_back(this); // Первой ФУ - это сам Bus
+			FUs.push_back(this); // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ - пїЅпїЅпїЅ пїЅпїЅпїЅ Bus
 			break;
-		case 1: // MakeFU Создать ФУ
+		case 1: // MakeFU пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			FUs.push_back(FUTypes.MakeFu(Load.toInt(),this, FUTempl));
-			FUs.back()->FUMkGlobalAdr = FUMkRange * (FUs.size() - 1); // Установить начало глобального диапазона МК
+			FUs.back()->FUMkGlobalAdr = FUMkRange * (FUs.size() - 1); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			break;
-		case 5: // ProgExec Выполнить программу из ИК
+		case 5: // ProgExec пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ
 			ProgExec((vector<ip>*)Load.Point);
 			break;
-		case 10: // FileOldProgExec Выполнить программу из файла
+		case 10: // FileOldProgExec пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 			ipVect = ConvIndOld(*(string*)Load.Point);
 			if(ipVect->size()>0) ProgExec( (*ipVect)[0], 0, this,nullptr);
 			break;
@@ -59,89 +60,89 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		case 22: // LastFuContextOut 
 			Load.Write(FUs.back());
 			break;
-		case 23: // LastFuContextOutMk Выдать МК с контекстом последнего созданного ФУ
+		case 23: // LastFuContextOutMk пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			MkExec(Load, {TFU, FUs.back()});
 			break;
-		case 25: // LastFUNameSet Установить имя последнего созданного ФУ
+		case 25: // LastFUNameSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			if (FUs.size() > 1)
 				FUs.back()->FUName = Load.toStr();
 			break;
-		case 40: // LastFUMkRangeOut Выдать начало МК-диапазона последнего ФУ
+		case 40: // LastFUMkRangeOut пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			Load.Write(FUMkRange*(FUs.size() - 1));
 			break;
-		case 41: // LastFUMkRangeOutMk Выдать МК с началом МК-диапазона последнего ФУ 
+		case 41: // LastFUMkRangeOutMk пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 
 			{
 				long int t = FUMkRange * (FUs.size() - 1);
 				MkExec(Load, { Cint, &t });
 			}
 			break;
 
-		case 45: // FuContextOut Выдать контекст ФУ по его МК
+		case 45: // FuContextOut пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ
 			if (Ind >= FUs.size() || Ind < 0) break;
 			Load.Write(FUs[Load.toInt() / FUMkRange]);
 			break;
-		case 46: // FuContextOutMk Выдать МК с контекстом ФУ по его МК
+		case 46: // FuContextOutMk пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ
 			if (Ind >= FUs.size() || Ind<0) break;
 			MkExec(Load, { TFU, &FUs[Ind] });
 			break;
-		case 47: // FuContestFormInd1ToInd2OutMk Последовательно выдать МК с контекстами ФУ с индекса 1 до индекса 2
+		case 47: // FuContestFormInd1ToInd2OutMk пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2
 			if (Ind >= FUs.size() || Ind < 0 || Ind2 >= FUs.size() || Ind2 < 0) break;
 			for (int i = Ind; i <= Ind2; i++)
 				MkExec(Load, { TFU,&FUs[i] });
 			break;
-		case 48: // FuContestFormInd1ToEndOutMk Последовательно выдать МК с контекстами ФУ с индекса 1 до конца списка ФУ
+		case 48: // FuContestFormInd1ToEndOutMk пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			if (Ind >= FUs.size() || Ind < 0) break;
 			for (int i = Ind; i <= FUs.size(); i++)
 				MkExec(Load, { TFU,&FUs[i] });
 			break;
-		case 50: // IndSet Установить индекс ФУ
+		case 50: // IndSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			Ind = Load.toInt(0);
 			break;
-		case 51: // Ind2Set Установить второй индекс ФУ
+		case 51: // Ind2Set пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			Ind2 = Load.toInt(0);
 			break;
-		case 52: // IndByMkSet Установить индекс ФУ по МК
+		case 52: // IndByMkSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅ
 			Ind = Load.toInt(0) / FUMkRange;
 			break;
-		case 53: // Ind2ByMkSet Установить второй индекс ФУ по МК
+		case 53: // Ind2ByMkSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅ
 			Ind2 = Load.toInt(0) / FUMkRange;
 			break;
-		case 54: // IndAdd Увеличить индекс ФУ
+		case 54: // IndAdd пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			Ind += Load.toInt(1);
 			break;
-		case 55: // Ind2Add Увеличить второй индекс ФУ
+		case 55: // Ind2Add пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 			Ind2 += Load.toInt(1);
 			break;
 
-		case 100: // MkExec Выполнить одму МК (в нагрузке ссылка на ИП)
+		case 100: // MkExec пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ)
 			if (Load.Point!=nullptr && Load.isIP())
 				ProgFU(((ip*)Load.Point)->atr, ((ip*)Load.Point)->Load);
 			break;
-		case 105: //InterpretatorModeSet Установить режим интерпретатора
+		case 105: //InterpretatorModeSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			InterpretatorMode = Load.toBool(true);
 			break;
-		case 106: // InterpretatorProgExec Выполнить программу, если режим интерпретатора
+		case 106: // InterpretatorProgExec пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (InterpretatorMode)
 				ProgExec(Load);
 			break;
-		case 107: // CompilyatorProgExec Выполнить программу, если режим компилятора
+		case 107: // CompilyatorProgExec пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (!InterpretatorMode)
 				ProgExec(Load);
 			break;
-		case 155:// FUTypeCorrectSet Установить коррекцию номера типа ФУ (для переноса ОА-программы на другую ОА-платформу)
+		case 155:// FUTypeCorrectSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 			FUTypeCorrect = Load.toInt();
 			break;
 
-		case 200: // ArgcSet Установить количество аргументов командной строки
+		case 200: // ArgcSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			argc = Load.toInt();
 			break;
-		case 201: // ArgcOut Выдать количество аргументов командной строки
+		case 201: // ArgcOut пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			Load.Write(argc);
 			break;
-		case 202: // ArgcOutMk Выдать МК с количеством аргументов командной строки
+		case 202: // ArgcOutMk пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			MkExec(Load, {Cint,&argc});
 			break;
-		case 203: // ArgvSet Установить аргументы командной строки
+		case 203: // ArgvSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			if (argc <= 0) break;
 			if (Load.isChar()) {
 				argInd = 0;
@@ -151,30 +152,30 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				}
 			}
 			break;
-		case 204: // ArgvOut Выдать количество аргументов командной строки
+		case 204: // ArgvOut пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			if (argc >= 0 && argc < argv.size())
 				Load.Write(argv[argInd]);
 			break;
-		case 207: // ArgvOutMk Выдать МК с количеством аргументов командной строки
+		case 207: // ArgvOutMk пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			if (argc >= 0 && argc < argv.size())
 				MkExec(Load, { Cstring, &argv[argInd] });
 			break;
-		case 206: // ArgByIndOut Выдать аргумент командной строки по индексу
+		case 206: // ArgByIndOut пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (argc >= 0 && argc < argv.size())
 				Load.Write(argv[argInd]);
 			break;
-		case 208: // ArgByIndOutMk  Выдать МК с аргументом командной строки по индексу
+		case 208: // ArgByIndOutMk  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (argInd >= 0 && argInd < argv.size())
 				MkExec(Load, { Cstring, &argv[argInd] });
 			break;
-		case 210: // ArgIndSet Установить индекс аргумента
+		case 210: // ArgIndSet пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			argInd = Load.toInt();
 			break;
-		case 215: // ArgcLessExec Выполнить, если количество аргументов меньше величины в нагрузке
+		case 215: // ArgcLessExec пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (Load.toInt() &&	Load.toInt() > argc)
 					ProgExec(Prog);
 			break;
-		case 216: // ArgcBiggerEq Выполнить, если количество аргументов больше или равно величине в нагрузке
+		case 216: // ArgcBiggerEq пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (Load.toInt() && Load.toInt() <= argc)
 				ProgExec(Prog);
 			break;
@@ -184,12 +185,12 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		}
 }
 
-FU* BusFU::Copy() // Программа копирования ФУ
+FU* BusFU::Copy() // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 {
 	return new BusFU(Bus, this);
 }
 
-FU* BusFU::TypeCopy() // Создать ФУ такого же типа (не копируя контекст
+FU* BusFU::TypeCopy() // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 {
 	return new BusFU(Bus, nullptr);
 }

@@ -1,0 +1,65 @@
+# A=1, B=2, C=3, D=4
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
+# Cons.OutLn="hello" -- plain Const arg, no ALE
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+# Cons.OutLn=A+B -- ALE pushed via EqVar Operator
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+ALEAfter op
+EqVar Operator -> ALE
+ALE operand
+ALEAfter done -> Root
+# Cons.OutLn=A+B*C-D -- 3-operator ALE
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+ALEAfter op
+EqVar Operator -> ALE
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter done -> Root
+# Cons.OutLn=(A+B)*C -- paren-first ALE via EqualAfter (
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter ( -> ALE
+ALE operand
+ALEAfter op
+ALE operand
+ALEAfter )
+ALEAfter op
+ALE operand
+ALEAfter done -> Root
+# Done=42
+Root Mnemo
+MnemoAnalysis =
+VarIniWait Const
