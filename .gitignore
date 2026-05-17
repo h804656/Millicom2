@@ -363,3 +363,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Consts.h
+/.claude/settings.local.json
+/CLAUDE.md
+/tests/README.md
+/tests/.last_input.lex
+/tests/.last_stderr.txt
+/tests/.last_stdout.txt
