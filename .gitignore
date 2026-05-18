@@ -369,3 +369,16 @@ FodyWeavers.xsd
 /tests/.last_input.lex
 /tests/.last_stderr.txt
 /tests/.last_stdout.txt
+/tests/.dbg.ind
+/tests/.dbg.oap
+/tests/.last_ale.ind
+/tests/.last_ale_compile.txt
+/tests/.last_ale_run.txt
+/tests/.last_ale_compile_err.txt
+/tests/.last_ale_run_err.txt
+/tests/.sample.ind
+/tests/.subic_err.txt
+/tests/.subic.ind
+/tests/.sample_run.txt
+/tests/.subic_run.txt
+/tests/.batlog.txt
