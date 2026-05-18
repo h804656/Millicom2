@@ -1,0 +1,11 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Sub-IC on user-declared FUs: the parent IP's atr resolves to the user
+// FU's MK range (8002, 9002, ...), not Cons's 2002. Covers a user FU
+// with prior priming and another with NO prior call (forces
+// applyPeerMkTable to fire during user-FU lookup).
+NewFU={Mnemo="U1" FUType=FUConsNew}
+U1.OutLn="u1 plain"
+U1.OutLn={U1.OutLn="u1 boxed"}
+NewFU={Mnemo="U2" FUType=FUConsNew}
+U2.OutLn={U2.OutLn="u2 first-call boxed"}
+Cons.OutLn="end"

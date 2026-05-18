@@ -1,0 +1,3 @@
+Z=30
+A=[1+Z]
+Cons.OutLn=A

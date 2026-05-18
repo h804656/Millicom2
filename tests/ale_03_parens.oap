@@ -1,0 +1,19 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Parenthesised expressions: paren-first, paren-last, single-var in parens,
+// idempotent double-parens, and nested combinations. Exercises the
+// AleParenIn/AleParenOut shunting-yard sentinel handling.
+A=4
+B=3
+C=6
+D=10
+E=2
+Cons.OutLn=(A+B)*C
+Cons.OutLn=A*(B+C)
+Cons.OutLn=(A)*B
+Cons.OutLn=((A))
+Cons.OutLn=(A+B)*(C-E)
+Cons.OutLn=A-(B+C)
+Cons.OutLn=A-B-C
+Cons.OutLn=((A+B)*(C+D))-E
+Cons.OutLn=(A+(B+(C+D+E)))
+Cons.OutLn=(D-A)*(C-E)

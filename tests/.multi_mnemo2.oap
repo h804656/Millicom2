@@ -1,0 +1,5 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+NewFU={Mnemo="MT" FUType=FUListNew}
+MT.Set=
+>{Mnemo="Greet" Cons.OutLn="hello" Cons.OutLn="world"}
+Bus.IpBufWrite="C:/Users/hacker/Downloads/millicom/tests/.last_emit.ind"

@@ -1,0 +1,14 @@
+Root Mk/Atr
+EqualWait =
+EqualAfter {
+EqualAfter Const/Var/Vect
+EqVar else -> Root
+Root }
+VarIniWait Const
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualAfter FU
+FUAfter2 .
+MkWait2 MkForFU

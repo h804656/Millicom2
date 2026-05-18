@@ -1,0 +1,14 @@
+VarIniWait Const
+VarIniWait Var
+ConstWait2 Const
+MnemoAnalysis else (Atr)
+Root Mk/Atr
+EqualWait else->Root
+MnemoAnalysis #
+ConstWait -> VectWait
+VectWait ,
+VectNext4 element added
+VectNext5 ,
+VectNext5 else->Root
+VectWait else->Root
+Root Var->ALE

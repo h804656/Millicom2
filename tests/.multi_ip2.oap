@@ -1,0 +1,5 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+NewFU={Mnemo="L" FUType=FUListNew}
+L.Set=
+>{Mnemo="A" Cons.OutLn="row-a-line1" Cons.OutLn="row-a-line2"}
+Bus.IpBufWrite="C:/Users/hacker/Downloads/millicom/tests/.last_emit.ind"

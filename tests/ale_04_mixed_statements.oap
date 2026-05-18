@@ -1,0 +1,14 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Multi-statement sequencing: string/int/float load types interleaved with
+// a zero-arg method call (Cons.Ln) and ALE expressions. Verifies state
+// resets cleanly between statements (AleReset, MkCalc=0).
+A=2
+B=3
+Cons.OutLn="header"
+Cons.OutLn=A+B
+Cons.OutLn=A*B
+Cons.OutLn=A-B
+Cons.OutLn=42
+Cons.OutLn=3.14
+Cons.Ln
+Cons.OutLn="footer"

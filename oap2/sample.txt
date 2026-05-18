@@ -1,1 +1,4 @@
-A=1 B=2 Atr=A+B Done=42 ;
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+C=0
+D=-1
+Cons.OutLn=C+D

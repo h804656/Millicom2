@@ -1,0 +1,7 @@
+grammar defined
+ListAfter {
+EqualAfter {
+Root }
+! must-not-foo-1
+! must-not-foo-2
+! from-foo

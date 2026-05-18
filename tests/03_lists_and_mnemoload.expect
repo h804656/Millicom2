@@ -1,0 +1,13 @@
+MnemoAnalysis > <
+ListAfter Mk/Atr/Const/Var
+ListAfter > <
+ListAfter Mnemo
+ListAfterMnemo {
+ListAfterMnemo else
+Root > list (self-loop)
+MnemoLoad (
+MnemoLoad {
+MnemoLoad > <
+MnemoLoad else->Root
+LoadVar Const/Var/Vect
+BrackLoadVar )

@@ -1,0 +1,11 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Nested sub-ICs at depths 2 and 4. Exercises the SubICOuterMk Push/Pop
+// stack -- each `{` pushes the outer MkCalc and each `}` pops -- so an
+// arbitrary nesting depth keeps every level's parent atr available.
+// Also: ALE expression inside a sub-IC routes through pushIpToCurrentCapsule
+// (sub-IC content), not main.
+Cons.OutLn={Cons.OutLn={Cons.OutLn="depth2"}}
+Cons.OutLn={Cons.OutLn={Cons.OutLn={Cons.OutLn="depth4"}}}
+A=10
+B=20
+Cons.OutLn={Cons.OutLn=A*B+2}

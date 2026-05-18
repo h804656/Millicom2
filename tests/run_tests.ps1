@@ -60,23 +60,28 @@ foreach ($lexFile in $testFiles) {
     # that's not inside a string literal -- crude, but enough for fixtures.
     $stripped = "tests\.last_input.lex"
     $raw = Get-Content $lexFile.FullName -Raw
-    # 1) Strip `//` line comments (C++ Lex emits comments as StrAtr tokens).
-    # 2) Collapse every newline into a space (C++ Lex emits a StrAtr for each
-    #    newline via state 12, which Root rejects). Multi-statement programs
-    #    therefore have to be fed as a single space-separated line.
-    $clean = ($raw -replace '(?m)//.*$', '') -replace '\s+', ' '
-    $clean = $clean.Trim()
-    # Append a trailing separator so the parser's final state always dispatches
-    # via an `else` transition (otherwise the last token's MnemoAnalysis-style
-    # state sits in limbo and its `else` trace never fires).
-    if ($clean -ne '') { $clean += ' ;' }
+    # Strip `//` line comments (C++ Lex still emits them as StrAtr tokens).
+    # Newlines, tabs and CRs are real whitespace in Lex.cpp now, so we feed
+    # the file's original layout straight through.
+    $clean = ($raw -replace '(?m)//.*$', '').Trim()
     Set-Content -Path $stripped -Value $clean -NoNewline -Encoding ASCII
 
-    $proc = Start-Process -FilePath $Exe `
-        -ArgumentList @($Ind, "--lex-file", $stripped) `
-        -NoNewWindow -PassThru `
-        -RedirectStandardOutput "tests\.last_stdout.txt" `
-        -RedirectStandardError  "tests\.last_stderr.txt"
+    # Optional `<name>.stdin` file is piped to the executable's stdin so
+    # tests can exercise Cons.Input / Cons.InputMk paths (runtime values
+    # that the compile-time ALE can't fold away).
+    $stdinFile = Join-Path $lexFile.DirectoryName "$name.stdin"
+    $procArgs = @{
+        FilePath = $Exe
+        ArgumentList = @($Ind, "--lex-file", $stripped)
+        NoNewWindow = $true
+        PassThru = $true
+        RedirectStandardOutput = "tests\.last_stdout.txt"
+        RedirectStandardError  = "tests\.last_stderr.txt"
+    }
+    if (Test-Path $stdinFile) {
+        $procArgs.RedirectStandardInput = $stdinFile
+    }
+    $proc = Start-Process @procArgs
     if (-not $proc.WaitForExit($TimeoutSec * 1000)) {
         $proc.Kill()
         Write-Host "  FAIL $name (timeout after ${TimeoutSec}s)" -ForegroundColor Red
@@ -102,7 +107,14 @@ foreach ($lexFile in $testFiles) {
 
     $missing = @()
     foreach ($e in $expectations) {
-        if (-not $stdout.Contains($e)) {
+        if ($e.StartsWith("!")) {
+            # Negative assertion: this text must NOT appear in stdout.
+            $needle = $e.Substring(1).TrimStart()
+            if ($stdout.Contains($needle)) {
+                $missing += "(unwanted) $needle"
+            }
+        }
+        elseif (-not $stdout.Contains($e)) {
             $missing += $e
         }
     }

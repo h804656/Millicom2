@@ -1,0 +1,15 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// NewFU declares user FUs; UserFuLookupOrFallback dispatches them as if
+// built in. First case: user FU is the FIRST call (no preceding Cons.* to
+// prime MkTable) -- exercises applyPeerMkTable borrowing Cons's row.
+// Second case: mixed user-FU/Cons traffic. Third case: a different user FU
+// at a different MK range with an ALE-computed RHS.
+NewFU={Mnemo="A1" FUType=FUConsNew}
+A1.OutLn="A1 first call"
+Cons.OutLn="cons interleaved"
+A1.OutLn="A1 again"
+NewFU={Mnemo="A2" FUType=FUConsNew}
+X=7
+Y=6
+A2.OutLn=X*Y
+A2.OutLn="A2 string"

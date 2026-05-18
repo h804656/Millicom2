@@ -1,0 +1,3 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+NewFU={Mnemo="A1" FUType=FUConsNew}
+A1.OutLn="hi"

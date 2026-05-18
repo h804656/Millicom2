@@ -1,0 +1,7 @@
+three rows registered
+EqualAfter {
+Root }
+! must-not-mk-1
+! must-not-mk-2
+! must-not-mnemo
+! must-not-eq

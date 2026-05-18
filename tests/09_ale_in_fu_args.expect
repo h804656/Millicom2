@@ -1,0 +1,11 @@
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqualWait =
+EqualAfter Const/Var/Vect
+EqVar Operator -> ALE
+ALE operand
+ALEAfter op
+EqualAfter (
+ALEAfter done -> Root

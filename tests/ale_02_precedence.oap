@@ -1,0 +1,19 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Operator precedence (* / % bind tighter than + -). Chains exercise the
+// shunting-yard pop-on-equal-or-higher-precedence path. Mixed * + - / %
+// covers the full op table.
+A=2
+B=3
+C=4
+D=5
+E=10
+Cons.OutLn=A+B*C
+Cons.OutLn=A*B+C
+Cons.OutLn=A+B*C+D
+Cons.OutLn=A*B-C*D
+Cons.OutLn=A-B*C+D
+Cons.OutLn=A+B*C-D
+Cons.OutLn=E/A+C
+Cons.OutLn=E%B+A
+Cons.OutLn=E/A*B
+Cons.OutLn=A+B*C-D/A%B

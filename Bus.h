@@ -1,7 +1,9 @@
-// ФУ Шина
+// пїЅпїЅ пїЅпїЅпїЅпїЅ
 #pragma once
 #include "FUini.h"
 #include <vector>
+#include <unordered_map>
+#include <string>
 
 //const int NFUTypes = 27;
 
@@ -12,23 +14,73 @@ public:
 	BusFU(FU* BusContext, FU* Templ) : FU(BusContext) { Bus = BusContext; FUTypesIni(); FUtype = 0; };
 	BusFU() : FU() { Bus = this; FUTypesIni(); };
 	void ProgFU(long int MK, LoadPoint Load, FU* Sender = nullptr) override;
-	FU* Copy() override; // Программа копирования ФУ
-	FU* TypeCopy() override; // Создать ФУ такого же типа (не копируя контекст
+	FU* Copy() override; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+	FU* TypeCopy() override; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	FuFabric FUTypes;
 //	FU* (*FUTypes[NFUTypes])(FU*, FU*) = {BusIni, ConsIni, StrGenIni, LexIni, FindIni,
 //		ListIni, GraphTrasfIni, IntAluIni, InOutIni, AutomatManagerIni, NeuroIni,
 //		NetManagerIni,SchedulerIni,EventserIni, MeanShiftIni, StreamFloatALUIni, GaussIni, ALUIni,
 //		CellularAutomatIni, CellularAutomatManagerIni, RouterIni, GatewayIni, StreamFloatALUManagerIni, 
 //		StreamIntALUIni, StreamIntALUManagerIni, MatPlotIni };
-	vector <FU *> FUs; // Вектор указателей на контексты ФУ
-	FU * FUTempl = nullptr; // Указатель на контекст шаблона ФУ
-	long int FUMkRange = 1000; // Диапазон МК для каждого ФУ
-	long int FUTypeCorrect= fuTypeCorrect; // Коррекция номера типы ФУ (для согласования со старой ОА-средой)
-	bool InterpretatorMode = false; // Режим интерпретатора (если установлено, то выполняется МК InterpretatorExec
-	long int Ind = 0, Ind2 = 0; // Индексы ФУ, управляемых Шиной
-	int argc = 0; // Количество аргументов командной строки
-	int argInd = -1; // Индекс аргумента
-	vector<string> argv; // Аргументы командной строки
+	vector <FU *> FUs; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+	FU * FUTempl = nullptr; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+	long int FUMkRange = 1000; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+	long int FUTypeCorrect= fuTypeCorrect; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ)
+	bool InterpretatorMode = false; // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ InterpretatorExec
+	long int Ind = 0, Ind2 = 0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+	int argc = 0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	int argInd = -1; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	vector<string> argv; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+
+	// Compiler output buffer. Each entry is the head text of one IP
+	// ("<atr> <T>:<value>") with no trailing pointer fields; IpBufWrite
+	// computes those on serialization.
+	vector<string> CapsIps;
+	// Pending atr value for the next IpBufEmit call (set via IpBufSetAtr).
+	long int CapsPendingAtr = 0;
+	// Stashed Load for the single-operand emit path -- IntAlu (AleResult)
+	// can't carry string/double types so we keep an independent copy.
+	LoadPoint CapsStashLoad = { 0, nullptr };
+	// Set by IpBufPendingMakeFU when the parser sees `FUType` so the next
+	// IpBufEmitStashed call ALSO emits a `1001 I:<value>` MakeFU IP. The
+	// flag clears after the emit.
+	bool IpBufPendingMakeFU = false;
+
+	// Sentinel atr codes the OAP layer can emit via IpBufSetAtr+IpBufEmit to
+	// delimit sub-capsules in the linear CapsIps buffer. IpBufWrite picks
+	// them up at serialization time to lay out main + sub-capsules with the
+	// correct DInd refs / capsule chain links. The markers are dropped from
+	// the emitted .ind.
+	static constexpr long int SubCapOpenAtr  = -1000;
+	static constexpr long int SubCapCloseAtr = -1001;
+	// Sub-capsule nesting depth. IpBufEmit/IpBufEmitStashed/AleEmit only
+	// live-dispatch (run the IP immediately so e.g. `Cons.OutLn="x"` prints
+	// at parse-time) when depth==0. Inside `>{...}` or `={...}` bodies, the
+	// IPs are pure row-body content and must NOT execute until the row is
+	// actually matched and dispatched at runtime.
+	int SubCapDepth = 0;
+
+	// User-FU registration state. When `NewFU={Mnemo="X" FUType=Y}` is parsed,
+	// the Mnemo MnemoTable row sets PendingFuNameMode so the next IpBufStashLoad
+	// captures the user FU's name; the FUType row sets IpBufPendingMakeFU so the
+	// next IpBufEmitStashed emits a MakeFU IP AND inserts a MnemoTable row for
+	// the new FU. After that, `<X>.<MK>` resolves through the standard
+	// MnemoTable.FindAnd path -- no fallback lookup MK needed.
+	bool       PendingFuNameMode = false;
+	std::string PendingFuName;
+	void*      LexFuPtr          = nullptr;
+	FU*        MnemoTableFu      = nullptr; // captured from Sender on PendingFuNameModeSet
+	// Operands accumulate into AleVals; operators into AleOps. When a new
+	// operator arrives at precedence <= the top of AleOps, the top is popped
+	// and applied to the top two operands. `(` pushes a paren sentinel onto
+	// AleOps that blocks popping; `)` pops down to (and through) the sentinel.
+	// AleEmit drains AleOps, leaving the final value on AleVals.
+	vector<long int> AleVals;
+	vector<int>      AleOps;   // 1=Add 2=Sub 3=Mul 4=Div 5=Mod 100=`(` sentinel
+	// At MakeFU emit, register the user FU in MnemoTable so a subsequent
+	// `<name>.<MK>` lookup goes through normal FindAnd. The row is built by
+	// borrowing the MkTable.Set IP from a built-in peer of the same FU type.
+	void addUserFuMnemoRow(const std::string& name, int type, long range);
 private:
 	void FUTypesIni();
 };

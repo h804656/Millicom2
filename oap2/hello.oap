@@ -1,0 +1,4 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+NewFU={Mnemo="C2" FUType=FUConsNew}
+Cons.OutLn="via Cons"
+C2.OutLn="via C2"

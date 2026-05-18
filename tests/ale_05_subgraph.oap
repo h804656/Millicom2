@@ -1,0 +1,11 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Subgraph `Atr={X=val ...}` declares variables visible to subsequent ALE.
+// Verifies the subgraph `{` path (MkCalc=0) does NOT open a sub-IC, and
+// the matching `}` falls through cleanly.
+Atr={X=10 Y=20 Z=12}
+Cons.OutLn="from subgraph"
+Cons.OutLn=X+Y+Z
+Atr={Big=100 Small=8}
+Cons.OutLn=Big-Small
+Cons.OutLn=Big/Small
+Cons.OutLn=X*Z

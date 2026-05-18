@@ -1,0 +1,14 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Sub-IC interleaved with subgraphs, mixed inner load types (S/I/D), and
+// edge nesting (subgraph inside sub-IC, sub-IC inside subgraph). Verifies
+// the MkCalc.NEQExec guard correctly distinguishes the two `{` paths and
+// that PendingSubICRef doesn't leak across them.
+Cons.OutLn={Cons.OutLn="pre"}
+Atr={V=99}
+Cons.OutLn=V
+Cons.OutLn={Cons.OutLn=42}
+Cons.OutLn={Cons.OutLn=3.14}
+Cons.OutLn={Cons.OutLn="str"}
+Cons.OutLn={Atr=99 Cons.OutLn="after-inner-atr"}
+Atr={Q=5 Cons.OutLn={Cons.OutLn="boxed-in-subgraph"}}
+Cons.OutLn=Q

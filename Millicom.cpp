@@ -60,6 +60,8 @@ int main(int argc, char* argv[])
 	indPath = argv[1];
 	string lexInput;
 	bool haveLexInput = false;
+	string outFile;
+	bool haveOutFile = false;
 
 	for (int i = 2; i < argc; i++)
 	{
@@ -81,6 +83,11 @@ int main(int argc, char* argv[])
 		{
 			lexInput = argv[++i];
 			haveLexInput = true;
+		}
+		else if (a == "--out-file" && i + 1 < argc)
+		{
+			outFile = argv[++i];
+			haveOutFile = true;
 		}
 		else if (a == "--help" || a == "-h")
 		{
@@ -131,7 +138,17 @@ int main(int argc, char* argv[])
 				"Did the index file load a compiler that creates a Lex FU?" << endl;
 			return 2;
 		}
+		// Lex.Lexing (case 100) already appends " \n" internally to flush
+		// any pending token, so we hand the input over unmodified.
 		Bus.ProgFU(lexGlobalMk + 100, { Cstring, &lexInput });
+	}
+
+	if (haveOutFile)
+	{
+		// After the Lex pass, dump the compiler's accumulated capsule buffer
+		// (Bus MKs 250..) to <path> as a .ind file. This is how CompileCC.oap
+		// emits its compiled output.
+		Bus.ProgFU(1253, { Cstring, &outFile });
 	}
 
 	return 0;

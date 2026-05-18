@@ -1,0 +1,17 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Constants, variables, and every single binary op (+ - * / %) plus a
+// string literal RHS. Covers single-operand RHS through IpBufEmitStashed
+// (type-preserving) as well as ALE-driven RHS through AleEmit.
+A=10
+B=20
+C=42
+D=6
+E=7
+Cons.OutLn="basic ops"
+Cons.OutLn=C
+Cons.OutLn=A
+Cons.OutLn=A+B
+Cons.OutLn=C-A
+Cons.OutLn=D*E
+Cons.OutLn=C/D
+Cons.OutLn=C%E

@@ -1,0 +1,5 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+NewFU={Mnemo="Alu" FUType=FUIntAluNew}
+Cons.InputMk=Alu.Set
+Cons.InputMk=Alu.Add
+Alu.OutMk=Cons.OutLn

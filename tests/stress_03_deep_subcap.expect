@@ -1,0 +1,7 @@
+pre
+post
+EqualAfter {
+Root }
+! must-not-fire-lvl1
+! must-not-fire-lvl2
+! must-not-fire-lvl3

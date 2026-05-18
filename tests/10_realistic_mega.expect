@@ -1,0 +1,18 @@
+VarIniWait Const
+ConstWait2 Const
+VectNext4 element added
+EqualAfter {
+MnemoAnalysis (
+AtrAtr Mk/Atr
+AtrBrack )
+EqVar Operator -> ALE
+ALE operand
+ALEAfter op
+EqualAfter (
+ALEAfter done -> Root
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+EqualAfter FU
+FUAfter2 .
+MkWait2 MkForFU

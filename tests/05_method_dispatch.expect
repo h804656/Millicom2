@@ -1,0 +1,10 @@
+Root FU/FUType
+FUAfter .
+MkWait MkForFU
+AtrBrack else->EqualWait
+EqVar else -> Root
+FUAfter2 .
+MkWait2 MkForFU
+LoadAfter else->Root
+VarIniWait Var
+EqualAfter Const/Var/Vect

@@ -1,0 +1,11 @@
+Root Mk/Atr
+EqualWait =
+EqualAfter {
+EqualAfter > <
+EqualAfter FU
+FUAfter2 .
+MkWait2 MkForFU
+LoadAfter else->Root
+EqualAfter Const/Var/Vect
+EqVar Operator -> ALE
+ALEAfter done -> Root

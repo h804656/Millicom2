@@ -99,14 +99,31 @@ if defined FAST (
   )
 )
 
-rem ---- 2. Run the input through the compiled .ind ----------------------------
+rem ---- 2. Compile the input through CompileCC.ind to a fresh .ind, showing
+rem        the parser trace, the emitted millicommands, and the runtime stdout.
+set "OUTIND=%TEMP%\millicom_%RANDOM%_%~n1.ind"
+if exist "%OUTIND%" del /q "%OUTIND%"
+
 if defined FAST (
-  echo [run] %INPUT%
+  echo [compile] %INPUT% -^> %OUTIND%
 ) else (
-  echo [2/2] Running %INPUT%
+  echo [2/2] Compiling %INPUT% -^> %OUTIND%
 )
+echo ---- parser trace ----
+rem CompileCC.oap's handlers print "Root Mnemo" / "ALEAfter op" / etc. as
+rem they see each token -- the live view of the new compiler at work.
+"%EXE%" "%IND%" --lex-file "%INPUT%" --out-file "%OUTIND%"
+set "CRC=!ERRORLEVEL!"
+if not exist "%OUTIND%" (
+  echo Error: compile produced no .ind ^(exit=!CRC!^).
+  exit /b !CRC!
+)
+echo ---- millicommands ----
+type "%OUTIND%"
+echo.
 echo ---- stdout ----
-"%EXE%" "%IND%" --lex-file "%INPUT%"
+"%EXE%" "%OUTIND%"
 set "RC=!ERRORLEVEL!"
 echo ---- end (exit=!RC!) ----
+del /q "%OUTIND%" 2>NUL
 exit /b !RC!

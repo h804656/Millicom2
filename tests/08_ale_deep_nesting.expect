@@ -1,0 +1,6 @@
+EqualAfter (
+ALE (
+ALE operand
+ALEAfter op
+ALEAfter )
+ALEAfter done -> Root

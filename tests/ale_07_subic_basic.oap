@@ -1,0 +1,11 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+// Basic sub-IC: `FU.MK={inner}` produces a parent IP whose F1 trailing
+// pointer (DInd-encoded as 4*N+0) references the sub-IC's first IP.
+// Covers single sub-IC, multiple sequential sub-ICs (state cleanup
+// between statements), sub-IC then regular call (and vice versa), and a
+// sub-IC with multiple inner IPs (doubly-linked sub-capsule).
+Cons.OutLn={Cons.OutLn="single"}
+Cons.OutLn="between"
+Cons.OutLn={Cons.OutLn="another"}
+Cons.OutLn="trail"
+Cons.OutLn={Cons.OutLn="A" Cons.OutLn="B" Cons.OutLn="C"}
