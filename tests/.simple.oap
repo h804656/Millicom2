@@ -1,3 +1,0 @@
-NewFU={Mnemo="Cons" FUType=FUConsNew}
-Cons.OutLn="hello"
-Cons.OutLn=10+5

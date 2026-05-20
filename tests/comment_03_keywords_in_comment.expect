@@ -1,0 +1,6 @@
+before
+after
+! ghost-1
+! ghost-2
+! string in comment
+! SHOULD NOT FIRE

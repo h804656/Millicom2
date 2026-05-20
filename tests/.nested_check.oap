@@ -1,5 +1,0 @@
-NewFU={Mnemo="Cons" FUType=FUConsNew}
-NewFU={Mnemo="L" FUType=FUListNew}
-NewFU={Mnemo="M" FUType=FUListNew}
-L.Set=>{Mnemo="A" Cons.OutLn="a1" M.LineCopyAdd={Mnemo="inner"} Cons.OutLn="a2"}
-Bus.IpBufWrite="C:/Users/hacker/Downloads/millicom/tests/.nested_emit.ind"

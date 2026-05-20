@@ -1,0 +1,17 @@
+# Each Atr-typed bootstrap name binds the var to its negative atr code.
+# Mk -> MkAtr (-24)
+-24
+# Const -> ConstAtr (-13)
+-13
+# ConstInt -> -10
+-10
+# ConstFloat -> -11
+-11
+# FUTypeList -> -23
+-23
+# MkList -> -21
+-21
+# Bare-name table with Mk=N row body fields now parses cleanly.
+table OK
+done
+End of program

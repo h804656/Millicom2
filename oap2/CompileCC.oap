@@ -1,12 +1,12 @@
 NewFU={Mnemo="Main_Bus" MkBegRange=1000 FUType=FUBusNew} // Описание Bus
 
-\\ To build the index file you must first launch the program !!!!
+// To build the index file you must first launch the program !!!!
  CapsManager.IndexVectCreate=20000
  CapsManager.IpIcIdOutMk=MainBus.IpIcIdSet
  CapsManager.IpIcIdOutMk=VariableManager.IpIcIdSet
  CapsManager.IpIcIdOutMk=ListSyntez.IpIcIdSet
  MainBus.ModeSet=1
-\\ -------------------------------------- \\
+// -------------------------------------- //
 MainBus.FUTypeCorrectSet=-96 // FU-type offset correction for built-in FU creation
 
 NewFU={Mnemo="Console" FUType=FUConsNew Hint="Консоль для вывода теста"}
@@ -51,9 +51,10 @@ NewFU={Mnemo="VectWait" FUType=FUListNew}
 NewFU={Mnemo="ConstWait" FUType=FUListNew}
 NewFU={Mnemo="ALE" FUType=FUListNew Hint="ALE: operand-expecting state"}
 NewFU={Mnemo="ALEAfter" FUType=FUListNew Hint="ALE: operator-expecting state"}
+NewFU={Mnemo="ListAfterClose" FUType=FUListNew Hint="После закрытия `}` строки списка: либо новый `>` (ещё строка), либо что угодно ещё (закрыть outer cap)"}
 NewFU={Mnemo="HLPL" FUType=FUListNew Hint="Высокоуровневый язык (внешний автомат)"}
 
-MainBus.PartialResetSet \\ remember the current FU count for partial reset
+MainBus.PartialResetSet // remember the current FU count for partial reset
 MainBus.ModeSet=2
 
 Sep*-4
@@ -89,7 +90,7 @@ Lex.UnicAtrSet=Mnemo
 Lex.UnicMkSet=MnemoTable.FindAnd
 Lex.StopProgSet={Str_Gen.Stop}
 
-CommonMkTable \\ generic FU Mks (Mks available on every FU)
+CommonMkTable // generic FU Mks (Mks available on every FU)
 	>{Mnemo="ContextOut" Mk=995 Hint="Вывод контекста на текущее ФУ"}
 	>{Mnemo="ContextOutMk" Mk=999 Hint="Вывод мнемоники с контекстом на текущее ФУ"}
 
@@ -105,16 +106,50 @@ CommonMkTable \\ generic FU Mks (Mks available on every FU)
 >{Mk=2   Mnemo="Out"               Hint="Write current line to Load"}
 >{Mk=3   Mnemo="OutMk"             Hint="Dispatch current line via Load MK"}
 >{Mk=5   Mnemo="MultiLineModeSet"  Hint="Toggle multi-line search mode"}
+>{Mk=7   Mnemo="MkModeSet"         Hint="On FindAnd/FindOr success run matched row body as a program"}
 >{Mk=8   Mnemo="EmptyProgExec"     Hint="Exec Load if list is empty"}
 >{Mk=9   Mnemo="FullExec"          Hint="Exec Load if list is non-empty"}
+>{Mk=12  Mnemo="SuccessProgSet"    Hint="Program to run on Find success"}
 >{Mk=17  Mnemo="FailProgSet"       Hint="Set program to run on Find failure"}
+>{Mk=23  Mnemo="SuccessExec"       Hint="Exec Load if last find succeeded"}
+>{Mk=24  Mnemo="FailExec"          Hint="Exec Load if last find failed"}
+>{Mk=151 Mnemo="LastPop"           Hint="Pop the last line"}
+>{Mk=156 Mnemo="LastPopMk"         Hint="Pop the last line, dispatch via Load MK"}
+>{Mk=157 Mnemo="LastDelMk"         Hint="Delete the last line"}
 >{Mk=160 Mnemo="LineAdd"           Hint="Append new line"}
 >{Mk=161 Mnemo="LineCopyAdd"       Hint="Copy-add new line"}
+>{Mk=170 Mnemo="LastAttach"        Hint="Attach IP to the last line's body"}
+>{Mk=174 Mnemo="LastLoadConstVarTypeSet" Hint="Mark last line load as Const/Var typed"}
+>{Mk=185 Mnemo="LastLoadSet"       Hint="Set Load of the last line"}
+>{Mk=186 Mnemo="LastLoadCopySet"   Hint="Set Load (copy) of the last line"}
+>{Mk=189 Mnemo="LastAtrSet"        Hint="Set atr of the last line"}
 >{Mk=192 Mnemo="LineCopyAddPrevSet" Hint="Set prev-line copy source"}
+>{Mk=210 Mnemo="LastAtrAttach"     Hint="Attach atr to last line as field"}
 >{Mk=220 Mnemo="FindOrLast"        Hint="OR-search, return last match"}
 >{Mk=222 Mnemo="FindAndLast"       Hint="AND-search, return last match"}
 >{Mk=228 Mnemo="FindOr"            Hint="OR-search across rows"}
 >{Mk=229 Mnemo="FindAnd"           Hint="AND-search across rows"}
+>{Mk=243 Mnemo="PushTied"          Hint="Push tied sub-list"}
+>{Mk=244 Mnemo="PushTiedCopy"      Hint="Push tied sub-list (copy)"}
+>{Mk=262 Mnemo="PopMkDel"          Hint="Pop, dispatch via Load MK, delete"}
+>{Mk=285 Mnemo="LastAtrOut"        Hint="Write last line's atr to Load"}
+>{Mk=286 Mnemo="LastAtrOutMk"      Hint="Dispatch last line's atr via Load MK"}
+>{Mk=425 Mnemo="LastIpPopMk"       Hint="Pop last IP, dispatch via Load MK"}
+
+\**\LexMkTable
+>{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}
+>{Mk=2   Mnemo="ReceiverPush"   Hint="Push current Receiver, set new from Load"}
+>{Mk=3   Mnemo="ReceiverPop"    Hint="Pop Receiver and dispatch MK"}
+>{Mk=5   Mnemo="ReceiverMkSet"  Hint="Set Receiver's dispatch MK"}
+>{Mk=10  Mnemo="ErrProgSet"     Hint="Set program for lex error"}
+>{Mk=13  Mnemo="StopProgSet"    Hint="Set program for Lex.Stop"}
+>{Mk=15  Mnemo="UnicAtrSet"     Hint="Set a unique-atr dispatch slot"}
+>{Mk=16  Mnemo="UnicMkSet"      Hint="Set the MK for the current unic-atr slot"}
+>{Mk=17  Mnemo="UnicFuSet"      Hint="Set the FU for the current unic-atr slot"}
+>{Mk=21  Mnemo="SepSet"         Hint="Register a Sep token literal"}
+>{Mk=22  Mnemo="SepErase"       Hint="Remove a Sep token literal"}
+>{Mk=70  Mnemo="SendToReceiver" Hint="Dispatch current LexBuf entry to Receiver"}
+>{Mk=100 Mnemo="Lexing"         Hint="Feed string into Lex for tokenization"}
 
 \**\IntAluMkTable
 >{Mk=1   Mnemo="Set"     Hint="Set accumulator"}
@@ -136,7 +171,11 @@ CommonMkTable \\ generic FU Mks (Mks available on every FU)
 >{Mk=5 Mnemo="ProgExec" Hint="Выполнить последовательность ФУ на шине"}
 >{Mk=10 Mnemo="FileOldProgExec" Hint="Выполнить последовательность ФУ из ранее сохранённого файла индекса"}
 >{Mk=20 Mnemo="NFUOut" Hint="Вывод количества ФУ, зарегистрированных на шине"}
->{Mk=20 Mnemo="NFUOutMk" Hint="Вывод ФУ с количеством МК, зарегистрированных на шине"}
+>{Mk=21 Mnemo="NFUOutMk" Hint="Вывод ФУ с количеством МК, зарегистрированных на шине"}
+>{Mk=25 Mnemo="LastFUNameSet" Hint="Set the name of the most-recently-created FU"}
+>{Mk=40 Mnemo="LastFUMkRangeOut" Hint="Write the most-recent FU's MK range to Load"}
+>{Mk=41 Mnemo="LastFUMkRangeOutMk" Hint="Dispatch the most-recent FU's MK range via Load MK"}
+>{Mk=155 Mnemo="FUTypeCorrectSet" Hint="Set FU type correction offset"}
 >{Mk=253 Mnemo="IpBufWrite"      Hint="Сериализовать буфер в .ind"}
 >{Mk=256 Mnemo="IpBufSetAtr"     Hint="Буферизовать atr для следующего IpBufEmit"}
 >{Mk=257 Mnemo="IpBufEmit"       Hint="Эмитировать ИП по буферизованному atr и Load"}
@@ -152,18 +191,7 @@ CommonMkTable \\ generic FU Mks (Mks available on every FU)
 >{Mk=286 Mnemo="PendingFuNameModeSet" Hint="Следующая stashed-строка станет именем user-FU"}
 
 
-MnemoTable.Set=
->{Mnemo="Atr"    Lex.SendToReceiver={Atr=Atr}}
->{Mnemo="Mnemo"  Lex.SendToReceiver={Atr=Mnemo}}
->{Mnemo="FUType" Lex.SendToReceiver={Atr=FUType}}
->{Mnemo="Hint"   Lex.SendToReceiver={Atr=Hint}}
->{Mnemo="pi"     ConstFloat=3.14159}
-
-\\ Unknown mnemo: just hand the lexeme back to Lex's current receiver.
-\\ Fresh names (var inits like `A=10`) are then treated as new identifiers
-\\ by the receiver state. User FUs are NOT looked up here -- they were
-\\ inserted into MnemoTable at their NewFU declaration so FindAnd finds
-\\ them on the regular path.
+// Unknown mnemo: just hand the lexeme back to lex's current receiver
 MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
 \**\MnemoTable.Set= //         mnemonic translation table
 //>{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=Console.OutLn}}
@@ -182,10 +210,7 @@ MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
 >{Mnemo="Name"  	 Lex.SendToReceiver={Atr=NameAtr}}
 >{Mnemo="FUType" 	 Lex.SendToReceiver={Atr=FUType} Main_Bus.IpBufPendingMakeFU=0}
 >{Mnemo="Hint"   	 Lex.SendToReceiver={Atr=Hint}}
-\\ FU type constants. Runtime parsing of `FUType=FUXxxNew` finds the
-\\ type-name entry here and sends Const=<C++ FUTypes index> to the receiver;
-\\ combined with the IpBufPendingMakeFU flag on the FUType row, the
-\\ subsequent stashed-emit becomes a `1001 I:<type>` MakeFU IP.
+>{Mnemo="MkBegRange"  Lex.SendToReceiver={Atr=MkBegRange}}
 >{Mnemo="FUBusNew"           Lex.SendToReceiver={Const=0}}
 >{Mnemo="FUConsNew"          Lex.SendToReceiver={Const=1}}
 >{Mnemo="FUStrGenNew"        Lex.SendToReceiver={Const=2}}
@@ -209,6 +234,7 @@ MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
 >{Mnemo="IntAluPeer" Hint="Шаблон для пользовательских IntAlu ФУ" MkTable.Set=IntAluMkTable! Lex.SendToReceiver={FU=7000}}
 >{Mnemo="ListPeer" Hint="Template row for user List FUs" MkTable.Set=ListMkTable! Lex.SendToReceiver={FU=4000}}
+>{Mnemo="LexPeer" Hint="Template row for user Lex FUs" MkTable.Set=LexMkTable! Lex.SendToReceiver={FU=6000}}
 
 CreateNewFU.MultiLineModeSet=1
 \**\CreateNewFU.Set=
@@ -230,10 +256,10 @@ CreateNewFU.MultiLineModeSet=1
 >{Mk Atr Lex.ReceiverMkSet=EqualWait.FindAnd
   OAList.LastAttach
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
-  \\ Propagate the atr code (e.g. -2 Mnemo, -6 LineAtr) into MkCalc so the
-  \\ shared emit path (which keys off MkCalc) writes IPs like `-2 S:"A"`
-  \\ for `Mnemo="A"`. Without this MkCalc carries stale FU.MK from prior
-  \\ statements (e.g. 46001 from `L.Set=`).
+  // Propagate the atr code (e.g. -2 Mnemo, -6 LineAtr) into MkCalc so the
+  // shared emit path (which keys off MkCalc) writes IPs like `-2 S:"A"`
+  // for `Mnemo="A"`. Without this MkCalc carries stale FU.MK from prior
+  // statements (e.g. 46001 from `L.Set=`).
   OAList.LastAtrOutMk=MkCalc.Set
   Console.OutLn="Root Mk/Atr"
 }
@@ -269,20 +295,8 @@ CreateNewFU.MultiLineModeSet=1
   Stack.FindAndLast={Sep="{"}
   Stack.FailExec={Lex.Stop Console.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
   Stack.LastDelMk
-  \\ `LHS=>{...}` single-row form: after popping the row body sub-cap and
-  \\ its `Sep="{"`, if ListOuterMark is on top it's the outer list-cap
-  \\ pushed by EqualAfter `> <`. Pop it, emit close, then pop `Sep=">"`.
-  \\ (Single-row only -- multi-row lists would need an explicit end marker.)
   Stack.FindAndLast={ListOuterMark}
-  Stack.SuccessExec={Stack.LastDelMk
-                     Main_Bus.IpBufSetAtr=-1001
-                     Main_Bus.IpBufEmit=0
-                     Stack.LastDelMk}
-  \\ If there's a MkExec marker (pushed by NewFU) now on top of Stack, fire
-  \\ its accumulated capsule. This lets each NewFU statement register its
-  \\ FU + mnemonic AS SOON AS the closing `}` is seen, so a subsequent
-  \\ statement can reference the user-declared FU by name -- not deferred
-  \\ to end of program.
+  Stack.SuccessExec={Lex.ReceiverMkSet=ListAfterClose.FindAnd}
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Main_Bus.MkExec}
   Console.OutLn="Root }"
@@ -291,11 +305,7 @@ CreateNewFU.MultiLineModeSet=1
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Main_Bus.MkExec}
 }
-\\ NB: Root's else is the catch-all for spurious tokens like an outer `)`
-\\ left over from a nested `Mnemo(Mnemo(Atr))` chain or a stray separator
-\\ that AtrAtr2 / MnemoLoad bounced back here. Print the diagnostic but do
-\\ NOT halt -- halting on these false-positives would lose every
-\\ subsequent statement in the input.
+>{Const Lex.ReceiverMkSet=Root.FindAnd}
 >{0 Console.OutLn="SYNTAX ERROR Root: unexpected token"
   FUListNew.ReceivedOutMk=Console.OutLn
 }
@@ -306,6 +316,7 @@ CreateNewFU.MultiLineModeSet=1
   Console.OutLn="MnemoAnalysis ="
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
+  Stack.LineCopyAdd={ListOuterMark}
   Console.OutLn="MnemoAnalysis > <"
 }
 >{Sep="#" Lex.ReceiverMkSet=ConstWait.FindAnd
@@ -344,6 +355,13 @@ CreateNewFU.MultiLineModeSet=1
   MnemoTable.LastLoadConstVarTypeSet=0
   MnemoTable.LastPopMk
   Console.OutLn="VarIniWait Const"
+}
+>{Atr Lex.ReceiverMkSet=Root.FindAnd
+  MnemoTable.LineCopyAddPrevLoadSet={Var}
+  FUListNew.ReceivedLoadOutMk=MnemoTable.LastLoadSet
+  MnemoTable.LastLoadConstVarTypeSet=0
+  MnemoTable.LastPopMk
+  Console.OutLn="VarIniWait Atr"
 }
 >{Var Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LastAttach
@@ -405,8 +423,8 @@ CreateNewFU.MultiLineModeSet=1
   FUListNew.ReceivedLoadOutMk=FUALUNew.Append
   Console.OutLn="VectNext4 element added"
 }
-\\ VectNext4 is only entered after ',' from VectWait or VectNext5, so anything
-\\ that is not a Const/Var here is a malformed vector (e.g. trailing comma).
+// VectNext4 is only entered after ',' from VectWait or VectNext5, so anything
+// that is not a Const/Var here is a malformed vector (e.g. trailing comma).
 >{0 Lex.Stop Console.OutLn="SYNTAX ERROR VectNext4: vector element (Const or Var) expected after ','"
   FUListNew.ReceivedOutMk=Console.OutLn
   ProgStopAll
@@ -414,10 +432,6 @@ CreateNewFU.MultiLineModeSet=1
 
 
 \**\VectNext5.Set=
-// Grammar-graph quirk: the Visio diagram loops VectNext5 ',' back to
-// VectWait, but VectWait only accepts ',' (not a Const), so the diagram-
-// literal path supports only 1-2 element vectors. We loop ',' back to
-// VectNext4 here so N-element vectors (V#1,2,3,4,5) work as users expect.
 >{Sep="," Lex.ReceiverMkSet=VectNext4.FindAnd
   Console.OutLn="VectNext5 ,"
 }
@@ -441,8 +455,6 @@ CreateNewFU.MultiLineModeSet=1
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
   Console.OutLn="AtrAtr Mk/Atr"
 }
-\\ Inside `Mnemo(...)` we MUST see a Mnemo/FU/FUType/Mk/Atr — anything else
-\\ (empty parens, a separator, a constant) is a malformed attribute chain.
 >{0 Lex.Stop Console.OutLn="SYNTAX ERROR AtrAtr: Mnemo, FU, Mk or Atr expected inside '('"
   FUListNew.ReceivedOutMk=Console.OutLn
   ProgStopAll
@@ -503,10 +515,6 @@ CreateNewFU.MultiLineModeSet=1
 
 
 \**\AtrBrack.Set=
-\\ AtrBrack is reached from FUAfter `(` (which pushes MkBrack on Stack so the
-\\ matching `)` here can pop it) AND from the AtrAtr `Mnemo(...)` path which
-\\ does NOT push anything. So `)` can legitimately leave nothing to pop —
-\\ checking Stack.FailExec here would false-positive on `Mnemo(Atr)`.
 >{Sep=")" Lex.ReceiverMkSet=Root.FindAnd
   Stack.FindAndLast={MkBrack}
   Stack.SuccessExec={Stack.PopMkDel}
@@ -523,10 +531,6 @@ CreateNewFU.MultiLineModeSet=1
   Console.OutLn="EqualWait ="
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
-  \\ When we leave the FU.MK chain WITHOUT `=` it's a zero-arg method call
-  \\ (e.g., Cons.Ln). MkCalc holds the resolved global MK; emit `<MkCalc>
-  \\ I:0`. C++ side skips emit when atr=0, so a bare Atr falls through
-  \\ silently.
   MkCalc.OutMk=Main_Bus.IpBufSetAtr
   Main_Bus.IpBufEmit=0
   MkCalc.Set=0
@@ -537,9 +541,6 @@ CreateNewFU.MultiLineModeSet=1
 
 \**\EqualAfter.Set=
 >{FU Lex.ReceiverMkSet=FUAfter2.FindAnd
-  \\ Stash LHS atr before MkCalc gets overwritten by the RHS FU range.
-  \\ LoadAfter else will use CapsPendingAtr+MkCalc-as-load to emit
-  \\ `<LHS_atr> I:<RHS_MK>` (and live-dispatch it).
   MkCalc.OutMk=Main_Bus.IpBufSetAtr
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
   Console.OutLn="EqualAfter FU"
@@ -555,22 +556,19 @@ CreateNewFU.MultiLineModeSet=1
 }
 >{Const Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
-  \\ Stash the Load (preserves type for string-RHS path) AND feed it to
-  \\ the ALE stack machine via AleApply. AleOp starts at SET so the first
-  \\ AleApply call just assigns; subsequent operators (set via AleOpSet
-  \\ in EqVar/ALEAfter Sep handlers) make AleApply combine.
   FUListNew.ReceivedLoadOutMk=Main_Bus.IpBufStashLoad
   FUListNew.ReceivedLoadOutMk=Main_Bus.AleApply
   Console.OutLn="EqualAfter Const/Var/Vect"
 }
+>{Atr Lex.ReceiverMkSet=EqVar.FindAnd
+  FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
+  FUListNew.ReceivedLoadOutMk=Main_Bus.IpBufStashLoad
+  FUListNew.ReceivedLoadOutMk=Main_Bus.AleApply
+  Console.OutLn="EqualAfter Atr"
+}
 >{Sep="{" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineCopyAddPrevLoadSet
-  \\ Structured load FU.MK= ... : emit parent IP with MkCalc as atr then a
-  \\ sentinel open-marker. The matching close brace emits a close-marker.
-  \\ IpBufWrite scans CapsIps for marker pairs and lays out sub-capsules.
-  \\ Push SubCapMark so the close side knows this was structured-load.
-  \\ Subgraph form Atr= ... has MkCalc=0 so we no-op.
   MkCalc.NEQExec={
     MkCalc.OutMk=Main_Bus.IpBufSetAtr
     Main_Bus.IpBufEmit=0
@@ -584,11 +582,6 @@ CreateNewFU.MultiLineModeSet=1
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTied
-  \\ `LHS.MK=>{...}` form: emit parent IP (LHS atr from MkCalc) + sub-cap
-  \\ open marker so the rows that follow live in a nested capsule. We
-  \\ tag this outer cap with ListOuterMark (not SubCapMark) so the row
-  \\ body's matching `}` doesn't prematurely close us; Root `}` looks for
-  \\ ListOuterMark specifically AFTER the inner body close.
   MkCalc.OutMk=Main_Bus.IpBufSetAtr
   Main_Bus.IpBufEmit=0
   Main_Bus.IpBufSetAtr=-1000
@@ -663,9 +656,6 @@ CreateNewFU.MultiLineModeSet=1
   Console.OutLn="EqVar Operator -> ALE"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
-  \\ Fires when RHS was a single operand (no ALE chain). Use
-  \\ IpBufEmitStashed to preserve original type (S/I/B/D), reset ALE
-  \\ state so the next statement starts fresh.
   MkCalc.OutMk=Main_Bus.IpBufSetAtr
   Main_Bus.IpBufEmitStashed=0
   Main_Bus.AleReset=0
@@ -708,9 +698,6 @@ CreateNewFU.MultiLineModeSet=1
   Console.OutLn="LoadAfter ="
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
-  \\ `LHS.MK=RHS.MK` form: CapsPendingAtr holds LHS atr (set by
-  \\ EqualAfter FU), MkCalc holds RHS MK. Stash MkCalc as Load and
-  \\ emit `<LHS_atr> I:<RHS_MK>` (also live-dispatches).
   MkCalc.OutMk=OAList.LastLoadSet
   MkCalc.OutMk=Main_Bus.IpBufStashLoad
   Main_Bus.IpBufEmitStashed=0
@@ -725,10 +712,6 @@ CreateNewFU.MultiLineModeSet=1
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineAdd
   OAList.LineCopyAddPrevSet
-  \\ Mark the row body as a sub-capsule for our IpBufWrite emission. Parent
-  \\ IP uses LineAtr (-6) to signal "this is a list row". The matching `}`
-  \\ in Root pops SubCapMark and emits the close marker. Live-dispatch in
-  \\ IpBufEmitStashed/AleEmit is suppressed while inside.
   Main_Bus.IpBufSetAtr=-6
   Main_Bus.IpBufEmit=0
   Main_Bus.IpBufSetAtr=-1000
@@ -753,6 +736,22 @@ CreateNewFU.MultiLineModeSet=1
 }
 
 
+\**\ListAfterClose.Set=
+>{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
+  // Another row -- delegate to ListAfter so the next `{` reopens a row body.
+  Console.OutLn="ListAfterClose >"
+}
+>{0 Lex.ReceiverMkSet=Root.FindAnd
+  Stack.FindAndLast={ListOuterMark}
+  Stack.SuccessExec={Stack.LastDelMk
+                     Main_Bus.IpBufSetAtr=-1001
+                     Main_Bus.IpBufEmit=0
+                     Stack.LastDelMk}
+  FUListNew.ReceivedOutMk=Lex.SendToReceiver
+  Console.OutLn="ListAfterClose else -> Root"
+}
+
+
 \**\ListAfterMnemo.Set=
 >{Sep="{" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep="{"}
@@ -761,7 +760,6 @@ CreateNewFU.MultiLineModeSet=1
   OAList.LineCopyAddPrevSet
   OAList.LastOutMk=MnemoTable.LastLoadSet
   MnemoTable.LastPopMk
-  \\ Row body is a sub-capsule (see ListAfter `{` for the rationale).
   Main_Bus.IpBufSetAtr=-6
   Main_Bus.IpBufEmit=0
   Main_Bus.IpBufSetAtr=-1000
@@ -775,13 +773,11 @@ CreateNewFU.MultiLineModeSet=1
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// ALE / ALEAfter: a two-state arithmetic-expression sub-automaton.
+// ALE
 
 \**\ALE.Set=
 >{Const Var Vect
   Lex.ReceiverMkSet=ALEAfter.FindAnd
-  \\ Dispatch operand to ALE stack machine. AleApply uses the pending AleOp
-  \\ set by the most recent ALEAfter operator row.
   FUListNew.ReceivedLoadOutMk=Main_Bus.AleApply
   Console.OutLn="ALE operand"
 }
@@ -845,7 +841,6 @@ CreateNewFU.MultiLineModeSet=1
                   ProgStopAll}
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
-  \\ ALE expression done. Emit `<MkCalc> I:<AleAcc>` via AleEmit.
   MkCalc.OutMk=Main_Bus.IpBufSetAtr
   Main_Bus.AleEmit=0
   MkCalc.Set=0

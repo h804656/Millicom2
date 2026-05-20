@@ -58,8 +58,11 @@ int main(int argc, char* argv[])
 	}
 
 	indPath = argv[1];
-	string lexInput;
-	bool haveLexInput = false;
+	// --lex-file and --lex may appear multiple times; each chunk is fed
+	// to Lex.Lexing in argv order. The self-host bootstrap relies on this:
+	// `--lex-file BootstrapCC.oap --lex-file CompileCC.oap` first
+	// populates MnemoTable with built-in atr names, then runs the rest.
+	vector<string> lexInputs;
 	string outFile;
 	bool haveOutFile = false;
 
@@ -76,13 +79,11 @@ int main(int argc, char* argv[])
 			}
 			stringstream ss;
 			ss << lf.rdbuf();
-			lexInput = ss.str();
-			haveLexInput = true;
+			lexInputs.push_back(ss.str());
 		}
 		else if (a == "--lex" && i + 1 < argc)
 		{
-			lexInput = argv[++i];
-			haveLexInput = true;
+			lexInputs.push_back(argv[++i]);
 		}
 		else if (a == "--out-file" && i + 1 < argc)
 		{
@@ -120,7 +121,15 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
-	if (haveLexInput)
+	// After the .ind bootstraps the compiler, inject mnemo rows for the
+	// bootstrap List FUs (Stack, MnemoTable) so user OAP code can address
+	// them by name. Delphi's compile of CompileCC.oap can't carry these
+	// rows directly because it can't tolerate two `MkTable.Set=X!` lines
+	// referencing the same table; doing it from C++ at load time bypasses
+	// that constraint.
+	Bus.InjectBuiltinMnemos();
+
+	if (!lexInputs.empty())
 	{
 		// Find the Lex FU (FUtype == 3) and call its Lexing MK (=100) on the supplied text.
 		long int lexGlobalMk = -1;
@@ -138,9 +147,12 @@ int main(int argc, char* argv[])
 				"Did the index file load a compiler that creates a Lex FU?" << endl;
 			return 2;
 		}
-		// Lex.Lexing (case 100) already appends " \n" internally to flush
-		// any pending token, so we hand the input over unmodified.
-		Bus.ProgFU(lexGlobalMk + 100, { Cstring, &lexInput });
+		// Feed each chunk in argv order. Lex.Lexing (case 100) appends " \n"
+		// internally to flush any pending token between chunks.
+		for (auto& chunk : lexInputs)
+		{
+			Bus.ProgFU(lexGlobalMk + 100, { Cstring, &chunk });
+		}
 	}
 
 	if (haveOutFile)

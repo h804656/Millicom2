@@ -1,0 +1,5 @@
+# Live compile-time output (Cons.OutLn fires at compile-pass time).
+cons one
+cons two
+cons one again
+End of program

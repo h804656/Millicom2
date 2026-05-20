@@ -1,4 +1,0 @@
-NewFU={Mnemo="Cons" FUType=FUConsNew}
-NewFU={Mnemo="L" FUType=FUListNew}
-L.LineCopyAdd={Mnemo="Hello"}
-Cons.OutLn="probe ok"

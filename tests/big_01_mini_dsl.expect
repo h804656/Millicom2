@@ -1,0 +1,9 @@
+-- dsl boot --
+hello-handler-1
+hello-handler-2
+status-line-A
+status-line-B
+status-line-C
+v1.0.0
+goodbye-handler
+-- dsl done --

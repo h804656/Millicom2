@@ -1,6 +1,0 @@
-NewFU={Mnemo="Cons" FUType=FUConsNew}
-NewFU={Mnemo="L" FUType=FUListNew}
-L.Set=>{Mnemo="A" Cons.OutLn="row-fired-1" Cons.OutLn="row-fired-2"}
-Cons.OutLn="before-find"
-L.FindAnd="A"
-Cons.OutLn="after-find"

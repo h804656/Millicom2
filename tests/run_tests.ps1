@@ -54,25 +54,43 @@ foreach ($lexFile in $testFiles) {
         continue
     }
 
-    # The C++ Lex emits `//` line comments as string tokens (the Delphi original
-    # drops them). Until that's fixed, strip comments out of the .lex file before
-    # feeding it through. Strip anything from a `//` to end-of-line on each line
-    # that's not inside a string literal -- crude, but enough for fixtures.
+    # `//` line comments are now handled in CompileCC.oap (Root has a Const
+    # swallow row that absorbs the StrAtr emitted by Lex state 11/12). Feed
+    # the .lex file through unchanged so the compiler exercises its own
+    # comment-handling path -- and so `//` inside string literals (which
+    # the runner's old regex would have mangled) survives intact.
     $stripped = "tests\.last_input.lex"
     $raw = Get-Content $lexFile.FullName -Raw
-    # Strip `//` line comments (C++ Lex still emits them as StrAtr tokens).
-    # Newlines, tabs and CRs are real whitespace in Lex.cpp now, so we feed
-    # the file's original layout straight through.
-    $clean = ($raw -replace '(?m)//.*$', '').Trim()
-    Set-Content -Path $stripped -Value $clean -NoNewline -Encoding ASCII
+    Set-Content -Path $stripped -Value $raw.Trim() -NoNewline -Encoding ASCII
 
     # Optional `<name>.stdin` file is piped to the executable's stdin so
     # tests can exercise Cons.Input / Cons.InputMk paths (runtime values
     # that the compile-time ALE can't fold away).
     $stdinFile = Join-Path $lexFile.DirectoryName "$name.stdin"
+    # Every test gets BootstrapCC.oap preloaded as `--lex-file` first so it
+    # exercises the same bootstrap path the eventual self-host flow will use
+    # (NewFU declarations for MnemoTable/Lex, atr-name MnemoTable.LineAdd
+    # rows). A `<name>.no-bootstrap` marker file opts a test out.
+    # An optional `<name>.bootstrap` adds EXTRA --lex-file paths after the
+    # default bootstrap, before the test's own `.lex`.
+    $argList = @($Ind)
+    $skipBootstrap = Test-Path (Join-Path $lexFile.DirectoryName "$name.no-bootstrap")
+    if (-not $skipBootstrap) {
+        $argList += "--lex-file"
+        $argList += "oap2\BootstrapCC.oap"
+    }
+    $bootstrapFile = Join-Path $lexFile.DirectoryName "$name.bootstrap"
+    if (Test-Path $bootstrapFile) {
+        foreach ($p in (Get-Content $bootstrapFile | Where-Object { $_.Trim() -ne "" -and -not $_.Trim().StartsWith("#") })) {
+            $argList += "--lex-file"
+            $argList += $p.Trim()
+        }
+    }
+    $argList += "--lex-file"
+    $argList += $stripped
     $procArgs = @{
         FilePath = $Exe
-        ArgumentList = @($Ind, "--lex-file", $stripped)
+        ArgumentList = $argList
         NoNewWindow = $true
         PassThru = $true
         RedirectStandardOutput = "tests\.last_stdout.txt"

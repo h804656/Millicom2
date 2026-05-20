@@ -1,0 +1,7 @@
+-- run --
+state-open
+state-move
+state-move
+state-close
+4
+-- end --

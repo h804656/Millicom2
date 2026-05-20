@@ -73,11 +73,16 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				FUs.back()->FUName = Load.toStr();
 			break;
 		case 40: // LastFUMkRangeOut ������ ������ ��-��������� ���������� ��
-			Load.Write(FUMkRange*(FUs.size() - 1));
+			// Use the FU's own FUMkGlobalAdr so MkBegRange overrides are
+			// reflected, falling back to the computed default when no
+			// FUs are registered (FUMkGlobalAdr defaults to 0).
+			Load.Write(FUs.size() > 1 ? FUs.back()->FUMkGlobalAdr
+			                          : FUMkRange * (FUs.size() - 1));
 			break;
-		case 41: // LastFUMkRangeOutMk ������ �� � ������� ��-��������� ���������� �� 
+		case 41: // LastFUMkRangeOutMk ������ �� � ������� ��-��������� ���������� ��
 			{
-				long int t = FUMkRange * (FUs.size() - 1);
+				long int t = FUs.size() > 1 ? FUs.back()->FUMkGlobalAdr
+				                            : FUMkRange * (FUs.size() - 1);
 				MkExec(Load, { Cint, &t });
 			}
 			break;
@@ -280,11 +285,134 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			// so skip the emit. CompileCC.oap zeroes MkCalc at end-of-statement
 			// so this naturally drops non-FU statements.
 			if (CapsPendingAtr == 0) break;
-			// Track sub-capsule nesting via the open/close sentinel markers so
-			// the live-dispatch paths can suppress execution of row-body IPs.
-			if (CapsPendingAtr == SubCapCloseAtr && SubCapDepth > 0) SubCapDepth--;
+			// Set to true by the NewFU rewrite path so we skip the close-marker
+			// write at the bottom of this case (we already rewrote the parent
+			// IP and dropped the body, so the close marker isn't needed).
+			bool skipEmit = false;
+			// Sub-capsule close: pop the IC built up while we were inside,
+			// then dispatch (or nest) the parent IP that opened it. Do this
+			// BEFORE emitting the close marker / decrementing SubCapDepth so
+			// the live-dispatch happens at the right outer depth.
+			if (CapsPendingAtr == SubCapCloseAtr) {
+				if (!IcStack.empty() && !ParentAtrStack.empty()) {
+					vector<ip>* innerIc = IcStack.back();
+					IcStack.pop_back();
+					long int parentAtr = ParentAtrStack.back();
+					ParentAtrStack.pop_back();
+					size_t parentCapsIdx = CapsIpsParentIdxStack.empty()
+						? (size_t)-1
+						: CapsIpsParentIdxStack.back();
+					if (!CapsIpsParentIdxStack.empty()) CapsIpsParentIdxStack.pop_back();
+					LoadPoint icLoad = { TIC, innerIc };
+					if (IcStack.empty()) {
+						// Back to top level. If this close finishes a
+						// `NewFU={...}` body (PendingMakeFU was set by the
+						// FUType= field), do the actual MakeFU + MnemoTable
+						// registration now -- the FU has to exist before
+						// the parent IP (CreateNewFU.FindOr) dispatches,
+						// since any post-NewFU user code expects to address
+						// the new FU by name.
+						bool didMakeFU = false;
+						if (PendingMakeFU) {
+							long int fuType = PendingMakeFUType;
+							LoadPoint typeLp = { Cint, &fuType };
+							ProgFU(1, typeLp, Sender);
+							// Honor MkBegRange if present in the body IC. The
+							// inner-MnemoTable's MkBegRange row dispatches
+							// Atr=MkBegRange, where MkBegRange is the Delphi
+							// built-in atr code -20 (verified empirically by
+							// dumping a `NewFU={... MkBegRange=N ...}` IC).
+							long int mkBegRange = 0;
+							if (innerIc) {
+								for (auto& ipEntry : *innerIc) {
+									if (ipEntry.atr == -20) {
+										mkBegRange = ipEntry.Load.toInt();
+										break;
+									}
+								}
+							}
+							long int realRange =
+								mkBegRange > 0
+									? mkBegRange
+									: (long)(FUs.size() - 1) * FUMkRange;
+							if (mkBegRange > 0)
+								FUs.back()->FUMkGlobalAdr = mkBegRange;
+							if (!PendingFuName.empty()) {
+								addUserFuMnemoRow(PendingFuName, (int)fuType, realRange);
+								PendingFuName.clear();
+							}
+							// Record the compile-time → reload-time MK range
+							// mapping for this user FU so subsequent emits get
+							// rebased at serialization time.
+							UserFuRanges.push_back({ realRange, NextReloadFuIdx * FUMkRange });
+							NextReloadFuIdx++;
+							PendingMakeFU     = false;
+							PendingMakeFUType = 0;
+							didMakeFU         = true;
+						}
+						// Only live-dispatch when the parent is a positive
+						// FU.MK atr (negative atrs like -6 are pure markers).
+						// Skip the dispatch if we just handled this as a
+						// NewFU body -- CreateNewFU.FindOr's FUType row body
+						// would otherwise fire MainBus.Create and double-
+						// create the FU at an unwanted index.
+						if (parentAtr > 0 && !didMakeFU) {
+							ProgFU(parentAtr, icLoad, Sender);
+						}
+						else {
+							delete innerIc;
+						}
+						// NewFU rewrite: replace the parent IP's CapsIps entry
+						// (atr=CreateNewFU.FindOr, I:0 + sub-cap pointer) with
+						// a synthetic `1001 I:<fuType>` Bus.MakeFU IP, and drop
+						// the open marker + body field IPs we accumulated for
+						// this sub-cap. CompileCC.oap:226-228 documents this
+						// as the intended emit shape for NewFU. Without it the
+						// produced .ind only replays when the full CompileCC
+						// compiler is also loaded.
+						if (didMakeFU
+							&& parentCapsIdx != (size_t)-1
+							&& parentCapsIdx < CapsIps.size())
+						{
+							long int fuType = PendingMakeFUType;
+							// PendingMakeFUType was just zeroed; recover the
+							// value from the load that ran ProgFU above.
+							// Simpler: pull it back from the inner IC's -22
+							// FUType entry. innerIc has been deleted, so we
+							// instead recover from the CapsIps entries we are
+							// about to truncate. Find the most recent "-22 I:"
+							// line in [parentCapsIdx+1 .. end).
+							for (size_t k = CapsIps.size(); k-- > parentCapsIdx + 1; ) {
+								const std::string& s = CapsIps[k];
+								if (s.compare(0, 6, "-22 I:") == 0) {
+									fuType = std::strtol(s.c_str() + 6, nullptr, 10);
+									break;
+								}
+							}
+							std::ostringstream rew;
+							rew << 1001 << " I:" << fuType;
+							CapsIps[parentCapsIdx] = rew.str();
+							// Drop everything after the parent IP (open marker,
+							// body field IPs). The close marker hasn't been
+							// pushed yet -- skip emitting it below.
+							CapsIps.resize(parentCapsIdx + 1);
+							// Tell the post-block emit path to skip the close
+							// marker push (its body has been folded into the
+							// rewritten parent IP above).
+							skipEmit = true;
+						}
+					}
+					else {
+						// Still nested: the parent IP becomes a normal entry
+						// in the outer IC with Load pointing at innerIc.
+						IcStack.back()->push_back({ parentAtr, TIC, innerIc });
+					}
+				}
+				if (SubCapDepth > 0) SubCapDepth--;
+			}
+			if (skipEmit) break;
 			ostringstream os;
-			os << CapsPendingAtr << " ";
+			os << rebaseAtr(CapsPendingAtr) << " ";
 			unsigned int dt = Load.Type >> 1;
 			if (dt == Dstring || dt == Dchar) {
 				os << "S:" << Load.toStr() << "\"";
@@ -300,7 +428,24 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				os << "I:" << Load.toInt();
 			}
 			CapsIps.push_back(os.str());
-			if (CapsPendingAtr == SubCapOpenAtr) SubCapDepth++;
+			if (CapsPendingAtr == SubCapOpenAtr) {
+				// Open a fresh IC for the body; the most recent non-marker
+				// IpBufEmit atr is this sub-cap's parent.
+				SubCapDepth++;
+				ParentAtrStack.push_back(PendingParentAtr);
+				IcStack.push_back(new vector<ip>());
+				// Track the parent IP's CapsIps index so SubCapClose can
+				// rewrite it into `1001 I:<fuType>` when this turns out to
+				// be a NewFU body. CapsIps just got the open-marker push;
+				// the parent IP is the entry immediately before that.
+				CapsIpsParentIdxStack.push_back(CapsIps.size() >= 2 ? CapsIps.size() - 2 : 0);
+				PendingParentAtr = 0;
+			}
+			else if (CapsPendingAtr != SubCapCloseAtr) {
+				// Regular non-marker IpBufEmit -- this IP is a candidate
+				// parent for a sub-cap that may open on the next call.
+				PendingParentAtr = CapsPendingAtr;
+			}
 			break;
 		}
 		case 258: // CapsStashLoad -- save Load (with type) for the next stashed emit
@@ -318,28 +463,33 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		case 259: // CapsEmitStashed -- emit using the saved CapsStashLoad value
 		{
 			if (IpBufPendingMakeFU) {
-				// FUType= path inside a NewFU block: emit a MakeFU IP using the
-				// stashed Load's integer value, regardless of CapsPendingAtr.
-				ostringstream os;
-				os << (FUMkRange + 1) << " I:" << CapsStashLoad.toInt();
-				CapsIps.push_back(os.str());
-				IpBufPendingMakeFU = false;
-				// LIVE: actually create the FU on the bus so subsequent user
-				// `<name>.<MK>=value` parses dispatch into a real backing FU.
-				long fuType = CapsStashLoad.toInt();
-				LoadPoint typeLp = { Cint, &fuType };
-				ProgFU(1, typeLp, Sender); // recursive MakeFU
-				long realRange = (long)(FUs.size() - 1) * FUMkRange;
-				// Register MnemoTable row with the REAL runtime FU range.
-				if (!PendingFuName.empty()) {
-					addUserFuMnemoRow(PendingFuName, (int)fuType, realRange);
-					PendingFuName.clear();
+				// FUType= field inside `NewFU={...}`: stash the type code so
+				// the deferred MakeFU at the NewFU close can create the FU
+				// and register its MnemoTable row. The body IP itself is
+				// emitted via the normal path (atr=FUType, Load=type), so
+				// the .ind output looks like a Delphi-compiled NewFU body
+				// instead of carrying a synthetic `1001 I:<type>` MakeFU IP.
+				//
+				// Depth guard: CompileCC.oap's FUType MnemoTable row fires
+				// IpBufPendingMakeFU=0 as a side effect EVERY time "FUType"
+				// is looked up by name -- including when it appears as a
+				// value RHS inside an unrelated row body (e.g. the
+				// MnemoTable.Set= multi-row that rebuilds its own FUType
+				// row). Only honor the flag when we're directly inside a
+				// NewFU={...} body (SubCapDepth == 1); deeper depth means
+				// nested context and the flag is spurious. Without this
+				// guard the deferred MakeFU at the unrelated row's close
+				// runs with garbage state and crashes.
+				if (SubCapDepth == 1) {
+					PendingMakeFU     = true;
+					PendingMakeFUType = CapsStashLoad.toInt();
 				}
-				break;
+				IpBufPendingMakeFU = false;
+				// fall through to the regular emit below
 			}
 			if (CapsPendingAtr == 0) break;
 			ostringstream os;
-			os << CapsPendingAtr << " ";
+			os << rebaseAtr(CapsPendingAtr) << " ";
 			unsigned int dt = CapsStashLoad.Type >> 1;
 			if (dt == Dstring || dt == Dchar) {
 				os << "S:" << CapsStashLoad.toStr() << "\"";
@@ -354,12 +504,16 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				os << "I:" << CapsStashLoad.toInt();
 			}
 			CapsIps.push_back(os.str());
-			// LIVE: dispatch the IP so the program executes as it's compiled.
-			// Suppressed inside `>{...}` / `={...}` row bodies (SubCapDepth>0)
-			// since those IPs belong to the row and should only fire when the
-			// row is matched at runtime.
-			if (SubCapDepth == 0)
+			// Inside a sub-cap body: push the IP into the in-construction IC
+			// so the parent can dispatch with real content at its close.
+			// Top-level (depth 0): live-dispatch so e.g. `Cons.OutLn="x"`
+			// prints at parse-time.
+			if (SubCapDepth > 0 && !IcStack.empty()) {
+				IcStack.back()->push_back({ CapsPendingAtr, CapsStashLoad.Type, CapsStashLoad.Point });
+			}
+			else {
 				ProgFU(CapsPendingAtr, CapsStashLoad, Sender);
+			}
 			break;
 		}
 		// ALE compile-time shunting-yard evaluator.
@@ -462,11 +616,15 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				MkExec(Load, { Cint, &result });
 			} else {
 				ostringstream os;
-				os << CapsPendingAtr << " I:" << result;
+				os << rebaseAtr(CapsPendingAtr) << " I:" << result;
 				CapsIps.push_back(os.str());
-				// LIVE: dispatch the result so e.g. `Cons.OutLn=A+B` prints.
-				// Suppressed inside row-body sub-capsules (see SubCapDepth note).
-				if (SubCapDepth == 0) {
+				// Inside a row-body sub-cap: push to the IC so the parent's
+				// close-time dispatch sees the computed value. Top level:
+				// live-dispatch as `Cons.OutLn=A+B` -> prints the result.
+				if (SubCapDepth > 0 && !IcStack.empty()) {
+					IcStack.back()->push_back({ CapsPendingAtr, Cint, new long int(result) });
+				}
+				else {
 					LoadPoint resultLp = { Cint, &result };
 					ProgFU(CapsPendingAtr, resultLp, Sender);
 				}
@@ -575,6 +733,59 @@ void BusFU::addUserFuMnemoRow(const std::string& name, int type, long range)
 FU* BusFU::Copy() // ��������� ����������� ��
 {
 	return new BusFU(Bus, this);
+}
+
+// SHIM: programmatic mnemo injection for built-in FUs (MnemoTable, Lex).
+//
+// Why this isn't done in CompileCC.oap:
+//   The Delphi bootstrap compiler (E:\miemp\Millicom\Millicom\) silently
+//   truncates the produced .ind file when CompileCC.oap contains more
+//   than ~5 `MkTable.Set=Y!` forward-reference rows TOTAL across the
+//   whole source -- not per-table, not per-target -- regardless of
+//   whether the references resolve to the same or different targets.
+//   The peer rows we already emit (Bus, Cons, IntAluPeer, ListPeer,
+//   LexPeer) sit right at that limit. Adding rows to expose MnemoTable
+//   and Lex by name pushes past it and the resulting .ind is unusable.
+//
+// What we tried and rejected:
+//   Restructuring the registry to CompileNew6-style hierarchical
+//   MkList + MkListFind (one parent table, child rows looked up
+//   dynamically) is the right long-term shape and on paper fits under
+//   the quota. Empirically Delphi truncated on that variant too -- the
+//   references needed to wire the lookup itself put us back over the
+//   same limit.
+//
+// Conclusion: this is a known shim until we self-host and drop Delphi.
+// Once the C++ executor compiles CompileCC.oap end-to-end, redo this
+// as hierarchical MkList + MkListFind in pure OAP and delete this
+// function (plus its call site in Millicom.cpp).
+void BusFU::InjectBuiltinMnemos()
+{
+	// CompileCC.oap declares Stack first then MnemoTable (both FUListNew),
+	// so MnemoTable is the SECOND FUtype=5 instance. MnemoTableFu must be
+	// set before any addUserFuMnemoRow call -- that's where rows append.
+	int mnemoIdx = -1;
+	int listCount = 0;
+	for (size_t i = 2; i < FUs.size(); i++) {
+		if (FUs[i] && FUs[i]->GetFuType() == 5) {
+			listCount++;
+			if (listCount == 2) { mnemoIdx = (int)i; break; }
+		}
+	}
+	if (mnemoIdx < 0) return;
+	MnemoTableFu = FUs[mnemoIdx];
+
+	addUserFuMnemoRow("MnemoTable", 5, (long)mnemoIdx * FUMkRange);
+	// Expose the bootstrap Lex (FUtype=3) so user code can reach
+	// Lex.UnicAtrSet / UnicMkSet / SendToReceiver / etc. by name. Same
+	// path as MnemoTable: addUserFuMnemoRow peer-matches against the
+	// LexPeer row CompileCC.oap declares with MkTable.Set=LexMkTable.
+	for (size_t i = 2; i < FUs.size(); i++) {
+		if (FUs[i] && FUs[i]->GetFuType() == 3) {
+			addUserFuMnemoRow("Lex", 3, (long)i * FUMkRange);
+			break;
+		}
+	}
 }
 
 FU* BusFU::TypeCopy() // ������� �� ������ �� ���� (�� ������� ��������

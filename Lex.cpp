@@ -382,6 +382,17 @@
 				// ��������� ���������
 				case 0:
 				{
+					// CompileCC.oap-style block prefix `\**\Name.Set=` -- skip
+					// the 4-char `\**\` and let the remainder lex as a normal
+					// `Name.Set=`. Behind StarStarSlashStripMode so this can
+					// be turned off later.
+					if (StarStarSlashStripMode
+					    && *i == '\\'
+					    && (i + 3) < str.end()
+					    && *(i + 1) == '*' && *(i + 2) == '*' && *(i + 3) == '\\') {
+						i += 3; // for-loop's i++ consumes the 4th char
+						break;
+					}
 					// ����� �� ���������
 					// ���� �������, �� ��������� ���������� ������� � LexAccum � ��������� �� ��������� ��� ��������� �������
 				/*
@@ -564,7 +575,8 @@
 				case 3:
 					if (Seps.count(str.substr(distance(str.begin(), i), 1)) || (*i == ' ' || *i == '\n' || *i == '\t' || *i == '\r')) //�����������; 3 -> 0
 					{
-						i--; // ��� ��������� ����������
+						bool stripBang = MnemoRefBangStripMode && *i == '!';
+						if (!stripBang) i--; // ��� ��������� ����������
 						if (find(TrueConst.begin(), TrueConst.end(), LexAccum) != TrueConst.end())
 						{
 							bool* t = new bool(true);
@@ -843,44 +855,34 @@
 					break;
 				//��������� ��������� �����������
 				case 11:
-					if (*i != '\n') //����� ������ ����� (\n); 11 -> 11
-					{
-						LexAccum += *i;  //���������� ������� � �������� ����������
-						//Debug(*i, S, LexAccum); // --- �������
-						break;
-					}
-					if (*i == '\n') //������ (\n); 11 -> 12
-					{
-						LexAccum += *i; //���������� ������� � �������� ����������
-						// TO DO tabCounter = 0 (���������� ��������������� ��������)
-						S = 12; //������� � ��������� 12
-						//Debug(*i, S, LexAccum); // --- �������
-						break;
-					}
-					Work = false; //��������� ����� �������� ������ ������� �� false
-					ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
+					// `//` line comment. Original code accumulated chars and
+					// transitioned to state 12 on `\n`; state 12 then emitted
+					// the comment text as a StrAtr at the next non-newline,
+					// which surfaces as a phantom RHS value at EqualAfter /
+					// VarIniWait / etc. (only Root could absorb it cleanly).
+					// We now consume the comment SILENTLY: ignore every char
+					// up to `\n` exclusive, then clear LexAccum so the
+					// trailing `\n` falls into state 0's normal newline path
+					// without carrying a stale token.
+					if (*i != '\n') break; // discard comment char
+					LexAccum = "";         // no stale accumulator for state 0
+					i--;                   // re-feed the `\n` to state 0
+					S = 0;
 					break;
 				//��������� ���������
 				case 12:
 					if (*i != '\n')//����� ������ ����� (\n); 12 -> 0
 					{
-						/*
-						TO DO
-						If (bracketAmount > 0)
-						������ ��������� �� ���-�� { ������ bracketAmount
-
-						If (bracketAmount < 0)
-						������ ��������� �� ���-�� } ������ bracketAmount
-						*/
+						// Original code emitted a StrAtr token here carrying
+						// whatever was in LexAccum (often stale Mnemo content
+						// or "// comment" text from state 11), which surfaces
+						// as a phantom token at every newline-to-content
+						// boundary. The grammar has to special-case-swallow
+						// it everywhere it appears. Skip the emit and just
+						// transition back to state 0 -- newlines are pure
+						// whitespace from the parser's perspective.
 						i--; // ��� ��������� ����������
-						string* st3 = new string;
-						*st3 = LexAccum; //������ ������� � ����������
-						ib = (ib + 1) % SizeBuf; //���������� �������� ������ ������ �������� ������ �� 1
-						LexBuf[ib].Load.Clear(); //�������� �������� ��
-						LexBuf[ib] = { StrAtr, Cstring, st3 }; //���������� ������� � ����� �������� ������ � ���� �� {�������, ���, ���������}
-						LexOut();
-						S = 0; //������� � ��������� 0
-					//	Debug(*i, S, LexAccum); // --- �������
+						S = 0;
 						break;
 					}
 					if (*i == '\n') //������ (\n); 12 -> 12
@@ -1114,19 +1116,10 @@
 		}
 		if (Work)
 		{
-			// Flush a pending newline-state token (case 12 only emits on a
-			// non-newline char, so a trailing \n was never dispatched).
-			if (S == 12)
-			{
-				string* st = new string(LexAccum);
-				ib = (ib + 1) % SizeBuf;
-				LexBuf[ib].Load.Clear();
-				LexBuf[ib] = { StrAtr, Cstring, st };
-				LexOut();
-				S = 0;
-			}
-			// Empty separator at end-of-input so the parser dispatches its
-			// `else` (or Sep="") transition and flushes any final emit.
+			// State 12 no longer emits StrAtr -- newlines are pure whitespace
+			// to the parser now -- so the old EOF flush of LexAccum is gone.
+			// Just send the final empty separator so the parser dispatches
+			// its `else` / Sep="" transition and flushes any pending emit.
 			ib = (ib + 1) % SizeBuf;
 			LexBuf[ib].Load.Clear();
 			LexBuf[ib] = { SeperatAtr, Cstring, new string("") };

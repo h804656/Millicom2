@@ -1,0 +1,18 @@
+# `before` lives at top-level -- prints live.
+before
+# First `>` after the bare name SomeTable engages MnemoAnalysis `>`.
+MnemoAnalysis > <
+# Each row's close `}` routes Root to ListAfterClose, which matches `>`
+# for "another row" -- the multi-row continuation we fixed.
+ListAfterClose >
+ListAfterClose >
+# After the last row's `}`, the next non-`>` token routes the else.
+ListAfterClose else -> Root
+# `after` lives at top-level again -- prints live.
+after
+End of program
+# Row body Cons.OutLn calls do NOT print live: they're inside the
+# sub-cap that ListAfter `{` opened, so they queue as IPs in IcStack.
+! row a
+! row b
+! row c

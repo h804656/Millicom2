@@ -1,6 +1,0 @@
-NewFU={Mnemo="Cons" FUType=FUConsNew}
-NewFU={Mnemo="L" FUType=FUListNew}
-L.Set=
->{Mnemo="A" Cons.OutLn="row-a-line1" Cons.OutLn="row-a-line2"}
->{Mnemo="B" Cons.OutLn="row-b-only"}
-Cons.OutLn="setup done"

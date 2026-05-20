@@ -1,0 +1,16 @@
+# Each `MyVar=AtrConstant` fires the new VarIniWait Atr row.
+VarIniWait Atr
+# LoadVar=MagicCode -> MagicCode*-321
+-321
+VarIniWait Atr
+# M=Mnemo -> Mnemo's atr value -2
+-2
+VarIniWait Atr
+VarIniWait Atr
+VarIniWait Atr
+# A,B,C all bound to Mnemo (-2)
+-2
+-2
+-2
+done
+End of program

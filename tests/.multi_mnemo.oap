@@ -1,4 +1,0 @@
-NewFU={Mnemo="Cons" FUType=FUConsNew}
-MnemoTable.Set=
->{Mnemo="Greet" Cons.OutLn="hello" Cons.OutLn="world"}
-Greet

@@ -1,0 +1,9 @@
+# Cons.OutLn=Mnemo -> Mnemo's atr value is -2
+-2
+# Cons.OutLn=MyAtr -> MyAtr*-77
+-77
+# Cons.OutLn=MyAtr2 -> MyAtr2*-88
+-88
+EqualAfter Atr
+done
+End of program
