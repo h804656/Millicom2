@@ -1,0 +1,3 @@
+NewFU={Mnemo="Cons" FUType=FUConsNew}
+C=7
+Cons.OutLn=C

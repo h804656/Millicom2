@@ -198,7 +198,6 @@ MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
 >{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=CreateNewFU.FindOr}
 	Console.Out="NewFU " Console.OutLn=CreateNewFU.FindOr
   }
->{Mnemo="Console"   Lex.SendToReceiver={FUType=2} }
 >{Mnemo="FUConsole" Lex.SendToReceiver={FUTypeList=ConsMkTable} }
 >{Mnemo="FUBus"     Lex.SendToReceiver={FUTypeList=BusMkTable} }
 >{Mnemo="sin" 		 Lex.SendToReceiver={FuncALE1Arg=FUALUNew.Sin} }

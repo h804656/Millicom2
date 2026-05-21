@@ -34,8 +34,8 @@ static void Usage()
 
 int main(int argc, char* argv[])
 {
-	std::string indPath;
-	if (argc < 2)
+	std::string indPath; //= "C:\\Users\\hacker\\Downloads\\millicom\\oap2\\CompileCC.ind";
+	if (argc < 2 && !indPath.size())
 	{
 		Usage();
 		return 1;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 		if (a1 == "--help" || a1 == "-h") { Usage(); return 0; }
 	}
 
-	indPath = argv[1];
+	if(indPath.empty()) indPath = argv[1];
 	// --lex-file and --lex may appear multiple times; each chunk is fed
 	// to Lex.Lexing in argv order. The self-host bootstrap relies on this:
 	// `--lex-file BootstrapCC.oap --lex-file CompileCC.oap` first
@@ -121,12 +121,6 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
-	// After the .ind bootstraps the compiler, inject mnemo rows for the
-	// bootstrap List FUs (Stack, MnemoTable) so user OAP code can address
-	// them by name. Delphi's compile of CompileCC.oap can't carry these
-	// rows directly because it can't tolerate two `MkTable.Set=X!` lines
-	// referencing the same table; doing it from C++ at load time bypasses
-	// that constraint.
 	Bus.InjectBuiltinMnemos();
 
 	if (!lexInputs.empty())

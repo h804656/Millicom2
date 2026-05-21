@@ -3,7 +3,6 @@
 // code can extend the runtime mnemonic table with `MnemoTable.LineCopyAdd`.
 // Typing the newly-registered name fires the row body via MnemoTable's
 // existing MkAtrExec-on-match path.
-NewFU={Mnemo="Cons" FUType=FUConsNew}
 MnemoTable.LineCopyAdd={Mnemo="Hello" Cons.OutLn="hello-from-row"}
 MnemoTable.LineCopyAdd={Mnemo="World" Cons.OutLn="world-from-row"}
 Cons.OutLn="before"

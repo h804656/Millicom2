@@ -67,18 +67,11 @@ foreach ($lexFile in $testFiles) {
     # tests can exercise Cons.Input / Cons.InputMk paths (runtime values
     # that the compile-time ALE can't fold away).
     $stdinFile = Join-Path $lexFile.DirectoryName "$name.stdin"
-    # Every test gets BootstrapCC.oap preloaded as `--lex-file` first so it
-    # exercises the same bootstrap path the eventual self-host flow will use
-    # (NewFU declarations for MnemoTable/Lex, atr-name MnemoTable.LineAdd
-    # rows). A `<name>.no-bootstrap` marker file opts a test out.
-    # An optional `<name>.bootstrap` adds EXTRA --lex-file paths after the
-    # default bootstrap, before the test's own `.lex`.
-    $argList = @($Ind)
-    $skipBootstrap = Test-Path (Join-Path $lexFile.DirectoryName "$name.no-bootstrap")
-    if (-not $skipBootstrap) {
-        $argList += "--lex-file"
-        $argList += "oap2\BootstrapCC.oap"
-    }
+    # BootstrapCC.oap is always prepended as the first --lex-file so the loaded
+    # compiler has MnemoTable + Lex mnemonics + the atr-name rows registered
+    # before the test input is lexed. An optional `<name>.bootstrap` adds EXTRA
+    # --lex-file paths after the default bootstrap, before the test's own `.lex`.
+    $argList = @($Ind, "--lex-file", "oap2\BootstrapCC.oap")
     $bootstrapFile = Join-Path $lexFile.DirectoryName "$name.bootstrap"
     if (Test-Path $bootstrapFile) {
         foreach ($p in (Get-Content $bootstrapFile | Where-Object { $_.Trim() -ne "" -and -not $_.Trim().StartsWith("#") })) {

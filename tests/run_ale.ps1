@@ -53,9 +53,12 @@ foreach ($oap in $testFiles) {
     $compiledInd = "tests\.last_ale.ind"
 
     # 1. Compile the .oap to a .ind
+    # BootstrapCC.oap is always prepended via --lex-file so the loaded compiler
+    # has MnemoTable + Lex mnemonics + the atr-name rows registered before the
+    # test input is lexed.
     $compileStdout = "tests\.last_ale_compile.txt"
     $proc = Start-Process -FilePath $Exe `
-        -ArgumentList @($Ind, "--lex-file", $oap.FullName, "--out-file", $compiledInd) `
+        -ArgumentList @($Ind, "--lex-file", "oap2\BootstrapCC.oap", "--lex-file", $oap.FullName, "--out-file", $compiledInd) `
         -NoNewWindow -PassThru `
         -RedirectStandardOutput $compileStdout `
         -RedirectStandardError "tests\.last_ale_compile_err.txt"
