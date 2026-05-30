@@ -1,7 +1,5 @@
-6
+4
 1001 I:1 2 11 4 -1
 1001 I:7 6 11 8 0
-3001 I:100 10 11 12 4
-3141 I:58 14 11 16 8
-3021 I:2002 18 11 20 12
-1253 S:C:/Users/hacker/Downloads/millicom/tests/.stress05_emit.ind" 22 11 -1 16
+2002 I:0 10 11 12 4
+1253 S:C:/Users/hacker/Downloads/millicom/tests/.stress05_emit.ind" 14 11 -1 8

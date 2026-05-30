@@ -146,6 +146,49 @@ CommonMkTable // generic FU Mks (Mks available on every FU)
 >{Mk=286 Mnemo="LastAtrOutMk"      Hint="Dispatch last line's atr via Load MK"}
 >{Mk=425 Mnemo="LastIpPopMk"       Hint="Pop last IP, dispatch via Load MK"}
 
+// MnemoListMkTable: an exact duplicate of ListMkTable, used ONLY by the
+// "MnemoTable" self-row below. The .ind serializer (MakeIndexVect in
+// MainUnit.pas) does NOT dedup a shared IC: a named table referenced by two
+// `!` pointers gets walked twice and corrupts the index vector (-1 refs ->
+// truncated .ind). ListMkTable is already `!`-shared by ListPeer, so the
+// MnemoTable row needs its own distinct copy. KEEP IN SYNC WITH ListMkTable.
+\**\MnemoListMkTable
+>{Mk=1   Mnemo="Set"               Hint="Replace current line with new IC"}
+>{Mk=2   Mnemo="Out"               Hint="Write current line to Load"}
+>{Mk=3   Mnemo="OutMk"             Hint="Dispatch current line via Load MK"}
+>{Mk=5   Mnemo="MultiLineModeSet"  Hint="Toggle multi-line search mode"}
+>{Mk=7   Mnemo="MkModeSet"         Hint="On FindAnd/FindOr success run matched row body as a program"}
+>{Mk=8   Mnemo="EmptyProgExec"     Hint="Exec Load if list is empty"}
+>{Mk=9   Mnemo="FullExec"          Hint="Exec Load if list is non-empty"}
+>{Mk=12  Mnemo="SuccessProgSet"    Hint="Program to run on Find success"}
+>{Mk=17  Mnemo="FailProgSet"       Hint="Set program to run on Find failure"}
+>{Mk=23  Mnemo="SuccessExec"       Hint="Exec Load if last find succeeded"}
+>{Mk=24  Mnemo="FailExec"          Hint="Exec Load if last find failed"}
+>{Mk=151 Mnemo="LastPop"           Hint="Pop the last line"}
+>{Mk=156 Mnemo="LastPopMk"         Hint="Pop the last line, dispatch via Load MK"}
+>{Mk=157 Mnemo="LastDelMk"         Hint="Delete the last line"}
+>{Mk=21  Mnemo="LineAtrDef"        Hint="Set default line atr applied by the next LineAdd"}
+>{Mk=160 Mnemo="LineAdd"           Hint="Append new line"}
+>{Mk=169 Mnemo="LastLoadOutMk"     Hint="Dispatch last ip load via Load MK"}
+>{Mk=161 Mnemo="LineCopyAdd"       Hint="Copy-add new line"}
+>{Mk=170 Mnemo="LastAttach"        Hint="Attach IP to the last line's body"}
+>{Mk=174 Mnemo="LastLoadConstVarTypeSet" Hint="Mark last line load as Const/Var typed"}
+>{Mk=185 Mnemo="LastLoadSet"       Hint="Set Load of the last line"}
+>{Mk=186 Mnemo="LastLoadCopySet"   Hint="Set Load (copy) of the last line"}
+>{Mk=189 Mnemo="LastAtrSet"        Hint="Set atr of the last line"}
+>{Mk=192 Mnemo="LineCopyAddPrevSet" Hint="Set prev-line copy source"}
+>{Mk=210 Mnemo="LastAtrAttach"     Hint="Attach atr to last line as field"}
+>{Mk=220 Mnemo="FindOrLast"        Hint="OR-search, return last match"}
+>{Mk=222 Mnemo="FindAndLast"       Hint="AND-search, return last match"}
+>{Mk=228 Mnemo="FindOr"            Hint="OR-search across rows"}
+>{Mk=229 Mnemo="FindAnd"           Hint="AND-search across rows"}
+>{Mk=243 Mnemo="PushTied"          Hint="Push tied sub-list"}
+>{Mk=244 Mnemo="PushTiedCopy"      Hint="Push tied sub-list (copy)"}
+>{Mk=262 Mnemo="PopMkDel"          Hint="Pop, dispatch via Load MK, delete"}
+>{Mk=285 Mnemo="LastAtrOut"        Hint="Write last line's atr to Load"}
+>{Mk=286 Mnemo="LastAtrOutMk"      Hint="Dispatch last line's atr via Load MK"}
+>{Mk=425 Mnemo="LastIpPopMk"       Hint="Pop last IP, dispatch via Load MK"}
+
 \**\LexMkTable
 >{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}
 >{Mk=2   Mnemo="ReceiverPush"   Hint="Push current Receiver, set new from Load"}
@@ -187,12 +230,6 @@ CommonMkTable // generic FU Mks (Mks available on every FU)
 >{Mk=41 Mnemo="LastFUMkRangeOutMk" Hint="Dispatch the most-recent FU's MK range via Load MK"}
 >{Mk=155 Mnemo="FUTypeCorrectSet" Hint="Set FU type correction offset"}
 >{Mk=253 Mnemo="IpBufWrite"      Hint="Сериализовать буфер в .ind"}
->{Mk=256 Mnemo="IpBufSetAtr"     Hint="Буферизовать atr для следующего IpBufEmit"}
->{Mk=257 Mnemo="IpBufEmit"       Hint="Эмитировать ИП по буферизованному atr и Load"}
->{Mk=258 Mnemo="IpBufStashLoad"  Hint="Сохранить Load (с типом) для следующего IpBufEmitStashed"}
->{Mk=259 Mnemo="IpBufEmitStashed" Hint="Эмитировать ИП по сохранённой Load (тип сохранён)"}
->{Mk=281 Mnemo="IpBufPendingMakeFU" Hint="Следующий stashed-emit должен быть MakeFU"}
->{Mk=286 Mnemo="PendingFuNameModeSet" Hint="Следующая stashed-строка станет именем user-FU"}
 >{Mk=287 Mnemo="CapsListRegister" Hint="Capture the CapsList FU pointer on the Bus (dispatch with Sender=CapsList)"}
 
 
@@ -210,9 +247,9 @@ MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
 >{Mnemo="ConsOut"   Lex.SendToReceiver={Mk=Console.OutLn}}
 >{Mnemo="Obj" 		 Lex.SendToReceiver={Atr=-6} }
 >{Mnemo="Atr"    	 Lex.SendToReceiver={Atr=Atr}}
->{Mnemo="Mnemo"  	 Main_Bus.PendingFuNameModeSet=0 Lex.SendToReceiver={Atr=Mnemo}}
+>{Mnemo="Mnemo"  	 Lex.SendToReceiver={Atr=Mnemo}}
 >{Mnemo="Name"  	 Lex.SendToReceiver={Atr=NameAtr}}
->{Mnemo="FUType" 	 Lex.SendToReceiver={Atr=FUType} Main_Bus.IpBufPendingMakeFU=0}
+>{Mnemo="FUType" 	 Lex.SendToReceiver={Atr=FUType}}
 >{Mnemo="Hint"   	 Lex.SendToReceiver={Atr=Hint}}
 >{Mnemo="MkBegRange"  Lex.SendToReceiver={Atr=MkBegRange}}
 >{Mnemo="Operand"      Lex.SendToReceiver={Atr=-1}}
@@ -264,7 +301,8 @@ MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
 >{Mnemo="IntAluPeer" Hint="Шаблон для пользовательских IntAlu ФУ" MkTable.Set=IntAluMkTable! Lex.SendToReceiver={FU=7000}}
 >{Mnemo="ListPeer" Hint="Template row for user List FUs" MkTable.Set=ListMkTable! Lex.SendToReceiver={FU=4000}}
->{Mnemo="LexPeer" Hint="Template row for user Lex FUs" MkTable.Set=LexMkTable! Lex.SendToReceiver={FU=6000}}
+>{Mnemo="Lex" Hint="Template row for user Lex FUs" MkTable.Set=LexMkTable! Lex.SendToReceiver={FU=6000}}
+>{Mnemo="MnemoTable" Hint="Mnemonic table self row at FU idx 5" MkTable.Set=MnemoListMkTable! Lex.SendToReceiver={FU=5000}}
 
 CreateNewFU.MultiLineModeSet=1
 \**\CreateNewFU.Set=
@@ -323,11 +361,10 @@ CreateNewFU.MultiLineModeSet=1
 >{Sep="}" Lex.ReceiverMkSet=Root.FindAnd
   Stack.FindAndLast={SubCapMark}
   Stack.SuccessExec={Stack.LastDelMk
-                     Main_Bus.IpBufSetAtr=-1001
-                     Main_Bus.IpBufEmit=0
                      CapsList.LevelPrevAdd
                      CapsDepth.Dec
-                     CapsDepth.LessEQExec={CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}}
+                     CapsDepth.LessEQExec={CapsList.LastOutMk=MainBus.Create
+                                           CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}}
   Stack.FindAndLast={Sep="{"}
   Stack.FailExec={Lex.Stop Console.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
   Stack.LastDelMk
@@ -566,9 +603,7 @@ CreateNewFU.MultiLineModeSet=1
   Console.OutLn="EqualWait ="
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
-  MkCalc.OutMk=Main_Bus.IpBufSetAtr
   MkCalc.OutMk=CapsList.LineAtrDef
-  Main_Bus.IpBufEmit=0
   CapsList.LineAdd=0
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
@@ -578,7 +613,6 @@ CreateNewFU.MultiLineModeSet=1
 
 \**\EqualAfter.Set=
 >{FU Lex.ReceiverMkSet=FUAfter2.FindAnd
-  MkCalc.OutMk=Main_Bus.IpBufSetAtr
   MkCalc.OutMk=CapsList.LineAtrDef
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
   Console.OutLn="EqualAfter FU"
@@ -594,7 +628,6 @@ CreateNewFU.MultiLineModeSet=1
 }
 >{Const Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
-  FUListNew.ReceivedLoadOutMk=Main_Bus.IpBufStashLoad
   MkCalc.OutMk=CapsList.LineAtrDef
   FUListNew.ReceivedLoadOutMk=CapsList.LineAdd
   AleResult.Set=0
@@ -603,7 +636,6 @@ CreateNewFU.MultiLineModeSet=1
 }
 >{Atr Lex.ReceiverMkSet=EqVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
-  FUListNew.ReceivedLoadOutMk=Main_Bus.IpBufStashLoad
   MkCalc.OutMk=CapsList.LineAtrDef
   FUListNew.ReceivedLoadOutMk=CapsList.LineAdd
   AleResult.Set=0
@@ -614,12 +646,8 @@ CreateNewFU.MultiLineModeSet=1
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineCopyAddPrevLoadSet
   MkCalc.NEQExec={
-    MkCalc.OutMk=Main_Bus.IpBufSetAtr
     MkCalc.OutMk=CapsList.LineAtrDef
-    Main_Bus.IpBufEmit=0
     CapsList.LineAdd=0
-    Main_Bus.IpBufSetAtr=-1000
-    Main_Bus.IpBufEmit=0
     CapsList.Push
     CapsDepth.Inc
     Stack.LineCopyAdd={SubCapMark}
@@ -630,12 +658,8 @@ CreateNewFU.MultiLineModeSet=1
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTied
-  MkCalc.OutMk=Main_Bus.IpBufSetAtr
   MkCalc.OutMk=CapsList.LineAtrDef
-  Main_Bus.IpBufEmit=0
   CapsList.LineAdd=0
-  Main_Bus.IpBufSetAtr=-1000
-  Main_Bus.IpBufEmit=0
   CapsList.Push
   CapsDepth.Inc
   Stack.LineCopyAdd={ListOuterMark}
@@ -713,9 +737,7 @@ CreateNewFU.MultiLineModeSet=1
   Console.OutLn="EqVar Operator -> ALE"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
-  MkCalc.OutMk=Main_Bus.IpBufSetAtr
   MkCalc.OutMk=CapsList.LineAtrDef
-  Main_Bus.IpBufEmitStashed=0
   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Main_Bus.MkExec}}
   AleResult.Set=0
   MkCalc.Set=0
@@ -758,9 +780,7 @@ CreateNewFU.MultiLineModeSet=1
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MkCalc.OutMk=OAList.LastLoadSet
-  MkCalc.OutMk=Main_Bus.IpBufStashLoad
   MkCalc.OutMk=CapsList.LineAdd
-  Main_Bus.IpBufEmitStashed=0
   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Main_Bus.MkExec}}
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Root.FindAnd
@@ -773,12 +793,8 @@ CreateNewFU.MultiLineModeSet=1
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineAdd
   OAList.LineCopyAddPrevSet
-  Main_Bus.IpBufSetAtr=-6
   CapsList.LineAtrDef=-6
-  Main_Bus.IpBufEmit=0
   CapsList.LineAdd=0
-  Main_Bus.IpBufSetAtr=-1000
-  Main_Bus.IpBufEmit=0
   CapsList.Push
   CapsDepth.Inc
   Stack.LineCopyAdd={SubCapMark}
@@ -809,8 +825,6 @@ CreateNewFU.MultiLineModeSet=1
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   Stack.FindAndLast={ListOuterMark}
   Stack.SuccessExec={Stack.LastDelMk
-                     Main_Bus.IpBufSetAtr=-1001
-                     Main_Bus.IpBufEmit=0
                      CapsList.LevelPrevAdd
                      CapsDepth.Dec
                      CapsDepth.LessEQExec={CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}
@@ -828,12 +842,8 @@ CreateNewFU.MultiLineModeSet=1
   OAList.LineCopyAddPrevSet
   OAList.LastOutMk=MnemoTable.LastLoadSet
   MnemoTable.LastPopMk
-  Main_Bus.IpBufSetAtr=-6
   CapsList.LineAtrDef=-6
-  Main_Bus.IpBufEmit=0
   CapsList.LineAdd=0
-  Main_Bus.IpBufSetAtr=-1000
-  Main_Bus.IpBufEmit=0
   CapsList.Push
   CapsDepth.Inc
   Stack.LineCopyAdd={SubCapMark}
@@ -902,11 +912,8 @@ CreateNewFU.MultiLineModeSet=1
                      Console.OutLn="ALEAfter )"}
   Stack.FailExec={Lex.ReceiverMkSet=Root.FindAnd
                   AleOp.OutMk=AleResult.Add
-                  MkCalc.OutMk=Main_Bus.IpBufSetAtr
                   MkCalc.OutMk=CapsList.LineAtrDef
-                  AleResult.OutMk=Main_Bus.IpBufStashLoad
                   AleResult.OutMk=CapsList.LineAdd
-                  Main_Bus.IpBufEmitStashed=0
                   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Main_Bus.MkExec}}
                   MkCalc.Set=0
                   FUListNew.ReceivedOutMk=Lex.SendToReceiver
@@ -927,11 +934,8 @@ CreateNewFU.MultiLineModeSet=1
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   AleOp.OutMk=AleResult.Add
-  MkCalc.OutMk=Main_Bus.IpBufSetAtr
   MkCalc.OutMk=CapsList.LineAtrDef
-  AleResult.OutMk=Main_Bus.IpBufStashLoad
   AleResult.OutMk=CapsList.LineAdd
-  Main_Bus.IpBufEmitStashed=0
   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Main_Bus.MkExec}}
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Lex.SendToReceiver

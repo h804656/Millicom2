@@ -41,42 +41,15 @@ public:
 	};
 
 	vector<CapsEntry> CapsEntries;
-	long int CapsPendingAtr = 0;
-	LoadPoint CapsStashLoad = { 0, nullptr };
-	bool IpBufPendingMakeFU = false;
 
-	// Sentinel atr codes the OAP layer can emit via IpBufSetAtr+IpBufEmit to
-	// delimit sub-capsules in CapsEntries. IpBufWrite picks them up at
-	// serialization time to lay out main + sub-capsules with the correct
-	// DInd refs / capsule chain links. The markers are dropped from the
-	// emitted .ind.
+	// Sentinel atr codes delimiting sub-capsules in the flat CapsEntries form.
+	// The OAP builds CapsList nested (Push/LevelPrevAdd); rebuildCapsFromList ->
+	// flattenCapsLevel re-introduces these markers so the serializer is unchanged.
 	static constexpr long int SubCapOpenAtr  = -1000;
 	static constexpr long int SubCapCloseAtr = -1001;
-	// Sub-capsule nesting depth. IpBufEmit/IpBufEmitStashed/AleEmit only
-	// live-dispatch (run the IP immediately so e.g. `Cons.OutLn="x"` prints
-	// at parse-time) when depth==0. Inside `>{...}` or `={...}` bodies, the
-	// IPs are pure row-body content and must NOT execute until the row is
-	// actually matched and dispatched at runtime.
-	int SubCapDepth = 0;
 
-	// User-FU registration state. When `NewFU={Mnemo="X" FUType=Y}` is parsed,
-	// the Mnemo MnemoTable row sets PendingFuNameMode so the next IpBufStashLoad
-	// captures the user FU's name; the FUType row sets IpBufPendingMakeFU so the
-	// next IpBufEmitStashed emits a MakeFU IP AND inserts a MnemoTable row for
-	// the new FU. After that, `<X>.<MK>` resolves through the standard
-	// MnemoTable.FindAnd path -- no fallback lookup MK needed.
-	bool       PendingFuNameMode = false;
-	std::string PendingFuName;
 	void*      LexFuPtr          = nullptr;
-	FU*        MnemoTableFu      = nullptr; // captured from Sender on PendingFuNameModeSet
-	// Deferred MakeFU state. Set by the FUType= field inside `NewFU={...}`;
-	// the actual MakeFU + MnemoTable-row insertion runs at the NewFU close
-	// `}` instead of inline during the body emit. This way the body IPs are
-	// clean Delphi-style fields (no synthetic `1001 I:type` IP) -- the IC
-	// dispatched to CreateNewFU.FindOr at close time contains only the
-	// field IPs Delphi would emit.
-	bool       PendingMakeFU     = false;
-	long int   PendingMakeFUType = 0;
+	FU*        MnemoTableFu      = nullptr; // the user-addressable MnemoTable FU (set by InjectBuiltinMnemos)
 	// Atr rebase table for serialization: each user NewFU live-dispatches into
 	// a high compile-time FU index (e.g. 47), but a fresh reload only has the
 	// Bus stub (0) and the Bus (1), so user FUs land at 2, 3, ... in order of
@@ -94,10 +67,10 @@ public:
 		}
 		return atr;
 	}
-	// At MakeFU emit, register the user FU in MnemoTable so a subsequent
-	// `<name>.<MK>` lookup goes through normal FindAnd. The row is built by
-	// borrowing the MkTable.Set IP from a built-in peer of the same FU type.
-	vector<ip>* buildIcFromEntries(size_t from, size_t to);
+	// Register a user FU in MnemoTable so a subsequent `<name>.<MK>` lookup goes
+	// through normal FindAnd. The row borrows the MkTable.Set IP from a built-in
+	// peer of the same FU type. Used by Create (mk 1) for user NewFU + by
+	// InjectBuiltinMnemos for the bootstrap FUs.
 	void addUserFuMnemoRow(const std::string& name, int type, long range);
 	// IpBuf->OAP migration: the OAP-side `CapsList` (a FUListNew) mirrors
 	// CapsEntries as a flat list of {atr,load} ips. The OAP registers it once
