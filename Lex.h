@@ -50,7 +50,7 @@ public:
 	// dropped -- CompileCC.oap uses `MkTable.Set=ConsMkTable!` as a
 	// load-by-reference hint that our compiler accepts as a no-op syntactic
 	// suffix. Toggle compile-time only.
-	bool MnemoRefBangStripMode = true;
+	bool MnemoRefBangStripMode = false; // !-after-mnemo now emits a real Sep token consumed by the OAP '!' handler
 	void ProgFU(long int MK, LoadPoint Load, FU* Sender=nullptr);
 	FU* Copy() override; // ��������� ����������� ��
 	FU* TypeCopy() override; // ������� �� ������ �� ���� (�� ������� ��������

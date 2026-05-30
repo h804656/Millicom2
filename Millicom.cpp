@@ -58,10 +58,6 @@ int main(int argc, char* argv[])
 	}
 
 	if(indPath.empty()) indPath = argv[1];
-	// --lex-file and --lex may appear multiple times; each chunk is fed
-	// to Lex.Lexing in argv order. The self-host bootstrap relies on this:
-	// `--lex-file BootstrapCC.oap --lex-file CompileCC.oap` first
-	// populates MnemoTable with built-in atr names, then runs the rest.
 	vector<string> lexInputs;
 	string outFile;
 	bool haveOutFile = false;
@@ -139,8 +135,6 @@ int main(int argc, char* argv[])
 				"Did the index file load a compiler that creates a Lex FU?" << endl;
 			return 2;
 		}
-		// Feed each chunk in argv order. Lex.Lexing (case 100) appends " \n"
-		// internally to flush any pending token between chunks.
 		for (auto& chunk : lexInputs)
 		{
 			Bus.ProgFU(lexGlobalMk + 100, { Cstring, &chunk });

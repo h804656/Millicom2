@@ -213,9 +213,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			break;
 
 		case 253: // IpBufWrite -- serialize CapsEntries to a .ind file
-			// IpBuf->OAP migration: if the OAP layer registered + populated
-			// CapsList, rebuild CapsEntries from it; else fall through with the
-			// natively-built CapsEntries.
 			if (CapsListFu != nullptr) rebuildCapsFromList((List*)CapsListFu);
 			if (Load.Point != nullptr) {
 				string path = Load.toStr();
@@ -311,8 +308,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			}
 			break;
 		case 287: // CapsListRegister -- capture the OAP CapsList FU pointer
-			// Dispatched from CapsList's own context (Sender == CapsList) so
-			// IpBufWrite can rebuild CapsEntries from it without scanning FUs.
 			if (CapsListFu == nullptr && Sender != nullptr) {
 				CapsListFu = Sender;
 			}
@@ -324,9 +319,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 }
 
 
-// Rebuild CapsEntries from the CapsList ips: one flat {atr,load} ip per entry.
-// Guard: only rebuild when CapsList is non-empty, so during the parallel-build
-// phase (CapsList not yet populated) the natively-built CapsEntries stand.
 void BusFU::flattenCapsLevel(void* levelIC, vector<CapsEntry>& out)
 {
 	IC_type level = (IC_type)levelIC;
