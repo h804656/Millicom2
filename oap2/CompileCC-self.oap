@@ -241,9 +241,17 @@ SelfMkTable
 >{Mk=400 Mnemo="LineOutMk"}
 >{Mk=418 Mnemo="LoadOutMk"}
 
+// Guard the rebuild so it runs ONCE (bootstrap) and is skipped on the self-host second pass.
+// Probe a sentinel row "GuardBuilt" (added by the rebuild): present in the loaded .ind, absent in
+// a fresh bootstrap table. Probe runs BEFORE FailProgSet so a bootstrap miss doesn't fire the
+// stray hand-back. FailExec runs the rebuild only on a bootstrap miss; on self-host it is skipped
+// so the FU-name rows the front-half NewFU declarations re-registered survive the rebuild.
+MnemoTable.FindAnd={Mnemo="GuardBuilt"}
+
 // Unknown mnemo: just hand the lexeme back to lex's current receiver
 MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=Lex.SendToReceiver}
-MnemoTable.Set= //         mnemonic translation table
+MnemoTable.FailExec={MnemoTable.Set= //         mnemonic translation table
+>{Mnemo="GuardBuilt"}
 //>{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=Console.OutLn}}
 >{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=CreateNewFU.FindOr}
 	Console.Out="NewFU " Console.OutLn=CreateNewFU.FindOr
@@ -312,6 +320,8 @@ MnemoTable.Set= //         mnemonic translation table
 >{Mnemo="ListPeer" Hint="Template row for user List FUs" MkTable.Set=ListMkTable! Lex.SendToReceiver={FU=4000}}
 >{Mnemo="Lex" Hint="Template row for user Lex FUs" MkTable.Set=LexMkTable! Lex.SendToReceiver={FU=6000}}
 >{Mnemo="MnemoTable" Hint="Mnemonic table self row at FU idx 5" MkTable.Set=MnemoListMkTable! Lex.SendToReceiver={FU=5000}}
+Console.OutLn="MnemoTable built"
+}
 
 CreateNewFU.MultiLineModeSet=1
 CreateNewFU.Set=
@@ -644,6 +654,7 @@ EqualAfter.Set=
 >{Mnemo Lex.ReceiverMkSet=MnemoLoad.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
+  FUListNew.ReceivedOutMk=VarKey.LineCopyAdd
   Console.OutLn="EqualAfter Mnemo"
 }
 >{Const Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
@@ -731,13 +742,16 @@ MkWait2.Set=
 MnemoLoad.Set=
 >{Sep="!" Lex.ReceiverMkSet=EqVar.FindAnd
   // '!' = consume a named variable/table to its IC (Delphi: PrevLexemaPopMk=DelFindIcLines).
-  // The name was just added to MnemoTable by 'EqualAfter Mnemo'; use that line as the VarStore search key,
-  // emit the stored rows IC into the current value slot (like EqualAfter Const), then drop the ref.
-  MnemoTable.LastOutMk=VarStore.FindAnd
+  // The ref name was just captured into VarKey by 'EqualAfter Mnemo'. Key the VarStore search off
+  // VarKey (a dedicated FU) rather than MnemoTable's last line: in a contended context (the Set=
+  // body build, or a guarded program) MnemoTable.last is whatever row is mid-build, not the ref --
+  // that is why nested '!' used to desync. VarKey is immune to those mutations.
+  VarKey.LastOutMk=VarStore.FindAnd
   VarStore.SuccessExec={VarStore.LineLoadOutMk=OAList.LastLoadSet
                         MkCalc.OutMk=CapsList.LineAtrDef
                         VarStore.LineLoadOutMk=CapsList.LineAdd}
   MnemoTable.LastPop
+  VarKey.LastPop
   Console.OutLn="MnemoLoad ! consume"
 }
 >{Sep="(" Lex.ReceiverMkSet=LoadVar.FindAnd

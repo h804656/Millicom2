@@ -652,6 +652,7 @@ EqualAfter.Set=
 >{Mnemo Lex.ReceiverMkSet=MnemoLoad.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
+  FUListNew.ReceivedOutMk=VarKey.LineCopyAdd
   Console.OutLn="EqualAfter Mnemo"
 }
 >{Const Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
@@ -739,13 +740,16 @@ MkWait2.Set=
 MnemoLoad.Set=
 >{Sep="!" Lex.ReceiverMkSet=EqVar.FindAnd
   // '!' = consume a named variable/table to its IC (Delphi: PrevLexemaPopMk=DelFindIcLines).
-  // The name was just added to MnemoTable by 'EqualAfter Mnemo'; use that line as the VarStore search key,
-  // emit the stored rows IC into the current value slot (like EqualAfter Const), then drop the ref.
-  MnemoTable.LastOutMk=VarStore.FindAnd
+  // The ref name was just captured into VarKey by 'EqualAfter Mnemo'. Key the VarStore search off
+  // VarKey (a dedicated FU) rather than MnemoTable's last line: in a contended context (the Set=
+  // body build, or a guarded program) MnemoTable.last is whatever row is mid-build, not the ref --
+  // that is why nested '!' used to desync. VarKey is immune to those mutations.
+  VarKey.LastOutMk=VarStore.FindAnd
   VarStore.SuccessExec={VarStore.LineLoadOutMk=OAList.LastLoadSet
                         MkCalc.OutMk=CapsList.LineAtrDef
                         VarStore.LineLoadOutMk=CapsList.LineAdd}
   MnemoTable.LastPop
+  VarKey.LastPop
   Console.OutLn="MnemoLoad ! consume"
 }
 >{Sep="(" Lex.ReceiverMkSet=LoadVar.FindAnd
