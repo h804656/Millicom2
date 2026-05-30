@@ -19,7 +19,7 @@ NewFU={Mnemo="MkCalc" FUType=FUIntAluNew Hint="Калькулятор для п�
 NewFU={Mnemo="AleResult" FUType=FUIntAluNew Hint="Аккумулятор для compile-time вычисления ALE-выражений"}
 NewFU={Mnemo="AleOp" FUType=FUIntAluNew Hint="Текущий операнд ALE (стэшится перед применением оператора)"}
 NewFU={Mnemo="AleTmp" FUType=FUIntAluNew Hint="ALE: holds a parenthesised sub-expression result across the accumulator restore"}
-NewFU={Mnemo="CapsDepth" FUType=FUIntAluNew Hint="Sub-capsule nesting depth for the OAP live-dispatch (mirrors C++ SubCapDepth); top-level emits dispatch when depth==0"}
+NewFU={Mnemo="CapsDepth" FUType=FUIntAluNew Hint="Sub-capsule nesting depth; top-level emits dispatch when depth==0"}
 NewFU={Mnemo="BackCloneCounter" FUType=FUIntAluNew Hint="Счётчик обратных клонов"}
 NewFU={Mnemo="MkTable" FUType=FUListNew Hint="ФУ для МК-таблиц"}
 NewFU={Mnemo="OAList" FUType=FUListNew Hint="ФУ для генерации ОА-графа"}
@@ -59,7 +59,7 @@ NewFU={Mnemo="AleModWait" FUType=FUListNew Hint="ALE: operand, apply %% to term"
 NewFU={Mnemo="AleNegWait" FUType=FUListNew Hint="ALE: operand, negated term"}
 NewFU={Mnemo="ListAfterClose" FUType=FUListNew Hint="После закрытия `}` строки списка: либо новый `>` (ещё строка), либо что угодно ещё (закрыть outer cap)"}
 NewFU={Mnemo="HLPL" FUType=FUListNew Hint="Высокоуровневый язык (внешний автомат)"}
-NewFU={Mnemo="CapsList" FUType=FUListNew Hint="OAP-side emission accumulator mirroring C++ CapsEntries (IpBuf->OAP migration)"}
+NewFU={Mnemo="CapsList" FUType=FUListNew Hint="Caps emission accumulator"}
 NewFU={Mnemo="RegPeer" FUType=FUListNew Hint="per-FUType user-FU mnemo registration (OAP)"}
 
 MainBus.PartialResetSet // remember the current FU count for partial reset
@@ -655,7 +655,7 @@ RegPeer.MkModeSet=1
 >{Sep="{" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineCopyAddPrevLoadSet
-  MkCalc.NEQExec={
+  MkCalc.BiggerExec={
     MkCalc.OutMk=CapsList.LineAtrDef
     CapsList.LineAdd=0
     CapsList.Push

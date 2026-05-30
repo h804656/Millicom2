@@ -43,9 +43,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			break;
 		case 1: // MakeFU ������� ��
 			{
-				// reg-ON: the OAP passes the NewFU sub-capsule IC here (CapsList.LastOutMk=
-				// MainBus.Create). Read FUType (-22) + MkBegRange (-20), honor the range, and
-				// record the compile->reload rebase (was case 257's job). reg-OFF: Load = type int.
 				long int fuType, mkBeg = 0; bool fromCaps = false;
 				std::string name;
 				if (Load.isIC() && Load.Point != nullptr) {
@@ -64,9 +61,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				long int range = mkBeg > 0 ? mkBeg : FUMkRange * (FUs.size() - 1);
 				FUs.back()->FUMkGlobalAdr = range;
 				if (fromCaps) {
-					// User-FU mnemo registration is now pure-OAP (CompileCC.oap RegPeer handler:
-					// per-FUType peer-clone via MnemoTable.LineCopyToLast + LastSubLoadSet). Create
-					// only makes the FU + records the compile->reload rebase.
 					UserFuRanges.push_back({ range, NextReloadFuIdx * FUMkRange });
 					NextReloadFuIdx++;
 					capsMakeFuJustFired = true; // so the OAP MarkLastCopyOutMk skips dispatching this NewFU sub-cap
