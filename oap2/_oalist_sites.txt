@@ -1,0 +1,29 @@
+24:NewFU={Mnemo="OAList" FUType=FUListNew Hint="ФУ для генерации ОА-графа"}
+283:  OAList.LastAttach
+284:  FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
+285:  OAList.LastAtrOutMk=MkCalc.Set
+309:  OAList.PushTied
+323:  Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Main_Bus.MkExec}
+328:  Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Main_Bus.MkExec}
+355:  OAList.LineCopyAddPrevLoadSet
+475:  FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
+499:  FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
+569:  FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
+578:  FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
+585:  FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
+593:  OAList.LineCopyAddPrevLoadSet
+606:  OAList.PushTied
+638:  MkCalc.OutMk=OAList.LastLoadSet
+652:  MkCalc.OutMk=OAList.LastLoadSet
+663:  OAList.PushTiedCopy
+668:  OAList.LineAdd
+669:  OAList.LineCopyAddPrevLoadSet
+696:  FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
+723:  MkCalc.OutMk=OAList.LastAtrAttach
+727:  MkCalc.OutMk=OAList.LastLoadSet
+739:  OAList.LineAdd
+740:  OAList.LineCopyAddPrevSet
+749:  FUListNew.LoadOutMk=OAList.LastLoadSet
+785:  OAList.LineAdd
+786:  OAList.LineCopyAddPrevSet
+787:  OAList.LastOutMk=MnemoTable.LastLoadSet

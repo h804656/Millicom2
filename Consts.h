@@ -298,7 +298,8 @@ public:
 
 class FU {  // Ядро функционального устройства
 public:
-	virtual void ProgFU(long int MK, LoadPoint Load, FU* Sender) {}; // Реализация логики работы ФУ
+	virtual void ProgFU(long int MK, LoadPoint Load, FU* Sender) {};
+	virtual bool ConsumeCapsMakeFu() { return false; } // BusFU overrides: returns+clears 'a sub-cap MakeFU just fired' (OAP sub-cap dispatch skip) // Реализация логики работы ФУ
 	vector<int> ExecCounter; // Стек счетчиков повторений подпрограммы в ИК
 	long int ExecRepeat = 1; // Текущее количество повторений подпрограммы
 	void Scheduling(bool SchedulerFlag); // Запуск МК после разрешенрия планировщика

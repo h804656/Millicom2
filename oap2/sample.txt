@@ -1,9 +1,4 @@
 NewFU={Mnemo="Cons" FUType=FUConsNew}
-C=0
-D=-1
-Cons.OutLn=C+D
-NewFU={Mnemo="State" FUType=FUListNew}
-NewFU={Mnemo="Counter" FUType=FUIntAluNew}
-State.MkModeSet=1
-Counter.Set=0
-Cons.OutLn="12312312"
+C=3
+D=2
+Cons.OutLn=C+D-C*D

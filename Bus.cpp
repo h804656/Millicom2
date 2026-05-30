@@ -191,6 +191,10 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			break;
 
 		case 253: // IpBufWrite -- serialize CapsEntries to a .ind file
+			// IpBuf->OAP migration: if the OAP layer registered + populated
+			// CapsList, rebuild CapsEntries from it; else fall through with the
+			// natively-built CapsEntries.
+			if (CapsListFu != nullptr) rebuildCapsFromList((List*)CapsListFu);
 			if (Load.Point != nullptr) {
 				string path = Load.toStr();
 				ofstream out(path);
@@ -346,9 +350,10 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 						PendingMakeFU     = false;
 						PendingMakeFUType = 0;
 						didMakeFU         = true;
+						capsMakeFuJustFired = true; // so the OAP CapsList dispatch skips this NewFU sub-cap
 					}
 					LoadPoint icLoad = { TIC, innerIc };
-					if (parentAtr > 0 && !didMakeFU) {
+					if (parentAtr > 0 && !didMakeFU && CapsListFu == nullptr) {
 						ProgFU(parentAtr, icLoad, Sender);
 					}
 					else {
@@ -400,7 +405,12 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				// Inside a sub-cap body — don't live-dispatch
 			}
 			else {
-				ProgFU(CapsPendingAtr, CapsStashLoad, Sender);
+				// Step 4: when the OAP CapsList drives emission, it now also live-
+				// dispatches top-level runtime calls (CapsDepth.LessEQExec ->
+				// CapsList.MarkLastOutMk -> Main_Bus.MkExec). Only the legacy reg-off
+				// path (no CapsList registered) live-dispatches natively here.
+				if (CapsListFu == nullptr)
+					ProgFU(CapsPendingAtr, CapsStashLoad, Sender);
 			}
 			break;
 		}
@@ -411,6 +421,13 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			PendingFuNameMode = true;
 			if (MnemoTableFu == nullptr && Sender != nullptr) {
 				MnemoTableFu = Sender;
+			}
+			break;
+		case 287: // CapsListRegister -- capture the OAP CapsList FU pointer
+			// Dispatched from CapsList's own context (Sender == CapsList) so
+			// IpBufWrite can rebuild CapsEntries from it without scanning FUs.
+			if (CapsListFu == nullptr && Sender != nullptr) {
+				CapsListFu = Sender;
 			}
 			break;
 		default:
@@ -451,6 +468,77 @@ vector<ip>* BusFU::buildIcFromEntries(size_t from, size_t to)
 		}
 	}
 	return ic;
+}
+
+// Rebuild CapsEntries from the CapsList ips: one flat {atr,load} ip per entry.
+// Guard: only rebuild when CapsList is non-empty, so during the parallel-build
+// phase (CapsList not yet populated) the natively-built CapsEntries stand.
+void BusFU::flattenCapsLevel(void* levelIC, vector<CapsEntry>& out)
+{
+	IC_type level = (IC_type)levelIC;
+	if (level == nullptr) return;
+	for (auto& e : *level) {
+		if (e.atr == SubCapOpenAtr || e.atr == SubCapCloseAtr) {
+			// Literal flat marker (a path not migrated to nested Push/LevelPrevAdd).
+			CapsEntry ce; ce.atr = e.atr; ce.load = { 0, nullptr };
+			ce.isMarker = true; ce.isNewFuParent = false; ce.newFuType = 0;
+			out.push_back(ce);
+		}
+		else if (e.Load.Point != nullptr && e.Load.isIC()) {
+			// Nested sub-capsule: parent line (load cleared) + open marker + body + close.
+			CapsEntry pe; pe.atr = e.atr; pe.load = { 0, nullptr };
+			pe.isMarker = false; pe.isNewFuParent = false; pe.newFuType = 0;
+			out.push_back(pe);
+			CapsEntry op; op.atr = SubCapOpenAtr; op.load = { 0, nullptr };
+			op.isMarker = true; op.isNewFuParent = false; op.newFuType = 0;
+			out.push_back(op);
+			flattenCapsLevel(e.Load.Point, out);
+			CapsEntry cm; cm.atr = SubCapCloseAtr; cm.load = { 0, nullptr };
+			cm.isMarker = true; cm.isNewFuParent = false; cm.newFuType = 0;
+			out.push_back(cm);
+		}
+		else {
+			CapsEntry ce; ce.atr = e.atr; ce.load = e.Load.Clone();
+			ce.isMarker = false; ce.isNewFuParent = false; ce.newFuType = 0;
+			out.push_back(ce);
+		}
+	}
+}
+
+void BusFU::rebuildCapsFromList(List* cl)
+{
+	bool any = false;
+	for (auto grp : cl->ListHead)
+		if (grp != nullptr && !grp->empty()) { any = true; break; }
+	if (!any) return; // not populated yet -> keep native CapsEntries
+	CapsEntries.clear();
+	for (auto grp : cl->ListHead)
+		flattenCapsLevel((void*)grp, CapsEntries);
+	// MakeFU marking (replicates case 257 for the CapsList path): a NewFU body
+	// emits its FUType field as an atr==-22 entry inside a -1000/-1001 sub-cap.
+	// Mark the parent (non-marker entry just before the -1000) isNewFuParent with
+	// newFuType = that value, so the serializer emits `1001 I:<fuType>` and the
+	// skip-prepass drops the sub-cap body.
+	int M = (int)CapsEntries.size();
+	for (int i = 0; i < M; i++) {
+		if (!(CapsEntries[i].isMarker && CapsEntries[i].atr == SubCapOpenAtr)) continue;
+		long fuType = 0; bool found = false; int depth = 0;
+		for (int j = i + 1; j < M; j++) {
+			if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapOpenAtr) depth++;
+			else if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapCloseAtr) {
+				if (depth == 0) break;
+				depth--;
+			}
+			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -22) {
+				fuType = CapsEntries[j].load.toInt(); found = true;
+			}
+		}
+		if (found) {
+			int p = i - 1;
+			while (p >= 0 && CapsEntries[p].isMarker) p--;
+			if (p >= 0) { CapsEntries[p].isNewFuParent = true; CapsEntries[p].newFuType = fuType; }
+		}
+	}
 }
 
 void BusFU::addUserFuMnemoRow(const std::string& name, int type, long range)

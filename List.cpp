@@ -559,7 +559,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 160: // LineAdd Добавить новую строку всписок
 		if (ListHead.back() == nullptr)
 			ListHead.back() = new vector<ip>;
-	    ListHead.back()->push_back({ LineAtr, Load });
+	    ListHead.back()->push_back({ LineAtr, Load.Clone() });
 		break;
 	case 161: // LineCopyAdd Добавить копию строки
 	case 162: // LineTreeCopyAdd Добавить копию ОА-графа
@@ -1027,7 +1027,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			if (MK == 240 || MK == 243 || MK == 246)
 			{
 	//			ListHead.back() = new vector<ip>;
-				ListHead.back()->push_back({ LineAtr, Load });
+				ListHead.back()->push_back({ LineAtr, Load.Clone() });
 			}
 			else if (MK == 241 || MK == 244 || MK == 247)
 			{
@@ -1081,6 +1081,28 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			}
 		}
 		break;
+	case 249: // LevelPrevAdd: pop current sub-level, attach as prev level's last-line Load (TIC) -- OAP capsule nesting
+	{
+		if (ListHead.size() > 1)
+		{
+			IC_type sub = (IC_type)ListHead.back();
+			ListHead.pop_back();
+			if (ListHead.back() != nullptr && !ListHead.back()->empty())
+				ListHead.back()->back().Load = { TIC, sub };
+		}
+		break;
+	}
+	case 263: // MarkLastCopyOutMk: dispatch a deep COPY of the last line's ip via Load MK (OAP sub-cap live-dispatch)
+	{
+		if (Bus->ConsumeCapsMakeFu()) break; // native MakeFU already handled this NewFU sub-cap
+		if (ListHead.size() && ListHead.back() != nullptr && ListHead.back()->size() && ListHead.back()->back().atr > 0)
+		{
+			ip tmp = ListHead.back()->back();
+			tmp.Load = ListHead.back()->back().Load.Clone();
+			MkExec(Load, { TIP, &tmp });
+		}
+		break;
+	}
 	case 265: // ZeroDeepExec Выполнить, если нет подсписков
 		if (ListHead.size() == 0)
 			ProgExec(Load);

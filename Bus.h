@@ -99,6 +99,25 @@ public:
 	// borrowing the MkTable.Set IP from a built-in peer of the same FU type.
 	vector<ip>* buildIcFromEntries(size_t from, size_t to);
 	void addUserFuMnemoRow(const std::string& name, int type, long range);
+	// IpBuf->OAP migration: the OAP-side `CapsList` (a FUListNew) mirrors
+	// CapsEntries as a flat list of {atr,load} ips. The OAP registers it once
+	// by dispatching CapsListRegister (Bus mk 287) from CapsList's context, so
+	// the Bus holds a direct pointer -- no FU scan, no sentinel. At serialize
+	// time rebuildCapsFromList() rebuilds CapsEntries from its ips so the
+	// existing serializer runs unchanged.
+	FU* CapsListFu = nullptr;
+	// Set true when a native MakeFU fires at a sub-cap close; CapsList.MarkLastCopyOutMk
+	// consumes it to skip the OAP sub-cap live-dispatch for NewFU bodies (the native
+	// MakeFU already created the FU; a second dispatch would create a spurious one).
+	bool capsMakeFuJustFired = false;
+	bool ConsumeCapsMakeFu() override { bool r = capsMakeFuJustFired; capsMakeFuJustFired = false; return r; }
+	void rebuildCapsFromList(class List* cl);
+	// Flatten one nested CapsList level into flat CapsEntries (with -1000/-1001
+	// markers around nested sub-capsules). The OAP now builds CapsList nested via
+	// Push/LevelPrevAdd (like the canonical ListSintezator), so this is the inverse
+	// of the old buildIcFromEntries -- nesting is done in OAP, this only flattens
+	// for the existing serializer. Handles literal flat markers too (mixed paths).
+	void flattenCapsLevel(void* levelIC, vector<CapsEntry>& out);
 	// Programmatically inject user-visible mnemo rows for the bootstrap FUs
 	// (MnemoTable, Stack) so user OAP code can address them by name. Doing
 	// this in C++ sidesteps Delphi's "duplicate MkTable.Set=X! across rows"
