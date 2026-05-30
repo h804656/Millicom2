@@ -48,8 +48,6 @@ public:
 	static constexpr long int SubCapOpenAtr  = -1000;
 	static constexpr long int SubCapCloseAtr = -1001;
 
-	void*      LexFuPtr          = nullptr;
-	FU*        MnemoTableFu      = nullptr; // the user-addressable MnemoTable FU (set by InjectBuiltinMnemos)
 	// Atr rebase table for serialization: each user NewFU live-dispatches into
 	// a high compile-time FU index (e.g. 47), but a fresh reload only has the
 	// Bus stub (0) and the Bus (1), so user FUs land at 2, 3, ... in order of
@@ -67,11 +65,6 @@ public:
 		}
 		return atr;
 	}
-	// Register a user FU in MnemoTable so a subsequent `<name>.<MK>` lookup goes
-	// through normal FindAnd. The row borrows the MkTable.Set IP from a built-in
-	// peer of the same FU type. Used by Create (mk 1) for user NewFU + by
-	// InjectBuiltinMnemos for the bootstrap FUs.
-	void addUserFuMnemoRow(const std::string& name, int type, long range);
 	// IpBuf->OAP migration: the OAP-side `CapsList` (a FUListNew) mirrors
 	// CapsEntries as a flat list of {atr,load} ips. The OAP registers it once
 	// by dispatching CapsListRegister (Bus mk 287) from CapsList's context, so
@@ -91,12 +84,6 @@ public:
 	// of the old buildIcFromEntries -- nesting is done in OAP, this only flattens
 	// for the existing serializer. Handles literal flat markers too (mixed paths).
 	void flattenCapsLevel(void* levelIC, vector<CapsEntry>& out);
-	// Programmatically inject user-visible mnemo rows for the bootstrap FUs
-	// (MnemoTable, Stack) so user OAP code can address them by name. Doing
-	// this in C++ sidesteps Delphi's "duplicate MkTable.Set=X! across rows"
-	// limit: we reuse the existing ListPeer row's MkTable.Set IP at runtime
-	// instead of adding a second row that references the same table.
-	void InjectBuiltinMnemos();
 private:
 	void FUTypesIni();
 };

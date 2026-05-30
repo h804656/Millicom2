@@ -64,8 +64,9 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				long int range = mkBeg > 0 ? mkBeg : FUMkRange * (FUs.size() - 1);
 				FUs.back()->FUMkGlobalAdr = range;
 				if (fromCaps) {
-					if (!name.empty())
-						addUserFuMnemoRow(name, (int)fuType, range);
+					// User-FU mnemo registration is now pure-OAP (CompileCC.oap RegPeer handler:
+					// per-FUType peer-clone via MnemoTable.LineCopyToLast + LastSubLoadSet). Create
+					// only makes the FU + records the compile->reload rebase.
 					UserFuRanges.push_back({ range, NextReloadFuIdx * FUMkRange });
 					NextReloadFuIdx++;
 					capsMakeFuJustFired = true; // so the OAP MarkLastCopyOutMk skips dispatching this NewFU sub-cap
@@ -400,116 +401,9 @@ void BusFU::rebuildCapsFromList(List* cl)
 	}
 }
 
-void BusFU::addUserFuMnemoRow(const std::string& name, int type, long range)
-{
-	if (MnemoTableFu == nullptr) return;
-	// Lazy-resolve Lex pointer by FUtype (Lex = FUtype 3).
-	if (LexFuPtr == nullptr) {
-		for (size_t i = 2; i < FUs.size(); i++) {
-			if (FUs[i] && FUs[i]->GetFuType() == 3) {
-				LexFuPtr = FUs[i];
-				break;
-			}
-		}
-		if (LexFuPtr == nullptr) return;
-	}
-	int lexFuNum = -1;
-	for (size_t i = 2; i < FUs.size(); i++)
-		if (FUs[i] == (FU*)LexFuPtr) { lexFuNum = (int)i; break; }
-	if (lexFuNum < 0) return;
-	long lexBase = (long)lexFuNum * FUMkRange;
-	long lexSendMk = lexBase + 70; // Lex.SendToReceiver MK
-	List* mt = (List*)MnemoTableFu;
-	if (mt->ListHead.empty() || mt->ListHead.back() == nullptr) return;
-	IC_type rows = mt->ListHead.back();
-	// Find a built-in peer FU of the same type (e.g. Cons at FU#=2 for
-	// FUConsNew users) and use ITS range to locate the right MnemoTable row.
-	long peerRange = -1;
-	for (size_t i = 2; i < FUs.size(); i++) {
-		if (FUs[i] && FUs[i]->GetFuType() == type) {
-			peerRange = (long)i * FUMkRange;
-			break;
-		}
-	}
-	if (peerRange < 0) return;
-	ip srcMkTableIp{ 0, 0, nullptr };
-	bool foundPeer = false;
-	for (auto& rowIp : *rows) {
-		if (rowIp.Load.Point == nullptr) continue;
-		IC_type fields = (IC_type)rowIp.Load.Point;
-		bool rowMatches = false;
-		for (auto& f : *fields) {
-			if (f.atr != lexSendMk || f.Load.Point == nullptr) continue;
-			IC_type sub = nullptr;
-			unsigned int loadDt = f.Load.Type >> 1;
-			if (loadDt == DIC) sub = (IC_type)f.Load.Point;
-			else if (loadDt == DIP) {
-				ip* tip = (ip*)f.Load.Point;
-				if (tip && (tip->Load.Type >> 1) == DIC)
-					sub = (IC_type)tip->Load.Point;
-			}
-			if (!sub) continue;
-			for (auto& s : *sub) {
-				if (s.atr == -300 && s.Load.toInt() == peerRange) {
-					rowMatches = true; break;
-				}
-			}
-			if (rowMatches) break;
-		}
-		if (!rowMatches) continue;
-		// Pluck the MkTable.Set IP (positive atr, non-Lex, *Set MK).
-		for (auto& f : *fields) {
-			if (f.atr <= 0) continue;
-			long fuNum = f.atr / FUMkRange;
-			if (fuNum == lexFuNum) continue;
-			if (f.atr % FUMkRange != 1) continue;
-			srcMkTableIp = f;
-			foundPeer = true;
-			break;
-		}
-		if (foundPeer) break;
-	}
-	if (!foundPeer) return;
-	// Build the new row: { Mnemo=<name>, MkTable.Set=<peer's table>,
-	// Lex.SendToReceiver={FU=<range>} }.
-	IC_type newRow = new vector<ip>();
-	// Mnemo=<name>
-	newRow->push_back({ -2 /*Mnemo*/, Cstring, new std::string(name) });
-	// MkTable.Set=<peer's table-load> -- share the Load by value (same Point).
-	newRow->push_back({ srcMkTableIp.atr, srcMkTableIp.Load.Type, srcMkTableIp.Load.Point });
-	// Lex.SendToReceiver={FU=<range>}: load is a TIC pointing at the
-	// sub-IC (same structure as the built-in mnemo rows produce).
-	IC_type fuSub = new vector<ip>();
-	fuSub->push_back({ -300 /*FU*/, Cint, new long int(range) });
-	newRow->push_back({ lexSendMk, TIC, fuSub });
-	rows->push_back({ -6 /*LineAtr*/, TIC, newRow });
-}
-
 FU* BusFU::Copy() // ��������� ����������� ��
 {
 	return new BusFU(Bus, this);
-}
-
-void BusFU::InjectBuiltinMnemos()
-{
-	// CompileCC.oap declares Stack first then MnemoTable (both FUListNew),
-	// so MnemoTable is the SECOND FUtype=5 instance. MnemoTableFu must be
-	// set before any addUserFuMnemoRow call -- that's where rows append.
-	int mnemoIdx = -1;
-	int listCount = 0;
-	for (size_t i = 2; i < FUs.size(); i++) {
-		if (FUs[i] && FUs[i]->GetFuType() == 5) {
-			listCount++;
-			if (listCount == 2) { mnemoIdx = (int)i; break; }
-		}
-	}
-	if (mnemoIdx < 0) return;
-	MnemoTableFu = FUs[mnemoIdx];
-	// The "MnemoTable" and "Lex" mnemo rows are now declared directly in
-	// CompileCC.oap's MnemoTable.Set (alongside the Cons/IntAluPeer/... peers),
-	// so they serialize into the .ind -- no C++ injection needed. This only
-	// caches the MnemoTable FU pointer that addUserFuMnemoRow appends rows to
-	// (and that pointer goes away when user-FU registration moves to OAP).
 }
 
 FU* BusFU::TypeCopy() // ������� �� ������ �� ���� (�� ������� ��������

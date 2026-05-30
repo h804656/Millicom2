@@ -692,6 +692,30 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				}
 			}
 		break;
+	case 178: // LineCopyToLast: append all ips of the FOUND row (LineUk) onto the LAST row ip-list (generic clone-found-fields). Shares each ip Load.Point like the legacy addUserFuMnemoRow peer-share.
+		if (LineUk != nullptr && LineUk->Load.Point != nullptr && LineUk->Load.isIC()
+			&& !ListHead.empty() && ListHead.back() != nullptr && !ListHead.back()->empty()
+			&& ListHead.back()->back().Load.Point != nullptr && ListHead.back()->back().Load.isIC())
+		{
+			IC_type src178 = (IC_type)LineUk->Load.Point;
+			IC_type dst178 = (IC_type)ListHead.back()->back().Load.Point;
+			for (auto& f178 : *src178) {
+				dst178->push_back(f178);
+				if (dst178->back().Load.isIC()) // fresh copy of {FU=..} / MkTable ICs so clones don't share a mutable sub-cap
+					dst178->back().Load = ICCopy(dst178->back().Load, false);
+			}
+		}
+		break;
+	case 148: // LastSubLoadSet: set value of the last field of the LAST row last-field load IC (deepest nested last value; used to overwrite a copied {FU=peerRange} with the new FU own range).
+		if (!ListHead.empty() && ListHead.back() != nullptr && !ListHead.back()->empty()
+			&& ListHead.back()->back().Load.Point != nullptr && ListHead.back()->back().Load.isIC()
+			&& !((IC_type)ListHead.back()->back().Load.Point)->empty())
+		{
+			LoadPoint& lastField148 = ((IC_type)ListHead.back()->back().Load.Point)->back().Load;
+			if (lastField148.Point != nullptr && lastField148.isIC() && !((IC_type)lastField148.Point)->empty())
+				((IC_type)lastField148.Point)->back().Load = Load.Clone();
+		}
+		break;
 	case 179: // LineCopyGrahpAttach
 		// ....
 		break;

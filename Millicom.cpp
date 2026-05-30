@@ -121,8 +121,6 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
-	Bus.InjectBuiltinMnemos();
-
 	if (!lexInputs.empty())
 	{
 		// Find the Lex FU (FUtype == 3) and call its Lexing MK (=100) on the supplied text.

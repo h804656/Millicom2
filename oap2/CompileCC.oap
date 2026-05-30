@@ -59,7 +59,8 @@ NewFU={Mnemo="AleModWait" FUType=FUListNew Hint="ALE: operand, apply %% to term"
 NewFU={Mnemo="AleNegWait" FUType=FUListNew Hint="ALE: operand, negated term"}
 NewFU={Mnemo="ListAfterClose" FUType=FUListNew Hint="После закрытия `}` строки списка: либо новый `>` (ещё строка), либо что угодно ещё (закрыть outer cap)"}
 NewFU={Mnemo="HLPL" FUType=FUListNew Hint="Высокоуровневый язык (внешний автомат)"}
-NewFU={Mnemo="CapsList" FUType=FUListNew Hint="OAP-side emission accumulator mirroring C++ CapsEntries (IpBuf->OAP migration)"}
+NewFU={Mnemo="CapsList" FUType=FUListNew Hint="OAP-side emission accumulator mirroring C++ CapsEntries (IpBuf->OAP migration)"}
+NewFU={Mnemo="RegPeer" FUType=FUListNew Hint="per-FUType user-FU mnemo registration (OAP)"}
 
 MainBus.PartialResetSet // remember the current FU count for partial reset
 MainBus.ModeSet=2
@@ -315,6 +316,14 @@ CreateNewFU.MultiLineModeSet=1
 
 ////////////////////////////////////////////////////////////////////////////////
 
+RegPeer.MultiLineModeSet=1
+RegPeer.MkModeSet=1
+\**\RegPeer.Set=
+>{FUType=1   CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="Cons"}       MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet}
+>{FUType=3    CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="Lex"}        MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet}
+>{FUType=5   CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="ListPeer"}   MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet}
+>{FUType=7 CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="IntAluPeer"} MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet}
+
 \**\Root.Set=
 >{Mnemo Lex.ReceiverMkSet=MnemoAnalysis.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
@@ -364,6 +373,7 @@ CreateNewFU.MultiLineModeSet=1
                      CapsList.LevelPrevAdd
                      CapsDepth.Dec
                      CapsDepth.LessEQExec={CapsList.LastOutMk=MainBus.Create
+                                          CapsList.LastOutMk=RegPeer.FindOr
                                            CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}}
   Stack.FindAndLast={Sep="{"}
   Stack.FailExec={Lex.Stop Console.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
