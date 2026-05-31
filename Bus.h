@@ -38,13 +38,14 @@ public:
 		bool isMarker;
 		bool isNewFuParent = false;
 		long int newFuType = 0;
+		std::string newFuName; // Mnemo of a NewFU declaration (for dedup on emit)
 	};
 
 	vector<CapsEntry> CapsEntries;
 	static constexpr long int SubCapOpenAtr  = -1000;
 	static constexpr long int SubCapCloseAtr = -1001;
 	vector<std::pair<long, long>> UserFuRanges;
-	long NextReloadFuIdx = 2;
+	long NextReloadFuIdx = 1;
 	long rebaseAtr(long atr) const {
 		if (atr <= 0) return atr;
 		for (auto& r : UserFuRanges) {

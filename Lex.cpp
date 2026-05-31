@@ -343,7 +343,7 @@
 				long int tabCounter = 0;
 				while (str[tabCounter] == '\t')
 					tabCounter++;
-				if (tabCounter > ProgLevel + 1) // ��������� ������ ��� �� ���� �������
+			if (tabCounter > ProgLevel + 1) // ��������� ������ ��� �� ���� �������
 				{
 					ProgExec(ErrProg); // ����� ������ ������������ �������
 					ProgExec(TabErrProg); // ������ ���������

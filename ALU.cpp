@@ -483,7 +483,7 @@ void ALU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			Load.Write((void*)&Accum);
 			break;
 		case 6: //AccumAdrOutMk Выдать МК с адресом выходного аккумулятора
-			MkExec(MK, { Cdouble,(void*)&Accum }, Receiver);
+			MkExec(Load, { Cdouble,(void*)&Accum }, Receiver);
 			break;
 		case 10: // OutMkAdrClear Очистить буфер МК и адресов для выдачи результата
 			Stack.back().OutMkAdr.clear();

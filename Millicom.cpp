@@ -35,6 +35,7 @@ static void Usage()
 int main(int argc, char* argv[])
 {
 	std::string indPath; //= "C:\\Users\\hacker\\Downloads\\millicom\\oap2\\CompileCC.ind";
+	vector<string> lexInputs; // = {"CompileCC-self.oap"};
 	if (argc < 2 && !indPath.size())
 	{
 		Usage();
@@ -58,7 +59,6 @@ int main(int argc, char* argv[])
 	}
 
 	if(indPath.empty()) indPath = argv[1];
-	vector<string> lexInputs;
 	string outFile;
 	bool haveOutFile = false;
 

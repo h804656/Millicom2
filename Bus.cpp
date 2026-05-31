@@ -219,12 +219,17 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				ofstream out(path);
 				if (out) {
 					int M = (int)CapsEntries.size();
-					// Pre-pass: mark entries inside NewFuParent sub-caps as skipped
+					// Pre-pass: mark entries inside NewFuParent sub-caps as skipped.
+					// Also drop the implicit-Bus declaration: Lexica's CapsManager never
+					// serializes the root Bus (its FUType is 0 = FUBusNew). Skipping the
+					// PARENT entry too (not just its sub-cap) removes the whole declaration;
+					// the group-based f3/f4 relink naturally bridges the gap.
 					std::vector<bool> skip(M, false);
 					for (int i = 0; i < M; i++) {
 						if (!CapsEntries[i].isMarker && CapsEntries[i].isNewFuParent
 							&& i + 1 < M && CapsEntries[i + 1].isMarker
 							&& CapsEntries[i + 1].atr == SubCapOpenAtr) {
+							if (CapsEntries[i].newFuType == 0) skip[i] = true; // implicit Bus root
 							int depth = 0;
 							for (int j = i + 1; j < M; j++) {
 								skip[j] = true;
@@ -296,8 +301,14 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 									out << "B:" << (ld.toBool() ? "T" : "F");
 								} else if (dt == Dfloat || dt == Ddouble) {
 									out << "D:" << ld.toDouble();
+								// (int branch handled below; rebased there)
 								} else {
-									out << "I:" << ld.toInt();
+									// Rebase int loads too: dispatch MKs captured during
+									// self-host point at the input's dual-instance FU range
+									// (e.g. CreateNewFU.FindOr=73228 at input idx 73); rebaseAtr
+									// remaps them to the canonical reload index (->16228) so the
+									// emitted .ind's wiring targets FUs that actually exist.
+									out << "I:" << rebaseAtr(ld.toInt());
 								}
 							}
 							out << " " << f1 << " " << f2
@@ -368,7 +379,7 @@ void BusFU::rebuildCapsFromList(List* cl)
 	int M = (int)CapsEntries.size();
 	for (int i = 0; i < M; i++) {
 		if (!(CapsEntries[i].isMarker && CapsEntries[i].atr == SubCapOpenAtr)) continue;
-		long fuType = 0; bool found = false; int depth = 0;
+		long fuType = 0; bool found = false; int depth = 0; std::string fuName;
 		for (int j = i + 1; j < M; j++) {
 			if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapOpenAtr) depth++;
 			else if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapCloseAtr) {
@@ -378,11 +389,20 @@ void BusFU::rebuildCapsFromList(List* cl)
 			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -22) {
 				fuType = CapsEntries[j].load.toInt(); found = true;
 			}
+			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -2) {
+				unsigned int dt = CapsEntries[j].load.Type >> 1;
+				if (dt == Dstring || dt == Dchar) fuName = CapsEntries[j].load.toStr();
+			}
 		}
-		if (found) {
+		// A real NewFU declaration is `NewFU={Mnemo="X" FUType=Y}` -- it has BOTH a
+		// FUType (-22) AND an FU-name Mnemo (-2) at depth 0 of the sub-cap. A RegPeer
+		// match-key row `>{FUType=1 ... FindAnd={Mnemo="Cons"}}` has the FUType but its
+		// Mnemo is nested inside FindAnd (depth>0), so fuName stays empty -- requiring a
+		// depth-0 Mnemo correctly excludes those false positives (they stay regular caps).
+		if (found && !fuName.empty()) {
 			int p = i - 1;
 			while (p >= 0 && CapsEntries[p].isMarker) p--;
-			if (p >= 0) { CapsEntries[p].isNewFuParent = true; CapsEntries[p].newFuType = fuType; }
+			if (p >= 0) { CapsEntries[p].isNewFuParent = true; CapsEntries[p].newFuType = fuType; CapsEntries[p].newFuName = fuName; }
 		}
 	}
 }

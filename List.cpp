@@ -426,11 +426,11 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		MkExec(Load, ((IC_type)(ListHead.back()->back().Load.Point))->back().Load);
 		break;
 	case 285: // LastAtrOut Выдать атрибут последней ИП последней линии
-		if (!ListHead.size() || !ListHead.back()->size() || ListHead.back()->back().Load.Point==nullptr || !ListHead.back()->back().Load.IC()->size()) break;
+		if (!ListHead.size() || ListHead.back()==nullptr || !ListHead.back()->size() || ListHead.back()->back().Load.Point==nullptr || !ListHead.back()->back().Load.IC()->size()) break;
 		Load.Write(ListHead.back()->back().Load.IC()->back().atr);
 		break;
 	case 286: // LastAtrOutMk Выдать МК с атрибутом последней ИП последней линии
-		if (!ListHead.size() || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.IC()->size()) break;
+		if (!ListHead.size() || ListHead.back()==nullptr || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.IC()->size()) break;
 		MkExec(Load, { Tint, &ListHead.back()->back().Load.IC()->back().atr });
 		break;
 	case 287: // LineAtrOut Выдать атрибут последней ИП текущей линии
@@ -556,6 +556,29 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			((IC_type)ListHead.back()->back().Load.Point)->back().Load = t;
 		break;
 	}
+	case 232: // RowsAppend -- append every row of the Load list (deep copy) into the current list
+		if (ListHead.back() == nullptr) ListHead.back() = new vector<ip>;
+		if (Load.isIC() && Load.Point != nullptr)
+			for (auto& _r : *(IC_type)Load.Point)
+				ListHead.back()->push_back({ _r.atr, TIC, ICCopy(_r.Load, true).Point });
+		break;
+	case 233: // DelFind -- delete the FIRST row whose Mnemo (first field) matches the key (Delphi mk170 DelFindIcLines, MultiLineMode=0)
+	{
+		if (ListHead.back() != nullptr && Load.Point != nullptr) {
+			std::string _kn;
+			if (Load.isIC() && ((IC_type)Load.Point)->size() && (*(IC_type)Load.Point)[0].Load.isStr()) _kn = (*(IC_type)Load.Point)[0].Load.toStr();
+			else if (Load.Type>>1==DIP && ((ip*)Load.Point)->Load.isStr()) _kn = ((ip*)Load.Point)->Load.toStr();
+			if (!_kn.empty()) {
+				auto& _rows = *ListHead.back();
+				for (size_t _i=0; _i<_rows.size(); _i++) {
+					std::string _rn;
+					if (_rows[_i].Load.isIC() && ((IC_type)_rows[_i].Load.Point)->size() && (*(IC_type)_rows[_i].Load.Point)[0].Load.isStr()) _rn = (*(IC_type)_rows[_i].Load.Point)[0].Load.toStr();
+					if (_rn == _kn) { _rows.erase(_rows.begin()+_i); break; }
+				}
+			}
+		}
+	}
+	break;
 	case 160: // LineAdd Добавить новую строку всписок
 		if (ListHead.back() == nullptr)
 			ListHead.back() = new vector<ip>;
@@ -1220,19 +1243,19 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Load.Write(Searcher.IPRezPoint);
 		break;
 	case 416: // IpOutMk Выдать МК с найденной ИП
-		MkExec(Load,{CIP, Searcher.IPRezPoint});
+		if (Searcher.IPRezPoint != nullptr) MkExec(Load,{CIP, Searcher.IPRezPoint});
 		break;
 	case 417: // LoadOut Выдать нагрузку найденной ИП
-		Load.Write(Searcher.IPRezPoint->Load);
+		if (Searcher.IPRezPoint != nullptr) Load.Write(Searcher.IPRezPoint->Load);
 		break;
 	case 418: // LoadOutMk Выдать МК с нагрузкой найденной ИП
-		MkExec(Load, Searcher.IPRezPoint->Load);
+		if (Searcher.IPRezPoint != nullptr) MkExec(Load, Searcher.IPRezPoint->Load);
 		break;
 	case 419: // AtrOut Выдать атрибут наденной ИП
-		Load.Write(Searcher.IPRezPoint->atr);
+		if (Searcher.IPRezPoint != nullptr) Load.Write(Searcher.IPRezPoint->atr);
 		break;
 	case 420: // AtrOutMk Выдать МК с атрибутом найденной ИП
-		MkExec(Load, { Cint, &Searcher.IPRezPoint->atr });
+		if (Searcher.IPRezPoint != nullptr) MkExec(Load, { Cint, &Searcher.IPRezPoint->atr });
 		break;
 	case 425: // LastIpPopMk
 		if (ListHead.back() != nullptr && ListHead.back()->size() > 0)
@@ -1247,19 +1270,19 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Load.Write(Searcher.IPTemplRezPoint);
 		break;
 	case 406: // IpReceivedOutMk Выдать МК с найденной в источнике ИП
-		MkExec(Load, { CIP, Searcher.IPTemplRezPoint });
+		if (Searcher.IPTemplRezPoint != nullptr) MkExec(Load, { CIP, Searcher.IPTemplRezPoint });
 		break;
 	case 407: // LoadReceivedOut Выдать нагрузку найденной в источнике ИП
-		Load.Write(Searcher.IPTemplRezPoint->Load);
+		if (Searcher.IPTemplRezPoint != nullptr) Load.Write(Searcher.IPTemplRezPoint->Load);
 		break;
 	case 408: // LoadReceivedOutMk Выдать МК с нагрузкой найденной в источнике ИП
-		MkExec(Load, Searcher.IPTemplRezPoint->Load);
+		if (Searcher.IPTemplRezPoint != nullptr) MkExec(Load, Searcher.IPTemplRezPoint->Load);
 		break;
 	case 409: // AtrReceivedOut Выдать атрибут наденной в источнике ИП
-		Load.Write(Searcher.IPTemplRezPoint->atr);
+		if (Searcher.IPTemplRezPoint != nullptr) Load.Write(Searcher.IPTemplRezPoint->atr);
 		break;
 	case 410: // AtrReceivedOutMk Выдать МК с атрибутом найденной в источнике ИП
-		MkExec(Load, { Cint, &Searcher.IPTemplRezPoint->atr });
+		if (Searcher.IPTemplRezPoint != nullptr) MkExec(Load, { Cint, &Searcher.IPTemplRezPoint->atr });
 		break;
 
 		// Программы по срезультатам сравнения номеров строк
