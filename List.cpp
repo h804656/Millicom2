@@ -1148,7 +1148,6 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	}
 	case 263: // MarkLastCopyOutMk: dispatch a deep COPY of the last line's ip via Load MK (OAP sub-cap live-dispatch)
 	{
-		if (Bus->ConsumeCapsMakeFu()) break; // native MakeFU already handled this NewFU sub-cap
 		if (ListHead.size() && ListHead.back() != nullptr && ListHead.back()->size() && ListHead.back()->back().atr > 0)
 		{
 			ip tmp = ListHead.back()->back();

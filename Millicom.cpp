@@ -135,6 +135,20 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
+	// Create the .ind emit FU before feeding input so the self-host grammar's
+	// `IndexFile.CapsListRegister` dispatch lands on it (capturing the CapsList
+	// accumulator via Sender). The Delphi-built reference grammar instead captures
+	// it on the Bus (`Main_Bus.CapsListRegister`); that path is handled at emit time.
+	IndexFile* idx = nullptr;
+	long idxAddr = 0;
+	if (!lexInputs.empty())
+	{
+		idx = new IndexFile(&Bus, nullptr);
+		Bus.FUs.push_back(idx);
+		idxAddr = Bus.FUMkRange * (long)(Bus.FUs.size() - 1);
+		idx->FUMkGlobalAdr = idxAddr;
+	}
+
 	string runTempOut;
 	if (runMode)
 	{
@@ -176,18 +190,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if (haveOutFile)
+	if (haveOutFile && idx != nullptr)
 	{
-		IndexFile* idx = new IndexFile(&Bus, nullptr);
-		Bus.FUs.push_back(idx);
-		long idxAddr = Bus.FUMkRange * (long)(Bus.FUs.size() - 1);
-		idx->FUMkGlobalAdr = idxAddr;
-		idx->FileName = outFile;                 // == GatewayFile.FileNameSet
-		if (Bus.capsListFu != nullptr) {
-			long buildMk = idxAddr + 22;         // IndexFile.IndexVectFromList
-			Bus.capsListFu->ProgFU(256, { Cint, &buildMk }, nullptr); // phase 1: CapsList.IndexVectPopMk=...
-		}
-		idx->ProgFU(idxAddr + 21, { Cint, nullptr }, nullptr);        // phase 2: IndexFile.IndexVectWrite
+		idx->FileName = outFile;                                   // == GatewayFile.FileNameSet
+		if (idx->CapsListFu == nullptr && Bus.capsListFu != nullptr)
+			idx->CapsListFu = Bus.capsListFu;
+		if (idx->CapsListFu != nullptr)
+			idx->ProgFU(idxAddr + 22, { Cint, nullptr }, nullptr); // phase 1: IndexVectFromList (build)
+		idx->ProgFU(idxAddr + 21, { Cint, nullptr }, nullptr);     // phase 2: IndexVectWrite
 	}
 
 	if (runMode && !runTempOut.empty())

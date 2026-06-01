@@ -270,6 +270,7 @@ BusMkTable
 >{Mk=287 Mnemo="CapsListRegister" Hint="Capture the CapsList FU pointer on the Bus (dispatch with Sender=CapsList)"}
 
 
+
 SelfMkTable
 >{Mk=30  Mnemo="ReceivedOutMk"}
 >{Mk=36  Mnemo="ReceivedLoadOutMk"}
@@ -358,6 +359,7 @@ MnemoTable.Set=
 >{Mnemo="FUGraphDisplayNew"  Lex.SendToReceiver={Const=25}}
 >{Mnemo="FUCons" 	 Lex.SendToReceiver={Const=1} Console.OutLn="FUCons !"}
 >{Mnemo="Bus" Hint="Главная шина" MkTable.Set=BusMkTable! Lex.SendToReceiver={FU=1000}}
+>{Mnemo="IndexFile" MkTable.Set=IndexFileMkList! Lex.SendToReceiver={FU=58000}}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
 >{Mnemo="StrGenPeer" Hint="Template row for StrGen FUs" MkTable.Set=StrGenMkTable! Lex.SendToReceiver={FU=3000}}
 >{Mnemo="IntAluPeer" Hint="Шаблон для пользовательских IntAlu ФУ" MkTable.Set=IntAluMkTable! Lex.SendToReceiver={FU=7000}}
@@ -389,43 +391,43 @@ Root.Set=
 >{Mnemo Lex.ReceiverMkSet=MnemoAnalysis.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root Mnemo"
 }
 >{Mk Atr ConstInt Lex.ReceiverMkSet=EqualWait.FindAnd
   OAList.LastAttach
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
   OAList.LastAtrOutMk=MkCalc.Set
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root Mk/Atr"
 }
 >{Var Lex.ReceiverMkSet=Root.FindAnd
   Lex.ReceiverPush=ALE.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root Var->ALE"
 }
 >{FU FUType Lex.ReceiverMkSet=FUAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root FU/FUType"
 }
 >{Sep="." Lex.ReceiverMkSet=MkWait.FindOr
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MkTable.FindOr
   MkTable.SuccessProgSet={FUListNew.LineOutMk=Lex.SendToReceiver}
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root ."
 }
 >{HLPLOperator Lex.ReceiverMkSet=Root.FindAnd
   Lex.ReceiverPush=HLPL.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root HLPLOperator->HLPL"
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTied
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root > list (self-loop)"
 }
 >{Sep="}" Lex.ReceiverMkSet=Root.FindAnd
@@ -435,7 +437,7 @@ Root.Set=
                      CapsDepth.Dec
                      CapsDepth.LessEQExec={CapsList.LastOutMk=Bus.Create
                                           CapsList.LastOutMk=RegPeer.FindOr
-                                           CapsList.MarkLastCopyOutMk=Bus.MkExec}}
+                                           RegPeer.FailExec={CapsList.MarkLastCopyOutMk=Bus.MkExec}}}
   Stack.FindAndLast={Sep="{"}
   Stack.FailExec={Lex.Stop Console.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
   Stack.LastDelMk
@@ -443,7 +445,7 @@ Root.Set=
   Stack.SuccessExec={Lex.ReceiverMkSet=ListAfterClose.FindAnd}
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Bus.MkExec}
-  CapsList.OutMk=Bus.CapsListRegister
+  CapsList.IndexVectPopMk=IndexFile.CapsListRegister
   Console.OutLn="Root }"
 }
 >{Sep="" Console.OutLn="End of program"

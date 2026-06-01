@@ -16,7 +16,6 @@ void IndexFile::flattenCapsLevel(void* levelIC, vector<CapsEntry>& out)
 	if (level == nullptr) return;
 	for (auto& e : *level) {
 		if (e.atr == SubCapOpenAtr || e.atr == SubCapCloseAtr) {
-			// Literal flat marker (a path not migrated to nested Push/LevelPrevAdd).
 			CapsEntry ce; ce.atr = e.atr; ce.load = { 0, nullptr };
 			ce.isMarker = true; ce.isNewFuParent = false; ce.newFuType = 0;
 			out.push_back(ce);
@@ -24,19 +23,11 @@ void IndexFile::flattenCapsLevel(void* levelIC, vector<CapsEntry>& out)
 		else if (e.Load.Point != nullptr && e.Load.isIC()) {
 			auto seen = _firstSeenIC.find(e.Load.Point);
 			if (seen != _firstSeenIC.end() && e.atr > 0) {
-				// Repeat of an aliased IC under an ACTION cap (atr>0, e.g. the MkTable.Set Mk
-				// 14001 carrying a `!`-shared table): KEEP the action atr and just point f1 at
-				// the first occurrence's sub-IC -- mirrors Delphi `14001 I:0 <ptr> 13`. SELECTIVE:
-				// only atr>0. Collapsing atr<=0 repeats (the -6 grammar rows, which the recording
-				// FALSELY aliases via the deep-copy gotcha) mis-binds state-FU content (e.g. leaves
-				// VarIniWait empty), so those fall through and inline a fresh copy instead.
 				CapsEntry ip; ip.atr = e.atr; ip.load = { 0, nullptr };
 				ip.isMarker = false; ip.isNewFuParent = false; ip.newFuType = 0;
 				ip.isIcPtr = true; ip.sharedSrcIdx = seen->second;
 				out.push_back(ip);
 			} else {
-				// First occurrence (record it) OR an atr<=0 repeat (inline a fresh copy, do NOT
-				// re-record): parent line (load cleared) + open marker + body + close.
 				if (seen == _firstSeenIC.end()) _firstSeenIC[e.Load.Point] = (int)out.size();
 				CapsEntry pe; pe.atr = e.atr; pe.load = { 0, nullptr };
 				pe.isMarker = false; pe.isNewFuParent = false; pe.newFuType = 0;
@@ -68,10 +59,6 @@ void IndexFile::rebuildCapsFromList(List* cl)
 	_firstSeenIC.clear();
 	for (auto grp : cl->ListHead)
 		flattenCapsLevel((void*)grp, CapsEntries);
-	// MakeFU marking: a NewFU body emits its FUType field as an atr==-22 entry
-	// inside a -1000/-1001 sub-cap. Mark the parent (non-marker entry just before
-	// the -1000) isNewFuParent with newFuType, so the serializer emits
-	// `1001 I:<fuType>` and the skip-prepass drops the sub-cap body.
 	int M = (int)CapsEntries.size();
 	for (int i = 0; i < M; i++) {
 		if (!(CapsEntries[i].isMarker && CapsEntries[i].atr == SubCapOpenAtr)) continue;
@@ -90,11 +77,6 @@ void IndexFile::rebuildCapsFromList(List* cl)
 				if (dt == Dstring || dt == Dchar) fuName = CapsEntries[j].load.toStr();
 			}
 		}
-		// A real NewFU declaration is `NewFU={Mnemo="X" FUType=Y}` -- it has BOTH a
-		// FUType (-22) AND an FU-name Mnemo (-2) at depth 0 of the sub-cap. A RegPeer
-		// match-key row `>{FUType=1 ... FindAnd={Mnemo="Cons"}}` has the FUType but its
-		// Mnemo is nested inside FindAnd (depth>0), so fuName stays empty -- requiring a
-		// depth-0 Mnemo correctly excludes those false positives (they stay regular caps).
 		if (found && !fuName.empty()) {
 			int p = i - 1;
 			while (p >= 0 && CapsEntries[p].isMarker) p--;
@@ -103,18 +85,12 @@ void IndexFile::rebuildCapsFromList(List* cl)
 	}
 }
 
-// CapsManager role: walk the caps tree, assign indices, compute the f1/f3/f4 pointer fields and
-// format every row (mirrors Delphi IndexVectFromList + IcToStr). Output is `builtRows`, NOT a file.
 void IndexFile::buildIndexVector()
 {
 	builtRows.clear();
 	if (CapsListFu != nullptr) rebuildCapsFromList((List*)CapsListFu);
 	BusFU* bus = (BusFU*)Bus; // for rebaseAtr / UserFuRanges (populated during FU creation)
 	int M = (int)CapsEntries.size();
-	// Pre-pass: mark entries inside NewFuParent sub-caps as skipped. Also drop the
-	// implicit-Bus declaration (FUType 0 = FUBusNew): Lexica never serializes the root
-	// Bus. Skipping the PARENT entry too removes the whole declaration; the group-based
-	// f3/f4 relink naturally bridges the gap.
 	std::vector<bool> skip(M, false);
 	for (int i = 0; i < M; i++) {
 		if (!CapsEntries[i].isMarker && CapsEntries[i].isNewFuParent
@@ -156,13 +132,6 @@ void IndexFile::buildIndexVector()
 	std::vector<std::vector<int>> groups(nCaps);
 	for (int i = 0; i < M; i++)
 		if (!CapsEntries[i].isMarker && !skip[i]) groups[capId[i]].push_back(i);
-	// SLOT ASSIGNMENT = pre-order DFS (mirrors Delphi IndexVectFromList, MainUnit.pas:694):
-	// slots follow the flattened APPEARANCE order, so a nested IC's elements sit immediately
-	// after their owning (-6/Obj) capsule. CapsEntries is already in pre-order from flatten;
-	// `capStart[c]` (a sub-IC's first-element slot) then naturally equals owner_slot+1, exactly
-	// Delphi's `Load.Point.Index = (counter after this node)*NIndexField`. The Old loader's
-	// IC segmentation (ConvIndOld) assumes this layout: children contiguous after the owner,
-	// and an owner's sibling f3 that skips past the subtree reads as a branch it resumes later.
 	int N = 0;
 	for (int i = 0; i < M; i++)
 		if (!CapsEntries[i].isMarker && !skip[i]) outIdx[i] = N++;
@@ -200,19 +169,6 @@ void IndexFile::buildIndexVector()
 			}
 			int f3 = (j == n - 1) ? -1 : ((outIdx[g[j + 1]]) << 2); // next sibling in this IC
 			int f4 = (j == 0)     ? -1 : ((outIdx[g[j - 1]]) << 2); // prev sibling in this IC
-			// Grammar template KEYS (a negative-atr leaf with an int-0 load, e.g. the `FU`
-			// key {-300,0} in a `>{FU FUType}` row) are WILDCARDS. The Delphi reference records
-			// them with a NULL load (serialized f1=-1; the loader reconstructs a null load, which
-			// LoadCmp treats as match-any). The OAP recording instead emits int-0, which makes
-			// LoadCmp value-specific so the key matches only value-0 -> NO name resolves in the
-			// self-emit. Normalize int-0 negative-atr leaf keys to f1=-1 so they reload as null
-			// wildcards and FindAnd (Root/MnemoTable) matches any dispatch value.
-			// atr<0 only (NOT atr==0): the `{FU}`/`{Mnemo}` category keys (negative atr) are
-			// NULL wildcards in the reference. But the catch-all `>{0}` key (atr==0) keeps its
-			// int-0 load in the reference -- nulling it makes it a UNIVERSAL wildcard that also
-			// matches Sep tokens (e.g. `=`), so the MnemoAnalysis catch-all spuriously fires on
-			// `=` and crashes in MnemoTable.LastPopMk. Excluding atr==0 keeps it int-0 (matches
-			// only null/int-0 dispatches, the true "else"), matching the Delphi reference.
 			if (!CapsEntries[src].isNewFuParent && !CapsEntries[src].isIcPtr && CapsEntries[src].atr < 0 && f1 == ((gi << 2) + 2)) {
 				auto& kld = CapsEntries[src].load;
 				unsigned int kdt = kld.Type >> 1;
@@ -237,9 +193,6 @@ void IndexFile::buildIndexVector()
 				unsigned int dt = ld.Type >> 1;
 				row << outAtr << " ";
 				if (dt == Dchar) {
-					// Char load (e.g. a Sep key '=') -> `C:<char>"`, matching the Delphi
-					// reference. Emitting it as `S:` (string) mistypes Sep keys and breaks the
-					// lexer/match flow downstream (e.g. var-init `A=1` halted after `=`).
 					row << "C:" << ld.toStr() << "\"";
 				} else if (dt == Dstring) {
 					row << "S:" << ld.toStr() << "\"";
@@ -248,9 +201,6 @@ void IndexFile::buildIndexVector()
 				} else if (dt == Dfloat || dt == Ddouble) {
 					row << "D:" << ld.toDouble();
 				} else {
-					// Rebase int loads too: dispatch MKs captured during self-host point
-					// at the input's dual-instance FU range; rebaseAtr remaps them to the
-					// canonical reload index so the emitted .ind targets FUs that exist.
 					row << "I:" << bus->rebaseAtr(ld.toInt());
 				}
 			}
@@ -279,7 +229,6 @@ void IndexFile::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		IndexVectWrite(FileName);
 		break;
 	case 22: // IndexVectFromList (CapsManager role) -- the caps accumulator forwarded itself
-		// here (CapsList.IndexVectPopMk=IndexFile.IndexVectFromList); build the index vector.
 		if (Load.isFU()) CapsListFu = (FU*)Load.Point;
 		else if (Sender != nullptr) CapsListFu = Sender;
 		buildIndexVector();
@@ -287,8 +236,11 @@ void IndexFile::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 25: // FileNameSet -- set the output .ind path (Delphi GatewayFile idiom)
 		FileName = Load.toStr();
 		break;
-	case 287: // CapsListRegister -- capture the OAP CapsList FU pointer
-		if (CapsListFu == nullptr && Sender != nullptr) CapsListFu = Sender;
+	case 287: // CapsListRegister -- capture the OAP CapsList FU pointer. When dispatched
+		if (CapsListFu == nullptr) {
+			if (Load.isFU()) CapsListFu = (FU*)Load.Point;
+			else if (Sender != nullptr) CapsListFu = Sender;
+		}
 		break;
 	default:
 		CommonMk(MK, Load);

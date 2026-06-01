@@ -32,9 +32,9 @@ public:
 	int argInd = -1; // ������ ���������
 	vector<string> argv; // ��������� ��������� ������
 
-	// FU-range rebase: populated during FU creation (case 1 MakeFU); read by the
-	// IndexFile serializer to remap self-host dual-instance dispatch MKs back to
-	// canonical FU indices. Stays on Bus because it is a creation-time concern.
+	/// <summary>
+	/// //////////////////////////////////////////////////////////// d2-2026
+	/// </summary>
 	vector<std::pair<long, long>> UserFuRanges;
 	long NextReloadFuIdx = 2;
 	long rebaseAtr(long atr) const {
@@ -45,14 +45,6 @@ public:
 		}
 		return atr;
 	}
-	bool capsMakeFuJustFired = false;
-	bool ConsumeCapsMakeFu() override { bool r = capsMakeFuJustFired; capsMakeFuJustFired = false; return r; }
-	// .ind emission logic lives entirely in the IndexFile FU (off the Bus), driven from
-	// Millicom.cpp. The Bus keeps only: (1) rebaseAtr/UserFuRanges (FU-creation-time
-	// data IndexFile reads), and (2) a 1-line CapsList pointer-capture hook (mk 287) --
-	// it must stay here because the .ind is Lexica-built (`Bus.CapsListRegister` baked
-	// in; Lexica has no IndexFile FU) and FUName is not restored on load, so the active
-	// CapsList can only be identified by the runtime Sender of that dispatch.
 	FU* capsListFu = nullptr;
 private:
 	void FUTypesIni();

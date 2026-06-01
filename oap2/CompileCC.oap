@@ -384,6 +384,7 @@ MnemoTable.Set= //         mnemonic translation table
 >{Mnemo="FUGraphDisplayNew"  Lex.SendToReceiver={Const=25}}
 >{Mnemo="FUCons" 	 Lex.SendToReceiver={Const=1} Console.OutLn="FUCons !"}
 >{Mnemo="Bus" Hint="Главная шина" MkTable.Set=BusMkTable! Lex.SendToReceiver={FU=1000}}
+>{Mnemo="IndexFile" MkTable.Set=IndexFileMkList! Lex.SendToReceiver={FU=58000}}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
 >{Mnemo="StrGenPeer" Hint="Template row for StrGen FUs" MkTable.Set=StrGenMkTable! Lex.SendToReceiver={FU=3000}}
 >{Mnemo="IntAluPeer" Hint="Шаблон для пользовательских IntAlu ФУ" MkTable.Set=IntAluMkTable! Lex.SendToReceiver={FU=7000}}
@@ -461,7 +462,7 @@ Root.Set=
                      CapsDepth.Dec
                      CapsDepth.LessEQExec={CapsList.LastOutMk=MainBus.Create
                                           CapsList.LastOutMk=RegPeer.FindOr
-                                           CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}}
+                                           RegPeer.FailExec={CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}}}
   Stack.FindAndLast={Sep="{"}
   Stack.FailExec={Lex.Stop Console.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
   Stack.LastDelMk

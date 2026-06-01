@@ -71,7 +71,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 						UserFuRanges.push_back({ range, NextReloadFuIdx * FUMkRange });
 						NextReloadFuIdx++;
 					}
-					capsMakeFuJustFired = true; // so the OAP MarkLastCopyOutMk skips dispatching this NewFU sub-cap
 				}
 			} // ���������� ������ ����������� ��������� ��
 			break;
@@ -220,8 +219,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				ProgExec(Prog);
 			break;
 
-		// mk 253 (IpBufWrite serializer) removed from the Bus -- emission now lives in
-		// the IndexFile FU, driven from Millicom.cpp.
 		case 287: // CapsListRegister -- thin hook: capture the active CapsList FU pointer
 			if (capsListFu == nullptr && Sender != nullptr) capsListFu = Sender;
 			break;
