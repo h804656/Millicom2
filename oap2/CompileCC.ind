@@ -1,4 +1,4 @@
-2101
+2187
 1001 I:1 2 11 4 -1
 1001 I:2 6 11 8 0
 1001 I:5 10 11 12 4
@@ -61,7 +61,7 @@
 -24 I:0 232 1 -1 -1
 3004 I:0 -1 0 -1 -1
 54007 I:0 246 11 248 232
-57007 I:1 250 11 2908 244
+57007 I:1 250 11 3060 244
 0 I:0 254 11 -1 -1
 -2 S:ContextOut"258 11 264 -1
 -6 I:0 256 1 276 -1
@@ -229,1874 +229,1960 @@
 -6 I:0 904 1 924 892
 -2 S:PushTiedCopy"914 11 916 904
 -42 S:Push tied sub-list (copy)"918 11 -1 912
--24 I:262 922 11 928 -1
+-24 I:240 922 11 928 -1
 -6 I:0 920 1 940 908
--2 S:PopMkDel"930 11 932 920
--42 S:Pop, dispatch via Load MK, delete"934 11 -1 928
--24 I:285 938 11 944 -1
+-2 S:Push"930 11 932 920
+-42 S:Push sub-list level (List; no-op in C++ like Delphi built-in)"934 11 -1 928
+-24 I:262 938 11 944 -1
 -6 I:0 936 1 956 924
--2 S:LastAtrOut"946 11 948 936
--42 S:Write last line's atr to Load"950 11 -1 944
--24 I:286 954 11 960 -1
+-2 S:PopMkDel"946 11 948 936
+-42 S:Pop, dispatch via Load MK, delete"950 11 -1 944
+-24 I:285 954 11 960 -1
 -6 I:0 952 1 972 940
--2 S:LastAtrOutMk"962 11 964 952
--42 S:Dispatch last line's atr via Load MK"966 11 -1 960
--24 I:425 970 11 976 -1
+-2 S:LastAtrOut"962 11 964 952
+-42 S:Write last line's atr to Load"966 11 -1 960
+-24 I:286 970 11 976 -1
 -6 I:0 968 1 988 956
--2 S:LastIpPopMk"978 11 980 968
--42 S:Pop last IP, dispatch via Load MK"982 11 -1 976
--24 I:30 986 11 992 -1
+-2 S:LastAtrOutMk"978 11 980 968
+-42 S:Dispatch last line's atr via Load MK"982 11 -1 976
+-24 I:425 986 11 992 -1
 -6 I:0 984 1 1004 972
--2 S:ReceivedOutMk"994 11 996 984
--42 S:Output received token IP via Load MK"998 11 -1 992
--24 I:36 1002 11 1008 -1
+-2 S:LastIpPopMk"994 11 996 984
+-42 S:Pop last IP, dispatch via Load MK"998 11 -1 992
+-24 I:30 1002 11 1008 -1
 -6 I:0 1000 1 1020 988
--2 S:ReceivedLoadOutMk"1010 11 1012 1000
--42 S:Output received token load via Load MK"1014 11 -1 1008
--24 I:406 1018 11 1024 -1
+-2 S:ReceivedOutMk"1010 11 1012 1000
+-42 S:Output received token IP via Load MK"1014 11 -1 1008
+-24 I:36 1018 11 1024 -1
 -6 I:0 1016 1 1036 1004
--2 S:IpReceivedOutMk"1026 11 1028 1016
--42 S:Output received IP via Load MK"1030 11 -1 1024
--24 I:408 1034 11 1040 -1
+-2 S:ReceivedLoadOutMk"1026 11 1028 1016
+-42 S:Output received token load via Load MK"1030 11 -1 1024
+-24 I:406 1034 11 1040 -1
 -6 I:0 1032 1 1052 1020
--2 S:LoadReceivedOutMk"1042 11 1044 1032
--42 S:Output received load via Load MK"1046 11 -1 1040
--24 I:400 1050 11 1056 -1
+-2 S:IpReceivedOutMk"1042 11 1044 1032
+-42 S:Output received IP via Load MK"1046 11 -1 1040
+-24 I:408 1050 11 1056 -1
 -6 I:0 1048 1 1068 1036
--2 S:LineOutMk"1058 11 1060 1048
--42 S:Output current line via Load MK"1062 11 -1 1056
--24 I:418 1066 11 1072 -1
+-2 S:LoadReceivedOutMk"1058 11 1060 1048
+-42 S:Output received load via Load MK"1062 11 -1 1056
+-24 I:400 1066 11 1072 -1
 -6 I:0 1064 1 1084 1052
--2 S:LoadOutMk"1074 11 1076 1064
--42 S:Output load via Load MK"1078 11 -1 1072
--24 I:178 1082 11 1088 -1
+-2 S:LineOutMk"1074 11 1076 1064
+-42 S:Output current line via Load MK"1078 11 -1 1072
+-24 I:418 1082 11 1088 -1
 -6 I:0 1080 1 1100 1068
--2 S:LineCopyToLast"1090 11 1092 1080
--42 S:Append found row ips onto last row"1094 11 -1 1088
--24 I:148 1098 11 1104 -1
+-2 S:LoadOutMk"1090 11 1092 1080
+-42 S:Output load via Load MK"1094 11 -1 1088
+-24 I:178 1098 11 1104 -1
 -6 I:0 1096 1 1116 1084
--2 S:LastSubLoadSet"1106 11 1108 1096
--42 S:Set deepest last-field load of last row"1110 11 -1 1104
--24 I:155 1114 11 1120 -1
+-2 S:LineCopyToLast"1106 11 1108 1096
+-42 S:Append found row ips onto last row"1110 11 -1 1104
+-24 I:148 1114 11 1120 -1
 -6 I:0 1112 1 1132 1100
--2 S:LastOutMk"1122 11 1124 1112
--42 S:Output last line via Load MK"1126 11 -1 1120
--24 I:116 1130 11 1136 -1
+-2 S:LastSubLoadSet"1122 11 1124 1112
+-42 S:Set deepest last-field load of last row"1126 11 -1 1120
+-24 I:155 1130 11 1136 -1
 -6 I:0 1128 1 1148 1116
--2 S:MarkLastOutMk"1138 11 1140 1128
--42 S:Mark/output last line via Load MK"1142 11 -1 1136
--24 I:163 1146 11 1152 -1
+-2 S:LastOutMk"1138 11 1140 1128
+-42 S:Output last line via Load MK"1142 11 -1 1136
+-24 I:116 1146 11 1152 -1
 -6 I:0 1144 1 1164 1132
--2 S:LineCopyAddPrevLoadSet"1154 11 1156 1144
--42 S:Set prev-line copy source load"1158 11 -1 1152
--24 I:164 1162 11 1168 -1
+-2 S:MarkLastOutMk"1154 11 1156 1144
+-42 S:Mark/output last line via Load MK"1158 11 -1 1152
+-24 I:163 1162 11 1168 -1
 -6 I:0 1160 1 1180 1148
--2 S:LineLoadOutMk"1170 11 1172 1160
--42 S:Dispatch found line load via Load MK"1174 11 -1 1168
--24 I:249 1178 11 1184 -1
+-2 S:LineCopyAddPrevLoadSet"1170 11 1172 1160
+-42 S:Set prev-line copy source load"1174 11 -1 1168
+-24 I:164 1178 11 1184 -1
 -6 I:0 1176 1 1196 1164
--2 S:LevelPrevAdd"1186 11 1188 1176
--42 S:Add previous level"1190 11 -1 1184
--24 I:263 1194 11 1200 -1
+-2 S:LineLoadOutMk"1186 11 1188 1176
+-42 S:Dispatch found line load via Load MK"1190 11 -1 1184
+-24 I:249 1194 11 1200 -1
 -6 I:0 1192 1 1212 1180
--2 S:MarkLastCopyOutMk"1202 11 1204 1192
--42 S:Mark last copy, dispatch via Load MK"1206 11 -1 1200
--24 I:451 1210 11 1216 -1
--6 I:0 1208 1 -1 1196
--2 S:BiggerExec"1218 11 1220 1208
--42 S:Exec Load if LineNum increased"1222 11 -1 1216
-0 I:0 1226 11 -1 -1
--24 I:1 1230 11 1236 -1
--6 I:0 1228 1 1248 -1
--2 S:Set"1238 11 1240 1228
--42 S:Replace current line with new IC"1242 11 -1 1236
--24 I:2 1246 11 1252 -1
--6 I:0 1244 1 1264 1232
--2 S:Out"1254 11 1256 1244
--42 S:Write current line to Load"1258 11 -1 1252
--24 I:3 1262 11 1268 -1
--6 I:0 1260 1 1280 1248
--2 S:OutMk"1270 11 1272 1260
--42 S:Dispatch current line via Load MK"1274 11 -1 1268
--24 I:5 1278 11 1284 -1
+-2 S:LevelPrevAdd"1202 11 1204 1192
+-42 S:Add previous level"1206 11 -1 1200
+-24 I:263 1210 11 1216 -1
+-6 I:0 1208 1 1228 1196
+-2 S:MarkLastCopyOutMk"1218 11 1220 1208
+-42 S:Mark last copy, dispatch via Load MK"1222 11 -1 1216
+-24 I:451 1226 11 1232 -1
+-6 I:0 1224 1 1244 1212
+-2 S:BiggerExec"1234 11 1236 1224
+-42 S:Exec Load if LineNum increased"1238 11 -1 1232
+-24 I:256 1242 11 1248 -1
+-6 I:0 1240 1 -1 1228
+-2 S:IndexVectPopMk"1250 11 1252 1240
+-42 S:Forward this caps-manager FU to the Load MK (.ind emission)"1254 11 -1 1248
+0 I:0 1258 11 -1 -1
+-24 I:1 1262 11 1268 -1
+-6 I:0 1260 1 1280 -1
+-2 S:Set"1270 11 1272 1260
+-42 S:Replace current line with new IC"1274 11 -1 1268
+-24 I:2 1278 11 1284 -1
 -6 I:0 1276 1 1296 1264
--2 S:MultiLineModeSet"1286 11 1288 1276
--42 S:Toggle multi-line search mode"1290 11 -1 1284
--24 I:6 1294 11 1300 -1
+-2 S:Out"1286 11 1288 1276
+-42 S:Write current line to Load"1290 11 -1 1284
+-24 I:3 1294 11 1300 -1
 -6 I:0 1292 1 1312 1280
--2 S:MultyListModeSet"1302 11 1304 1292
--42 S:On find, recurse into each row's sub-list (so nested FU-name fields match)"1306 11 -1 1300
--24 I:7 1310 11 1316 -1
+-2 S:OutMk"1302 11 1304 1292
+-42 S:Dispatch current line via Load MK"1306 11 -1 1300
+-24 I:5 1310 11 1316 -1
 -6 I:0 1308 1 1328 1296
--2 S:MkModeSet"1318 11 1320 1308
--42 S:On FindAnd/FindOr success run matched row body as a program"1322 11 -1 1316
--24 I:8 1326 11 1332 -1
+-2 S:MultiLineModeSet"1318 11 1320 1308
+-42 S:Toggle multi-line search mode"1322 11 -1 1316
+-24 I:6 1326 11 1332 -1
 -6 I:0 1324 1 1344 1312
--2 S:EmptyProgExec"1334 11 1336 1324
--42 S:Exec Load if list is empty"1338 11 -1 1332
--24 I:9 1342 11 1348 -1
+-2 S:MultyListModeSet"1334 11 1336 1324
+-42 S:On find, recurse into each row's sub-list (so nested FU-name fields match)"1338 11 -1 1332
+-24 I:7 1342 11 1348 -1
 -6 I:0 1340 1 1360 1328
--2 S:FullExec"1350 11 1352 1340
--42 S:Exec Load if list is non-empty"1354 11 -1 1348
--24 I:12 1358 11 1364 -1
+-2 S:MkModeSet"1350 11 1352 1340
+-42 S:On FindAnd/FindOr success run matched row body as a program"1354 11 -1 1348
+-24 I:8 1358 11 1364 -1
 -6 I:0 1356 1 1376 1344
--2 S:SuccessProgSet"1366 11 1368 1356
--42 S:Program to run on Find success"1370 11 -1 1364
--24 I:17 1374 11 1380 -1
+-2 S:EmptyProgExec"1366 11 1368 1356
+-42 S:Exec Load if list is empty"1370 11 -1 1364
+-24 I:9 1374 11 1380 -1
 -6 I:0 1372 1 1392 1360
--2 S:FailProgSet"1382 11 1384 1372
--42 S:Set program to run on Find failure"1386 11 -1 1380
--24 I:23 1390 11 1396 -1
+-2 S:FullExec"1382 11 1384 1372
+-42 S:Exec Load if list is non-empty"1386 11 -1 1380
+-24 I:12 1390 11 1396 -1
 -6 I:0 1388 1 1408 1376
--2 S:SuccessExec"1398 11 1400 1388
--42 S:Exec Load if last find succeeded"1402 11 -1 1396
--24 I:24 1406 11 1412 -1
+-2 S:SuccessProgSet"1398 11 1400 1388
+-42 S:Program to run on Find success"1402 11 -1 1396
+-24 I:17 1406 11 1412 -1
 -6 I:0 1404 1 1424 1392
--2 S:FailExec"1414 11 1416 1404
--42 S:Exec Load if last find failed"1418 11 -1 1412
--24 I:151 1422 11 1428 -1
+-2 S:FailProgSet"1414 11 1416 1404
+-42 S:Set program to run on Find failure"1418 11 -1 1412
+-24 I:23 1422 11 1428 -1
 -6 I:0 1420 1 1440 1408
--2 S:LastPop"1430 11 1432 1420
--42 S:Pop the last line"1434 11 -1 1428
--24 I:156 1438 11 1444 -1
+-2 S:SuccessExec"1430 11 1432 1420
+-42 S:Exec Load if last find succeeded"1434 11 -1 1428
+-24 I:24 1438 11 1444 -1
 -6 I:0 1436 1 1456 1424
--2 S:LastPopMk"1446 11 1448 1436
--42 S:Pop the last line, dispatch via Load MK"1450 11 -1 1444
--24 I:157 1454 11 1460 -1
+-2 S:FailExec"1446 11 1448 1436
+-42 S:Exec Load if last find failed"1450 11 -1 1444
+-24 I:151 1454 11 1460 -1
 -6 I:0 1452 1 1472 1440
--2 S:LastDelMk"1462 11 1464 1452
--42 S:Delete the last line"1466 11 -1 1460
--24 I:21 1470 11 1476 -1
+-2 S:LastPop"1462 11 1464 1452
+-42 S:Pop the last line"1466 11 -1 1460
+-24 I:156 1470 11 1476 -1
 -6 I:0 1468 1 1488 1456
--2 S:LineAtrDef"1478 11 1480 1468
--42 S:Set default line atr applied by the next LineAdd"1482 11 -1 1476
--24 I:160 1486 11 1492 -1
+-2 S:LastPopMk"1478 11 1480 1468
+-42 S:Pop the last line, dispatch via Load MK"1482 11 -1 1476
+-24 I:157 1486 11 1492 -1
 -6 I:0 1484 1 1504 1472
--2 S:LineAdd"1494 11 1496 1484
--42 S:Append new line"1498 11 -1 1492
--24 I:169 1502 11 1508 -1
+-2 S:LastDelMk"1494 11 1496 1484
+-42 S:Delete the last line"1498 11 -1 1492
+-24 I:21 1502 11 1508 -1
 -6 I:0 1500 1 1520 1488
--2 S:LastLoadOutMk"1510 11 1512 1500
--42 S:Dispatch last ip load via Load MK"1514 11 -1 1508
--24 I:161 1518 11 1524 -1
+-2 S:LineAtrDef"1510 11 1512 1500
+-42 S:Set default line atr applied by the next LineAdd"1514 11 -1 1508
+-24 I:160 1518 11 1524 -1
 -6 I:0 1516 1 1536 1504
--2 S:LineCopyAdd"1526 11 1528 1516
--42 S:Copy-add new line"1530 11 -1 1524
--24 I:232 1534 11 1540 -1
+-2 S:LineAdd"1526 11 1528 1516
+-42 S:Append new line"1530 11 -1 1524
+-24 I:169 1534 11 1540 -1
 -6 I:0 1532 1 1552 1520
--2 S:RowsAppend"1542 11 1544 1532
--42 S:Append all rows of the Load list (deep copy) into this list"1546 11 -1 1540
--24 I:233 1550 11 1556 -1
+-2 S:LastLoadOutMk"1542 11 1544 1532
+-42 S:Dispatch last ip load via Load MK"1546 11 -1 1540
+-24 I:161 1550 11 1556 -1
 -6 I:0 1548 1 1568 1536
--2 S:DelFind"1558 11 1560 1548
--42 S:Delete the first row whose Mnemo matches the key (shadow)"1562 11 -1 1556
--24 I:170 1566 11 1572 -1
+-2 S:LineCopyAdd"1558 11 1560 1548
+-42 S:Copy-add new line"1562 11 -1 1556
+-24 I:232 1566 11 1572 -1
 -6 I:0 1564 1 1584 1552
--2 S:LastAttach"1574 11 1576 1564
--42 S:Attach IP to the last line's body"1578 11 -1 1572
--24 I:174 1582 11 1588 -1
+-2 S:RowsAppend"1574 11 1576 1564
+-42 S:Append all rows of the Load list (deep copy) into this list"1578 11 -1 1572
+-24 I:233 1582 11 1588 -1
 -6 I:0 1580 1 1600 1568
--2 S:LastLoadConstVarTypeSet"1590 11 1592 1580
--42 S:Mark last line load as Const/Var typed"1594 11 -1 1588
--24 I:185 1598 11 1604 -1
+-2 S:DelFind"1590 11 1592 1580
+-42 S:Delete the first row whose Mnemo matches the key (shadow)"1594 11 -1 1588
+-24 I:170 1598 11 1604 -1
 -6 I:0 1596 1 1616 1584
--2 S:LastLoadSet"1606 11 1608 1596
--42 S:Set Load of the last line"1610 11 -1 1604
--24 I:186 1614 11 1620 -1
+-2 S:LastAttach"1606 11 1608 1596
+-42 S:Attach IP to the last line's body"1610 11 -1 1604
+-24 I:174 1614 11 1620 -1
 -6 I:0 1612 1 1632 1600
--2 S:LastLoadCopySet"1622 11 1624 1612
--42 S:Set Load (copy) of the last line"1626 11 -1 1620
--24 I:189 1630 11 1636 -1
+-2 S:LastLoadConstVarTypeSet"1622 11 1624 1612
+-42 S:Mark last line load as Const/Var typed"1626 11 -1 1620
+-24 I:185 1630 11 1636 -1
 -6 I:0 1628 1 1648 1616
--2 S:LastAtrSet"1638 11 1640 1628
--42 S:Set atr of the last line"1642 11 -1 1636
--24 I:192 1646 11 1652 -1
+-2 S:LastLoadSet"1638 11 1640 1628
+-42 S:Set Load of the last line"1642 11 -1 1636
+-24 I:186 1646 11 1652 -1
 -6 I:0 1644 1 1664 1632
--2 S:LineCopyAddPrevSet"1654 11 1656 1644
--42 S:Set prev-line copy source"1658 11 -1 1652
--24 I:210 1662 11 1668 -1
+-2 S:LastLoadCopySet"1654 11 1656 1644
+-42 S:Set Load (copy) of the last line"1658 11 -1 1652
+-24 I:189 1662 11 1668 -1
 -6 I:0 1660 1 1680 1648
--2 S:LastAtrAttach"1670 11 1672 1660
--42 S:Attach atr to last line as field"1674 11 -1 1668
--24 I:220 1678 11 1684 -1
+-2 S:LastAtrSet"1670 11 1672 1660
+-42 S:Set atr of the last line"1674 11 -1 1668
+-24 I:192 1678 11 1684 -1
 -6 I:0 1676 1 1696 1664
--2 S:FindOrLast"1686 11 1688 1676
--42 S:OR-search, return last match"1690 11 -1 1684
--24 I:222 1694 11 1700 -1
+-2 S:LineCopyAddPrevSet"1686 11 1688 1676
+-42 S:Set prev-line copy source"1690 11 -1 1684
+-24 I:210 1694 11 1700 -1
 -6 I:0 1692 1 1712 1680
--2 S:FindAndLast"1702 11 1704 1692
--42 S:AND-search, return last match"1706 11 -1 1700
--24 I:228 1710 11 1716 -1
+-2 S:LastAtrAttach"1702 11 1704 1692
+-42 S:Attach atr to last line as field"1706 11 -1 1700
+-24 I:220 1710 11 1716 -1
 -6 I:0 1708 1 1728 1696
--2 S:FindOr"1718 11 1720 1708
--42 S:OR-search across rows"1722 11 -1 1716
--24 I:229 1726 11 1732 -1
+-2 S:FindOrLast"1718 11 1720 1708
+-42 S:OR-search, return last match"1722 11 -1 1716
+-24 I:222 1726 11 1732 -1
 -6 I:0 1724 1 1744 1712
--2 S:FindAnd"1734 11 1736 1724
--42 S:AND-search across rows"1738 11 -1 1732
--24 I:243 1742 11 1748 -1
+-2 S:FindAndLast"1734 11 1736 1724
+-42 S:AND-search, return last match"1738 11 -1 1732
+-24 I:228 1742 11 1748 -1
 -6 I:0 1740 1 1760 1728
--2 S:PushTied"1750 11 1752 1740
--42 S:Push tied sub-list"1754 11 -1 1748
--24 I:244 1758 11 1764 -1
+-2 S:FindOr"1750 11 1752 1740
+-42 S:OR-search across rows"1754 11 -1 1748
+-24 I:229 1758 11 1764 -1
 -6 I:0 1756 1 1776 1744
--2 S:PushTiedCopy"1766 11 1768 1756
--42 S:Push tied sub-list (copy)"1770 11 -1 1764
--24 I:262 1774 11 1780 -1
+-2 S:FindAnd"1766 11 1768 1756
+-42 S:AND-search across rows"1770 11 -1 1764
+-24 I:243 1774 11 1780 -1
 -6 I:0 1772 1 1792 1760
--2 S:PopMkDel"1782 11 1784 1772
--42 S:Pop, dispatch via Load MK, delete"1786 11 -1 1780
--24 I:285 1790 11 1796 -1
+-2 S:PushTied"1782 11 1784 1772
+-42 S:Push tied sub-list"1786 11 -1 1780
+-24 I:244 1790 11 1796 -1
 -6 I:0 1788 1 1808 1776
--2 S:LastAtrOut"1798 11 1800 1788
--42 S:Write last line's atr to Load"1802 11 -1 1796
--24 I:286 1806 11 1812 -1
+-2 S:PushTiedCopy"1798 11 1800 1788
+-42 S:Push tied sub-list (copy)"1802 11 -1 1796
+-24 I:240 1806 11 1812 -1
 -6 I:0 1804 1 1824 1792
--2 S:LastAtrOutMk"1814 11 1816 1804
--42 S:Dispatch last line's atr via Load MK"1818 11 -1 1812
--24 I:425 1822 11 1828 -1
+-2 S:Push"1814 11 1816 1804
+-42 S:Push sub-list level (List; no-op in C++ like Delphi built-in)"1818 11 -1 1812
+-24 I:262 1822 11 1828 -1
 -6 I:0 1820 1 1840 1808
--2 S:LastIpPopMk"1830 11 1832 1820
--42 S:Pop last IP, dispatch via Load MK"1834 11 -1 1828
--24 I:30 1838 11 1844 -1
+-2 S:PopMkDel"1830 11 1832 1820
+-42 S:Pop, dispatch via Load MK, delete"1834 11 -1 1828
+-24 I:285 1838 11 1844 -1
 -6 I:0 1836 1 1856 1824
--2 S:ReceivedOutMk"1846 11 1848 1836
--42 S:Output received token IP via Load MK"1850 11 -1 1844
--24 I:36 1854 11 1860 -1
+-2 S:LastAtrOut"1846 11 1848 1836
+-42 S:Write last line's atr to Load"1850 11 -1 1844
+-24 I:286 1854 11 1860 -1
 -6 I:0 1852 1 1872 1840
--2 S:ReceivedLoadOutMk"1862 11 1864 1852
--42 S:Output received token load via Load MK"1866 11 -1 1860
--24 I:406 1870 11 1876 -1
+-2 S:LastAtrOutMk"1862 11 1864 1852
+-42 S:Dispatch last line's atr via Load MK"1866 11 -1 1860
+-24 I:425 1870 11 1876 -1
 -6 I:0 1868 1 1888 1856
--2 S:IpReceivedOutMk"1878 11 1880 1868
--42 S:Output received IP via Load MK"1882 11 -1 1876
--24 I:408 1886 11 1892 -1
+-2 S:LastIpPopMk"1878 11 1880 1868
+-42 S:Pop last IP, dispatch via Load MK"1882 11 -1 1876
+-24 I:30 1886 11 1892 -1
 -6 I:0 1884 1 1904 1872
--2 S:LoadReceivedOutMk"1894 11 1896 1884
--42 S:Output received load via Load MK"1898 11 -1 1892
--24 I:400 1902 11 1908 -1
+-2 S:ReceivedOutMk"1894 11 1896 1884
+-42 S:Output received token IP via Load MK"1898 11 -1 1892
+-24 I:36 1902 11 1908 -1
 -6 I:0 1900 1 1920 1888
--2 S:LineOutMk"1910 11 1912 1900
--42 S:Output current line via Load MK"1914 11 -1 1908
--24 I:418 1918 11 1924 -1
+-2 S:ReceivedLoadOutMk"1910 11 1912 1900
+-42 S:Output received token load via Load MK"1914 11 -1 1908
+-24 I:406 1918 11 1924 -1
 -6 I:0 1916 1 1936 1904
--2 S:LoadOutMk"1926 11 1928 1916
--42 S:Output load via Load MK"1930 11 -1 1924
--24 I:178 1934 11 1940 -1
+-2 S:IpReceivedOutMk"1926 11 1928 1916
+-42 S:Output received IP via Load MK"1930 11 -1 1924
+-24 I:408 1934 11 1940 -1
 -6 I:0 1932 1 1952 1920
--2 S:LineCopyToLast"1942 11 1944 1932
--42 S:Append found row ips onto last row"1946 11 -1 1940
--24 I:148 1950 11 1956 -1
+-2 S:LoadReceivedOutMk"1942 11 1944 1932
+-42 S:Output received load via Load MK"1946 11 -1 1940
+-24 I:400 1950 11 1956 -1
 -6 I:0 1948 1 1968 1936
--2 S:LastSubLoadSet"1958 11 1960 1948
--42 S:Set deepest last-field load of last row"1962 11 -1 1956
--24 I:155 1966 11 1972 -1
+-2 S:LineOutMk"1958 11 1960 1948
+-42 S:Output current line via Load MK"1962 11 -1 1956
+-24 I:418 1966 11 1972 -1
 -6 I:0 1964 1 1984 1952
--2 S:LastOutMk"1974 11 1976 1964
--42 S:Output last line via Load MK"1978 11 -1 1972
--24 I:116 1982 11 1988 -1
+-2 S:LoadOutMk"1974 11 1976 1964
+-42 S:Output load via Load MK"1978 11 -1 1972
+-24 I:178 1982 11 1988 -1
 -6 I:0 1980 1 2000 1968
--2 S:MarkLastOutMk"1990 11 1992 1980
--42 S:Mark/output last line via Load MK"1994 11 -1 1988
--24 I:163 1998 11 2004 -1
+-2 S:LineCopyToLast"1990 11 1992 1980
+-42 S:Append found row ips onto last row"1994 11 -1 1988
+-24 I:148 1998 11 2004 -1
 -6 I:0 1996 1 2016 1984
--2 S:LineCopyAddPrevLoadSet"2006 11 2008 1996
--42 S:Set prev-line copy source load"2010 11 -1 2004
--24 I:164 2014 11 2020 -1
+-2 S:LastSubLoadSet"2006 11 2008 1996
+-42 S:Set deepest last-field load of last row"2010 11 -1 2004
+-24 I:155 2014 11 2020 -1
 -6 I:0 2012 1 2032 2000
--2 S:LineLoadOutMk"2022 11 2024 2012
--42 S:Dispatch found line load via Load MK"2026 11 -1 2020
--24 I:249 2030 11 2036 -1
+-2 S:LastOutMk"2022 11 2024 2012
+-42 S:Output last line via Load MK"2026 11 -1 2020
+-24 I:116 2030 11 2036 -1
 -6 I:0 2028 1 2048 2016
--2 S:LevelPrevAdd"2038 11 2040 2028
--42 S:Add previous level"2042 11 -1 2036
--24 I:263 2046 11 2052 -1
+-2 S:MarkLastOutMk"2038 11 2040 2028
+-42 S:Mark/output last line via Load MK"2042 11 -1 2036
+-24 I:163 2046 11 2052 -1
 -6 I:0 2044 1 2064 2032
--2 S:MarkLastCopyOutMk"2054 11 2056 2044
--42 S:Mark last copy, dispatch via Load MK"2058 11 -1 2052
--24 I:451 2062 11 2068 -1
--6 I:0 2060 1 -1 2048
--2 S:BiggerExec"2070 11 2072 2060
--42 S:Exec Load if LineNum increased"2074 11 -1 2068
-0 I:0 2078 11 -1 -1
--24 I:0 2082 11 2088 -1
--6 I:0 2080 1 2100 -1
--2 S:Reset"2090 11 2092 2080
--42 S:Reset Lex state"2094 11 -1 2088
--24 I:2 2098 11 2104 -1
--6 I:0 2096 1 2116 2084
--2 S:ReceiverPush"2106 11 2108 2096
--42 S:Push current Receiver, set new from Load"2110 11 -1 2104
--24 I:3 2114 11 2120 -1
--6 I:0 2112 1 2132 2100
--2 S:ReceiverPop"2122 11 2124 2112
--42 S:Pop Receiver and dispatch MK"2126 11 -1 2120
--24 I:5 2130 11 2136 -1
--6 I:0 2128 1 2148 2116
--2 S:ReceiverMkSet"2138 11 2140 2128
--42 S:Set Receiver's dispatch MK"2142 11 -1 2136
--24 I:10 2146 11 2152 -1
--6 I:0 2144 1 2164 2132
--2 S:ErrProgSet"2154 11 2156 2144
--42 S:Set program for lex error"2158 11 -1 2152
--24 I:13 2162 11 2168 -1
+-2 S:LineCopyAddPrevLoadSet"2054 11 2056 2044
+-42 S:Set prev-line copy source load"2058 11 -1 2052
+-24 I:164 2062 11 2068 -1
+-6 I:0 2060 1 2080 2048
+-2 S:LineLoadOutMk"2070 11 2072 2060
+-42 S:Dispatch found line load via Load MK"2074 11 -1 2068
+-24 I:249 2078 11 2084 -1
+-6 I:0 2076 1 2096 2064
+-2 S:LevelPrevAdd"2086 11 2088 2076
+-42 S:Add previous level"2090 11 -1 2084
+-24 I:263 2094 11 2100 -1
+-6 I:0 2092 1 2112 2080
+-2 S:MarkLastCopyOutMk"2102 11 2104 2092
+-42 S:Mark last copy, dispatch via Load MK"2106 11 -1 2100
+-24 I:451 2110 11 2116 -1
+-6 I:0 2108 1 2128 2096
+-2 S:BiggerExec"2118 11 2120 2108
+-42 S:Exec Load if LineNum increased"2122 11 -1 2116
+-24 I:256 2126 11 2132 -1
+-6 I:0 2124 1 -1 2112
+-2 S:IndexVectPopMk"2134 11 2136 2124
+-42 S:Forward this caps-manager FU to the Load MK (.ind emission)"2138 11 -1 2132
+0 I:0 2142 11 -1 -1
+-24 I:0 2146 11 2152 -1
+-6 I:0 2144 1 2164 -1
+-2 S:Reset"2154 11 2156 2144
+-42 S:Reset Lex state"2158 11 -1 2152
+-24 I:2 2162 11 2168 -1
 -6 I:0 2160 1 2180 2148
--2 S:StopProgSet"2170 11 2172 2160
--42 S:Set program for Lex.Stop"2174 11 -1 2168
--24 I:15 2178 11 2184 -1
+-2 S:ReceiverPush"2170 11 2172 2160
+-42 S:Push current Receiver, set new from Load"2174 11 -1 2168
+-24 I:3 2178 11 2184 -1
 -6 I:0 2176 1 2196 2164
--2 S:UnicAtrSet"2186 11 2188 2176
--42 S:Set a unique-atr dispatch slot"2190 11 -1 2184
--24 I:16 2194 11 2200 -1
+-2 S:ReceiverPop"2186 11 2188 2176
+-42 S:Pop Receiver and dispatch MK"2190 11 -1 2184
+-24 I:5 2194 11 2200 -1
 -6 I:0 2192 1 2212 2180
--2 S:UnicMkSet"2202 11 2204 2192
--42 S:Set the MK for the current unic-atr slot"2206 11 -1 2200
--24 I:17 2210 11 2216 -1
+-2 S:ReceiverMkSet"2202 11 2204 2192
+-42 S:Set Receiver's dispatch MK"2206 11 -1 2200
+-24 I:10 2210 11 2216 -1
 -6 I:0 2208 1 2228 2196
--2 S:UnicFuSet"2218 11 2220 2208
--42 S:Set the FU for the current unic-atr slot"2222 11 -1 2216
--24 I:21 2226 11 2232 -1
+-2 S:ErrProgSet"2218 11 2220 2208
+-42 S:Set program for lex error"2222 11 -1 2216
+-24 I:13 2226 11 2232 -1
 -6 I:0 2224 1 2244 2212
--2 S:SepSet"2234 11 2236 2224
--42 S:Register a Sep token literal"2238 11 -1 2232
--24 I:22 2242 11 2248 -1
+-2 S:StopProgSet"2234 11 2236 2224
+-42 S:Set program for Lex.Stop"2238 11 -1 2232
+-24 I:15 2242 11 2248 -1
 -6 I:0 2240 1 2260 2228
--2 S:SepErase"2250 11 2252 2240
--42 S:Remove a Sep token literal"2254 11 -1 2248
--24 I:70 2258 11 2264 -1
+-2 S:UnicAtrSet"2250 11 2252 2240
+-42 S:Set a unique-atr dispatch slot"2254 11 -1 2248
+-24 I:16 2258 11 2264 -1
 -6 I:0 2256 1 2276 2244
--2 S:SendToReceiver"2266 11 2268 2256
--42 S:Dispatch current LexBuf entry to Receiver"2270 11 -1 2264
--24 I:100 2274 11 2280 -1
+-2 S:UnicMkSet"2266 11 2268 2256
+-42 S:Set the MK for the current unic-atr slot"2270 11 -1 2264
+-24 I:17 2274 11 2280 -1
 -6 I:0 2272 1 2292 2260
--2 S:Lexing"2282 11 2284 2272
--42 S:Feed string into Lex for tokenization"2286 11 -1 2280
--24 I:99 2290 11 2296 -1
--6 I:0 2288 1 -1 2276
--2 S:Stop"2298 11 2300 2288
--42 S:Stop lexing (Lex.Stop)"2302 11 -1 2296
-0 I:0 2306 11 -1 -1
--24 I:1 2310 11 2316 -1
--6 I:0 2308 1 2328 -1
--2 S:Set"2318 11 2320 2308
--42 S:Set accumulator"2322 11 -1 2316
--24 I:5 2326 11 2332 -1
--6 I:0 2324 1 2344 2312
--2 S:Push"2334 11 2336 2324
--42 S:Push accumulator, set to Load"2338 11 -1 2332
--24 I:8 2342 11 2348 -1
--6 I:0 2340 1 2360 2328
--2 S:Pop"2350 11 2352 2340
--42 S:Pop accumulator into Load"2354 11 -1 2348
--24 I:9 2358 11 2364 -1
--6 I:0 2356 1 2376 2344
--2 S:PopMk"2366 11 2368 2356
--42 S:Pop, dispatch popped value via Load MK"2370 11 -1 2364
--24 I:20 2374 11 2380 -1
--6 I:0 2372 1 2392 2360
--2 S:Out"2382 11 2384 2372
--42 S:Out accumulator into Load"2386 11 -1 2380
--24 I:21 2390 11 2396 -1
+-2 S:UnicFuSet"2282 11 2284 2272
+-42 S:Set the FU for the current unic-atr slot"2286 11 -1 2280
+-24 I:21 2290 11 2296 -1
+-6 I:0 2288 1 2308 2276
+-2 S:SepSet"2298 11 2300 2288
+-42 S:Register a Sep token literal"2302 11 -1 2296
+-24 I:22 2306 11 2312 -1
+-6 I:0 2304 1 2324 2292
+-2 S:SepErase"2314 11 2316 2304
+-42 S:Remove a Sep token literal"2318 11 -1 2312
+-24 I:70 2322 11 2328 -1
+-6 I:0 2320 1 2340 2308
+-2 S:SendToReceiver"2330 11 2332 2320
+-42 S:Dispatch current LexBuf entry to Receiver"2334 11 -1 2328
+-24 I:100 2338 11 2344 -1
+-6 I:0 2336 1 2356 2324
+-2 S:Lexing"2346 11 2348 2336
+-42 S:Feed string into Lex for tokenization"2350 11 -1 2344
+-24 I:99 2354 11 2360 -1
+-6 I:0 2352 1 -1 2340
+-2 S:Stop"2362 11 2364 2352
+-42 S:Stop lexing (Lex.Stop)"2366 11 -1 2360
+0 I:0 2370 11 -1 -1
+-24 I:1 2374 11 2380 -1
+-6 I:0 2372 1 2392 -1
+-2 S:Set"2382 11 2384 2372
+-42 S:Set accumulator"2386 11 -1 2380
+-24 I:5 2390 11 2396 -1
 -6 I:0 2388 1 2408 2376
--2 S:OutMk"2398 11 2400 2388
--42 S:Dispatch accumulator via Load MK"2402 11 -1 2396
--24 I:60 2406 11 2412 -1
+-2 S:Push"2398 11 2400 2388
+-42 S:Push accumulator, set to Load"2402 11 -1 2396
+-24 I:8 2406 11 2412 -1
 -6 I:0 2404 1 2424 2392
--2 S:EQExec"2414 11 2416 2404
--42 S:Exec Load if accum != compare (NB: bug in IntAlu)"2418 11 -1 2412
--24 I:61 2422 11 2428 -1
+-2 S:Pop"2414 11 2416 2404
+-42 S:Pop accumulator into Load"2418 11 -1 2412
+-24 I:9 2422 11 2428 -1
 -6 I:0 2420 1 2440 2408
--2 S:NEQExec"2430 11 2432 2420
--42 S:Exec Load if accum != compare"2434 11 -1 2428
--24 I:140 2438 11 2444 -1
+-2 S:PopMk"2430 11 2432 2420
+-42 S:Pop, dispatch popped value via Load MK"2434 11 -1 2428
+-24 I:20 2438 11 2444 -1
 -6 I:0 2436 1 2456 2424
--2 S:Add"2446 11 2448 2436
--42 S:Add Load to accumulator"2450 11 -1 2444
--24 I:141 2454 11 2460 -1
+-2 S:Out"2446 11 2448 2436
+-42 S:Out accumulator into Load"2450 11 -1 2444
+-24 I:21 2454 11 2460 -1
 -6 I:0 2452 1 2472 2440
--2 S:Sub"2462 11 2464 2452
--42 S:Subtract Load from accumulator"2466 11 -1 2460
--24 I:142 2470 11 2476 -1
+-2 S:OutMk"2462 11 2464 2452
+-42 S:Dispatch accumulator via Load MK"2466 11 -1 2460
+-24 I:60 2470 11 2476 -1
 -6 I:0 2468 1 2488 2456
--2 S:Mul"2478 11 2480 2468
--42 S:Multiply accumulator by Load"2482 11 -1 2476
--24 I:143 2486 11 2492 -1
+-2 S:EQExec"2478 11 2480 2468
+-42 S:Exec Load if accum != compare (NB: bug in IntAlu)"2482 11 -1 2476
+-24 I:61 2486 11 2492 -1
 -6 I:0 2484 1 2504 2472
--2 S:Div"2494 11 2496 2484
--42 S:Divide accumulator by Load"2498 11 -1 2492
--24 I:144 2502 11 2508 -1
+-2 S:NEQExec"2494 11 2496 2484
+-42 S:Exec Load if accum != compare"2498 11 -1 2492
+-24 I:140 2502 11 2508 -1
 -6 I:0 2500 1 2520 2488
--2 S:Mod"2510 11 2512 2500
--42 S:Modulo accumulator by Load"2514 11 -1 2508
--24 I:130 2518 11 2524 -1
+-2 S:Add"2510 11 2512 2500
+-42 S:Add Load to accumulator"2514 11 -1 2508
+-24 I:141 2518 11 2524 -1
 -6 I:0 2516 1 2536 2504
--2 S:Inc"2526 11 2528 2516
--42 S:Increment accumulator"2530 11 -1 2524
--24 I:131 2534 11 2540 -1
+-2 S:Sub"2526 11 2528 2516
+-42 S:Subtract Load from accumulator"2530 11 -1 2524
+-24 I:142 2534 11 2540 -1
 -6 I:0 2532 1 2552 2520
--2 S:Dec"2542 11 2544 2532
--42 S:Decrement accumulator"2546 11 -1 2540
--24 I:62 2550 11 2556 -1
+-2 S:Mul"2542 11 2544 2532
+-42 S:Multiply accumulator by Load"2546 11 -1 2540
+-24 I:143 2550 11 2556 -1
 -6 I:0 2548 1 2568 2536
--2 S:BiggerExec"2558 11 2560 2548
--42 S:Exec Load if accum > compare"2562 11 -1 2556
--24 I:65 2566 11 2572 -1
--6 I:0 2564 1 -1 2552
--2 S:LessEQExec"2574 11 2576 2564
--42 S:Exec Load if accum <= compare"2578 11 -1 2572
-0 I:0 2582 11 -1 -1
--24 I:1 2586 11 2592 -1
--6 I:0 2584 1 2604 -1
--2 S:MakeFU"2594 11 2596 2584
--42 S:Создать ФУ (с типом аргумента или ФУ)"2598 11 -1 2592
--24 I:1 2602 11 2608 -1
--6 I:0 2600 1 2620 2588
--2 S:Create"2610 11 2612 2600
--42 S:alias of MakeFU (Bus mk 1)"2614 11 -1 2608
--24 I:100 2618 11 2624 -1
--6 I:0 2616 1 2636 2604
--2 S:MkExec"2626 11 2628 2616
--42 S:dispatch an IC via its global MK"2630 11 -1 2624
--24 I:5 2634 11 2640 -1
--6 I:0 2632 1 2652 2620
--2 S:ProgExec"2642 11 2644 2632
--42 S:Выполнить последовательность ФУ на шине"2646 11 -1 2640
--24 I:10 2650 11 2656 -1
--6 I:0 2648 1 2668 2636
--2 S:FileOldProgExec"2658 11 2660 2648
--42 S:Выполнить последовательность ФУ из ранее сохранённого файла индекса"2662 11 -1 2656
--24 I:20 2666 11 2672 -1
+-2 S:Div"2558 11 2560 2548
+-42 S:Divide accumulator by Load"2562 11 -1 2556
+-24 I:144 2566 11 2572 -1
+-6 I:0 2564 1 2584 2552
+-2 S:Mod"2574 11 2576 2564
+-42 S:Modulo accumulator by Load"2578 11 -1 2572
+-24 I:130 2582 11 2588 -1
+-6 I:0 2580 1 2600 2568
+-2 S:Inc"2590 11 2592 2580
+-42 S:Increment accumulator"2594 11 -1 2588
+-24 I:131 2598 11 2604 -1
+-6 I:0 2596 1 2616 2584
+-2 S:Dec"2606 11 2608 2596
+-42 S:Decrement accumulator"2610 11 -1 2604
+-24 I:62 2614 11 2620 -1
+-6 I:0 2612 1 2632 2600
+-2 S:BiggerExec"2622 11 2624 2612
+-42 S:Exec Load if accum > compare"2626 11 -1 2620
+-24 I:65 2630 11 2636 -1
+-6 I:0 2628 1 -1 2616
+-2 S:LessEQExec"2638 11 2640 2628
+-42 S:Exec Load if accum <= compare"2642 11 -1 2636
+0 I:0 2646 11 -1 -1
+-24 I:1 2650 11 2656 -1
+-6 I:0 2648 1 2668 -1
+-2 S:MakeFU"2658 11 2660 2648
+-42 S:Создать ФУ (с типом аргумента или ФУ)"2662 11 -1 2656
+-24 I:1 2666 11 2672 -1
 -6 I:0 2664 1 2684 2652
--2 S:NFUOut"2674 11 2676 2664
--42 S:Вывод количества ФУ, зарегистрированных на шине"2678 11 -1 2672
--24 I:21 2682 11 2688 -1
+-2 S:Create"2674 11 2676 2664
+-42 S:alias of MakeFU (Bus mk 1)"2678 11 -1 2672
+-24 I:100 2682 11 2688 -1
 -6 I:0 2680 1 2700 2668
--2 S:NFUOutMk"2690 11 2692 2680
--42 S:Вывод ФУ с количеством МК, зарегистрированных на шине"2694 11 -1 2688
--24 I:25 2698 11 2704 -1
+-2 S:MkExec"2690 11 2692 2680
+-42 S:dispatch an IC via its global MK"2694 11 -1 2688
+-24 I:5 2698 11 2704 -1
 -6 I:0 2696 1 2716 2684
--2 S:LastFUNameSet"2706 11 2708 2696
--42 S:Set the name of the most-recently-created FU"2710 11 -1 2704
--24 I:40 2714 11 2720 -1
+-2 S:ProgExec"2706 11 2708 2696
+-42 S:Выполнить последовательность ФУ на шине"2710 11 -1 2704
+-24 I:10 2714 11 2720 -1
 -6 I:0 2712 1 2732 2700
--2 S:LastFUMkRangeOut"2722 11 2724 2712
--42 S:Write the most-recent FU's MK range to Load"2726 11 -1 2720
--24 I:41 2730 11 2736 -1
+-2 S:FileOldProgExec"2722 11 2724 2712
+-42 S:Выполнить последовательность ФУ из ранее сохранённого файла индекса"2726 11 -1 2720
+-24 I:20 2730 11 2736 -1
 -6 I:0 2728 1 2748 2716
--2 S:LastFUMkRangeOutMk"2738 11 2740 2728
--42 S:Dispatch the most-recent FU's MK range via Load MK"2742 11 -1 2736
--24 I:155 2746 11 2752 -1
+-2 S:NFUOut"2738 11 2740 2728
+-42 S:Вывод количества ФУ, зарегистрированных на шине"2742 11 -1 2736
+-24 I:21 2746 11 2752 -1
 -6 I:0 2744 1 2764 2732
--2 S:FUTypeCorrectSet"2754 11 2756 2744
--42 S:Set FU type correction offset"2758 11 -1 2752
--24 I:253 2762 11 2768 -1
+-2 S:NFUOutMk"2754 11 2756 2744
+-42 S:Вывод ФУ с количеством МК, зарегистрированных на шине"2758 11 -1 2752
+-24 I:25 2762 11 2768 -1
 -6 I:0 2760 1 2780 2748
--2 S:IpBufWrite"2770 11 2772 2760
--42 S:Сериализовать буфер в .ind"2774 11 -1 2768
--24 I:287 2778 11 2784 -1
--6 I:0 2776 1 -1 2764
--2 S:CapsListRegister"2786 11 2788 2776
--42 S:Capture the CapsList FU pointer on the Bus (dispatch with Sender=CapsList)"2790 11 -1 2784
-0 I:0 2794 11 -1 -1
--24 I:30 2798 11 2804 -1
--6 I:0 2796 1 2812 -1
--2 S:ReceivedOutMk"2806 11 -1 2796
--24 I:36 2810 11 2816 -1
--6 I:0 2808 1 2824 2800
--2 S:ReceivedLoadOutMk"2818 11 -1 2808
--24 I:406 2822 11 2828 -1
--6 I:0 2820 1 2836 2812
--2 S:IpReceivedOutMk"2830 11 -1 2820
--24 I:408 2834 11 2840 -1
--6 I:0 2832 1 2848 2824
--2 S:LoadReceivedOutMk"2842 11 -1 2832
--24 I:400 2846 11 2852 -1
--6 I:0 2844 1 2860 2836
--2 S:LineOutMk"2854 11 -1 2844
--24 I:418 2858 11 2864 -1
--6 I:0 2856 1 -1 2848
--2 S:LoadOutMk"2866 11 -1 2856
-0 I:0 2870 11 -1 -1
--24 I:280 2874 11 2880 -1
--6 I:0 2872 1 2888 -1
--2 S:VectNew"2882 11 -1 2872
--24 I:290 2886 11 2892 -1
+-2 S:LastFUNameSet"2770 11 2772 2760
+-42 S:Set the name of the most-recently-created FU"2774 11 -1 2768
+-24 I:40 2778 11 2784 -1
+-6 I:0 2776 1 2796 2764
+-2 S:LastFUMkRangeOut"2786 11 2788 2776
+-42 S:Write the most-recent FU's MK range to Load"2790 11 -1 2784
+-24 I:41 2794 11 2800 -1
+-6 I:0 2792 1 2812 2780
+-2 S:LastFUMkRangeOutMk"2802 11 2804 2792
+-42 S:Dispatch the most-recent FU's MK range via Load MK"2806 11 -1 2800
+-24 I:155 2810 11 2816 -1
+-6 I:0 2808 1 2828 2796
+-2 S:FUTypeCorrectSet"2818 11 2820 2808
+-42 S:Set FU type correction offset"2822 11 -1 2816
+-24 I:253 2826 11 2832 -1
+-6 I:0 2824 1 2844 2812
+-2 S:IpBufWrite"2834 11 2836 2824
+-42 S:Сериализовать буфер в .ind"2838 11 -1 2832
+-24 I:287 2842 11 2848 -1
+-6 I:0 2840 1 -1 2828
+-2 S:CapsListRegister"2850 11 2852 2840
+-42 S:Capture the CapsList FU pointer on the Bus (dispatch with Sender=CapsList)"2854 11 -1 2848
+0 I:0 2858 11 -1 -1
+-24 I:30 2862 11 2868 -1
+-6 I:0 2860 1 2876 -1
+-2 S:ReceivedOutMk"2870 11 -1 2860
+-24 I:36 2874 11 2880 -1
+-6 I:0 2872 1 2888 2864
+-2 S:ReceivedLoadOutMk"2882 11 -1 2872
+-24 I:406 2886 11 2892 -1
 -6 I:0 2884 1 2900 2876
--2 S:Append"2894 11 -1 2884
--24 I:17 2898 11 2904 -1
--6 I:0 2896 1 -1 2888
--2 S:PopMk"2906 11 -1 2896
-57017 I:0 2916 1 2920 248
--24 I:0 2908 1 -1 -1
-30 I:6070 2918 11 -1 -1
-5017 I:0 2928 1 2932 2908
--24 I:0 2920 1 -1 -1
-30 I:57229 2930 11 -1 -1
-5001 I:0 2940 13 4216 2920
--2 S:NewFU"2938 11 2944 -1
--6 I:0 2936 1 2980 -1
-4161 I:0 2952 1 2956 2936
--15 I:0 2944 1 -1 -1
+-2 S:IpReceivedOutMk"2894 11 -1 2884
+-24 I:408 2898 11 2904 -1
+-6 I:0 2896 1 2912 2888
+-2 S:LoadReceivedOutMk"2906 11 -1 2896
+-24 I:400 2910 11 2916 -1
+-6 I:0 2908 1 2924 2900
+-2 S:LineOutMk"2918 11 -1 2908
+-24 I:418 2922 11 2928 -1
+-6 I:0 2920 1 -1 2912
+-2 S:LoadOutMk"2930 11 -1 2920
+0 I:0 2934 11 -1 -1
+-24 I:280 2938 11 2944 -1
+-6 I:0 2936 1 2952 -1
+-2 S:VectNew"2946 11 -1 2936
+-24 I:290 2950 11 2956 -1
+-6 I:0 2948 1 2964 2940
+-2 S:Append"2958 11 -1 2948
+-24 I:17 2962 11 2968 -1
+-6 I:0 2960 1 -1 2952
+-2 S:PopMk"2970 11 -1 2960
+0 I:0 2974 11 -1 -1
+-24 I:4 2978 11 2984 -1
+-6 I:0 2976 1 -1 -1
+-2 S:Stop"2986 11 2988 2976
+-42 S:Halt the string generator"2990 11 -1 2984
+0 I:0 2994 11 -1 -1
+-24 I:287 2998 11 3004 -1
+-6 I:0 2996 1 3016 -1
+-2 S:CapsListRegister"3006 11 3008 2996
+-42 S:Capture the active CapsList accumulator FU"3010 11 -1 3004
+-24 I:21 3014 11 3020 -1
+-6 I:0 3012 1 3032 3000
+-2 S:IndexVectWrite"3022 11 3024 3012
+-42 S:Write the built index vector to a .ind file"3026 11 -1 3020
+-24 I:22 3030 11 3036 -1
+-6 I:0 3028 1 3048 3016
+-2 S:IndexVectFromList"3038 11 3040 3028
+-42 S:Build the index vector from the caps tree"3042 11 -1 3036
+-24 I:25 3046 11 3052 -1
+-6 I:0 3044 1 -1 3032
+-2 S:FileNameSet"3054 11 3056 3044
+-42 S:Set the output .ind path"3058 11 -1 3052
+57017 I:0 3068 1 3072 248
+-24 I:0 3060 1 -1 -1
+30 I:6070 3070 11 -1 -1
+5017 I:0 3080 1 3084 3060
+-24 I:0 3072 1 -1 -1
+30 I:57229 3082 11 -1 -1
+5001 I:0 3092 13 4416 3072
+-2 S:NewFU"3090 11 3096 -1
+-6 I:0 3088 1 3132 -1
+4161 I:0 3104 1 3108 3088
+-15 I:0 3096 1 -1 -1
 -304 I:0 -1 0 -1 -1
-6070 I:0 2964 1 2968 2944
--15 I:0 2956 1 -1 -1
--24 I:16228 2966 11 -1 -1
-2001 S:NewFU "2970 11 2972 2956
-2002 I:16228 2974 11 -1 2968
--2 S:ConsOut"2978 11 2984 -1
--6 I:0 2976 1 3000 2940
-6070 I:0 2992 1 -1 2976
--15 I:0 2984 1 -1 -1
--24 I:2002 2994 11 -1 -1
--2 S:Obj"2998 11 3004 -1
--6 I:0 2996 1 3020 2980
-6070 I:0 3012 1 -1 2996
--15 I:0 3004 1 -1 -1
--8 I:-6 3014 11 -1 -1
--2 S:Atr"3018 11 3024 -1
--6 I:0 3016 1 3040 3000
-6070 I:0 3032 1 -1 3016
--15 I:0 3024 1 -1 -1
--8 I:-8 3034 11 -1 -1
--2 S:Mnemo"3038 11 3044 -1
--6 I:0 3036 1 3060 3020
-6070 I:0 3052 1 -1 3036
--15 I:0 3044 1 -1 -1
--8 I:-2 3054 11 -1 -1
--2 S:Name"3058 11 3064 -1
--6 I:0 3056 1 3080 3040
-6070 I:0 3072 1 -1 3056
--15 I:0 3064 1 -1 -1
--8 I:-72 3074 11 -1 -1
--2 S:FUType"3078 11 3084 -1
--6 I:0 3076 1 3100 3060
-6070 I:0 3092 1 -1 3076
--15 I:0 3084 1 -1 -1
--8 I:-22 3094 11 -1 -1
--2 S:Hint"3098 11 3104 -1
--6 I:0 3096 1 3120 3080
-6070 I:0 3112 1 -1 3096
--15 I:0 3104 1 -1 -1
--8 I:-42 3114 11 -1 -1
--2 S:MkBegRange"3118 11 3124 -1
--6 I:0 3116 1 3140 3100
-6070 I:0 3132 1 -1 3116
--15 I:0 3124 1 -1 -1
--8 I:-20 3134 11 -1 -1
--2 S:Operand"3138 11 3144 -1
--6 I:0 3136 1 3160 3120
-6070 I:0 3152 1 -1 3136
--15 I:0 3144 1 -1 -1
--8 I:-1 3154 11 -1 -1
--2 S:ConstInt"3158 11 3164 -1
--6 I:0 3156 1 3180 3140
-6070 I:0 3172 1 -1 3156
--15 I:0 3164 1 -1 -1
--8 I:-10 3174 11 -1 -1
--2 S:ConstFloat"3178 11 3184 -1
--6 I:0 3176 1 3200 3160
-6070 I:0 3192 1 -1 3176
--15 I:0 3184 1 -1 -1
--8 I:-11 3194 11 -1 -1
--2 S:Const"3198 11 3204 -1
--6 I:0 3196 1 3220 3180
-6070 I:0 3212 1 -1 3196
--15 I:0 3204 1 -1 -1
--8 I:-13 3214 11 -1 -1
--2 S:VarPointer"3218 11 3224 -1
--6 I:0 3216 1 3240 3200
-6070 I:0 3232 1 -1 3216
--15 I:0 3224 1 -1 -1
--8 I:-14 3234 11 -1 -1
--2 S:IcPointer"3238 11 3244 -1
--6 I:0 3236 1 3260 3220
-6070 I:0 3252 1 -1 3236
--15 I:0 3244 1 -1 -1
--8 I:-15 3254 11 -1 -1
--2 S:AtrPointer"3258 11 3264 -1
--6 I:0 3256 1 3280 3240
-6070 I:0 3272 1 -1 3256
--15 I:0 3264 1 -1 -1
--8 I:-18 3274 11 -1 -1
--2 S:MkList"3278 11 3284 -1
--6 I:0 3276 1 3300 3260
-6070 I:0 3292 1 -1 3276
--15 I:0 3284 1 -1 -1
--8 I:-21 3294 11 -1 -1
--2 S:FUTypeList"3298 11 3304 -1
--6 I:0 3296 1 3320 3280
-6070 I:0 3312 1 -1 3296
--15 I:0 3304 1 -1 -1
--8 I:-23 3314 11 -1 -1
--2 S:Mk"3318 11 3324 -1
--6 I:0 3316 1 3340 3300
-6070 I:0 3332 1 -1 3316
--15 I:0 3324 1 -1 -1
--8 I:-24 3334 11 -1 -1
--2 S:Exeption"3338 11 3344 -1
--6 I:0 3336 1 3360 3320
-6070 I:0 3352 1 -1 3336
--15 I:0 3344 1 -1 -1
--8 I:-40 3354 11 -1 -1
--2 S:Comment"3358 11 3364 -1
--6 I:0 3356 1 3380 3340
-6070 I:0 3372 1 -1 3356
--15 I:0 3364 1 -1 -1
--8 I:-54 3374 11 -1 -1
--2 S:FUContext"3378 11 3384 -1
--6 I:0 3376 1 3400 3360
-6070 I:0 3392 1 -1 3376
--15 I:0 3384 1 -1 -1
--8 I:-57 3394 11 -1 -1
--2 S:PointPointer"3398 11 3404 -1
--6 I:0 3396 1 3420 3380
-6070 I:0 3412 1 -1 3396
--15 I:0 3404 1 -1 -1
--8 I:-63 3414 11 -1 -1
--2 S:MkTree"3418 11 3424 -1
--6 I:0 3416 1 3440 3400
-6070 I:0 3432 1 -1 3416
--15 I:0 3424 1 -1 -1
--8 I:-64 3434 11 -1 -1
--2 S:ListPointer"3438 11 3444 -1
--6 I:0 3436 1 3460 3420
-6070 I:0 3452 1 -1 3436
--15 I:0 3444 1 -1 -1
--8 I:-66 3454 11 -1 -1
--2 S:CounterAtr"3458 11 3464 -1
--6 I:0 3456 1 3480 3440
-6070 I:0 3472 1 -1 3456
--15 I:0 3464 1 -1 -1
--8 I:-68 3474 11 -1 -1
--2 S:FUName"3478 11 3484 -1
--6 I:0 3476 1 3500 3460
-6070 I:0 3492 1 -1 3476
--15 I:0 3484 1 -1 -1
--8 I:-69 3494 11 -1 -1
--2 S:FUTypeDef"3498 11 3504 -1
--6 I:0 3496 1 3520 3480
-6070 I:0 3512 1 -1 3496
--15 I:0 3504 1 -1 -1
--8 I:-70 3514 11 -1 -1
--2 S:RepeatProg"3518 11 3524 -1
--6 I:0 3516 1 3540 3500
-6070 I:0 3532 1 -1 3516
--15 I:0 3524 1 -1 -1
--24 I:901 3534 11 -1 -1
--2 S:ElseProgSet"3538 11 3544 -1
--6 I:0 3536 1 3560 3520
-6070 I:0 3552 1 -1 3536
--15 I:0 3544 1 -1 -1
--24 I:953 3554 11 -1 -1
--2 S:ProgSetExec"3558 11 3564 -1
--6 I:0 3556 1 3580 3540
-6070 I:0 3572 1 -1 3556
--15 I:0 3564 1 -1 -1
--24 I:954 3574 11 -1 -1
--2 S:ProgStopAll"3578 11 3584 -1
--6 I:0 3576 1 3600 3560
-6070 I:0 3592 1 -1 3576
--15 I:0 3584 1 -1 -1
--24 I:988 3594 11 -1 -1
--2 S:ProgStop"3598 11 3604 -1
--6 I:0 3596 1 3620 3580
-6070 I:0 3612 1 -1 3596
--15 I:0 3604 1 -1 -1
--24 I:989 3614 11 -1 -1
--2 S:ProgExec"3618 11 3624 -1
--6 I:0 3616 1 3640 3600
-6070 I:0 3632 1 -1 3616
--15 I:0 3624 1 -1 -1
--24 I:990 3634 11 -1 -1
--2 S:ProgSet"3638 11 3644 -1
--6 I:0 3636 1 3660 3620
-6070 I:0 3652 1 -1 3636
--15 I:0 3644 1 -1 -1
--24 I:991 3654 11 -1 -1
--2 S:FUBusNew"3658 11 3664 -1
--6 I:0 3656 1 3680 3640
-6070 I:0 3672 1 -1 3656
--15 I:0 3664 1 -1 -1
--13 I:0 3674 11 -1 -1
--2 S:FUConsNew"3678 11 3684 -1
--6 I:0 3676 1 3700 3660
-6070 I:0 3692 1 -1 3676
--15 I:0 3684 1 -1 -1
--13 I:1 3694 11 -1 -1
--2 S:FUStrGenNew"3698 11 3704 -1
--6 I:0 3696 1 3720 3680
-6070 I:0 3712 1 -1 3696
--15 I:0 3704 1 -1 -1
--13 I:2 3714 11 -1 -1
--2 S:FULexNew"3718 11 3724 -1
--6 I:0 3716 1 3740 3700
-6070 I:0 3732 1 -1 3716
--15 I:0 3724 1 -1 -1
--13 I:3 3734 11 -1 -1
--2 S:FUFindNew"3738 11 3744 -1
--6 I:0 3736 1 3760 3720
-6070 I:0 3752 1 -1 3736
--15 I:0 3744 1 -1 -1
--13 I:4 3754 11 -1 -1
--2 S:FUListNew"3758 11 3764 -1
--6 I:0 3756 1 3784 3740
-14001 I:0 2800 13 3768 3756
-6070 I:0 3776 1 -1 3764
--15 I:0 3768 1 -1 -1
--13 I:5 3778 11 -1 -1
--2 S:FUGraphTransfNew"3782 11 3788 -1
--6 I:0 3780 1 3804 3760
-6070 I:0 3796 1 -1 3780
--15 I:0 3788 1 -1 -1
--13 I:6 3798 11 -1 -1
--2 S:FUIntAluNew"3802 11 3808 -1
--6 I:0 3800 1 3824 3784
-6070 I:0 3816 1 -1 3800
--15 I:0 3808 1 -1 -1
--13 I:7 3818 11 -1 -1
--2 S:FUInOutNew"3822 11 3828 -1
--6 I:0 3820 1 3844 3804
-6070 I:0 3836 1 -1 3820
--15 I:0 3828 1 -1 -1
--13 I:8 3838 11 -1 -1
--2 S:FUMeanShiftNew"3842 11 3848 -1
--6 I:0 3840 1 3864 3824
-6070 I:0 3856 1 -1 3840
--15 I:0 3848 1 -1 -1
--13 I:14 3858 11 -1 -1
--2 S:FUStreamFloatALUNew"3862 11 3868 -1
--6 I:0 3860 1 3884 3844
-6070 I:0 3876 1 -1 3860
--15 I:0 3868 1 -1 -1
--13 I:15 3878 11 -1 -1
--2 S:FUGaussNew"3882 11 3888 -1
--6 I:0 3880 1 3904 3864
-6070 I:0 3896 1 -1 3880
--15 I:0 3888 1 -1 -1
--13 I:16 3898 11 -1 -1
--2 S:FUALUNew"3902 11 3908 -1
--6 I:0 3900 1 3928 3884
-14001 I:0 2876 13 3912 3900
-6070 I:0 3920 1 -1 3908
--15 I:0 3912 1 -1 -1
--13 I:17 3922 11 -1 -1
--2 S:FURouterNew"3926 11 3932 -1
--6 I:0 3924 1 3948 3904
-6070 I:0 3940 1 -1 3924
--15 I:0 3932 1 -1 -1
--13 I:20 3942 11 -1 -1
--2 S:FUGatewayNew"3946 11 3952 -1
--6 I:0 3944 1 3968 3928
-6070 I:0 3960 1 -1 3944
--15 I:0 3952 1 -1 -1
--13 I:21 3962 11 -1 -1
--2 S:FUStreamIntALUNew"3966 11 3972 -1
--6 I:0 3964 1 3988 3948
-6070 I:0 3980 1 -1 3964
--15 I:0 3972 1 -1 -1
--13 I:23 3982 11 -1 -1
--2 S:FUMatPlotNew"3986 11 3992 -1
--6 I:0 3984 1 4008 3968
-6070 I:0 4000 1 -1 3984
--15 I:0 3992 1 -1 -1
--13 I:24 4002 11 -1 -1
--2 S:FUGraphDisplayNew"4006 11 4012 -1
--6 I:0 4004 1 4028 3988
-6070 I:0 4020 1 -1 4004
--15 I:0 4012 1 -1 -1
--13 I:25 4022 11 -1 -1
--2 S:FUCons"4026 11 4032 -1
--6 I:0 4024 1 4052 4008
-6070 I:0 4040 1 4044 4024
--15 I:0 4032 1 -1 -1
--13 I:1 4042 11 -1 -1
-2002 S:FUCons !"4046 11 -1 4032
--2 S:Bus"4050 11 4056 -1
--6 I:0 4048 1 4080 4028
--42 S:Главная шина"4058 11 4060 4048
-14001 I:0 2588 13 4064 4056
+6070 I:0 3116 1 3120 3096
+-15 I:0 3108 1 -1 -1
+-24 I:16228 3118 11 -1 -1
+2001 S:NewFU "3122 11 3124 3108
+2002 I:16228 3126 11 -1 3120
+-2 S:ConsOut"3130 11 3136 -1
+-6 I:0 3128 1 3152 3092
+6070 I:0 3144 1 -1 3128
+-15 I:0 3136 1 -1 -1
+-24 I:2002 3146 11 -1 -1
+-2 S:Obj"3150 11 3156 -1
+-6 I:0 3148 1 3172 3132
+6070 I:0 3164 1 -1 3148
+-15 I:0 3156 1 -1 -1
+-8 I:-6 3166 11 -1 -1
+-2 S:Atr"3170 11 3176 -1
+-6 I:0 3168 1 3192 3152
+6070 I:0 3184 1 -1 3168
+-15 I:0 3176 1 -1 -1
+-8 I:-8 3186 11 -1 -1
+-2 S:Mnemo"3190 11 3196 -1
+-6 I:0 3188 1 3212 3172
+6070 I:0 3204 1 -1 3188
+-15 I:0 3196 1 -1 -1
+-8 I:-2 3206 11 -1 -1
+-2 S:Name"3210 11 3216 -1
+-6 I:0 3208 1 3232 3192
+6070 I:0 3224 1 -1 3208
+-15 I:0 3216 1 -1 -1
+-8 I:-72 3226 11 -1 -1
+-2 S:FUType"3230 11 3236 -1
+-6 I:0 3228 1 3252 3212
+6070 I:0 3244 1 -1 3228
+-15 I:0 3236 1 -1 -1
+-8 I:-22 3246 11 -1 -1
+-2 S:Hint"3250 11 3256 -1
+-6 I:0 3248 1 3272 3232
+6070 I:0 3264 1 -1 3248
+-15 I:0 3256 1 -1 -1
+-8 I:-42 3266 11 -1 -1
+-2 S:MkBegRange"3270 11 3276 -1
+-6 I:0 3268 1 3292 3252
+6070 I:0 3284 1 -1 3268
+-15 I:0 3276 1 -1 -1
+-8 I:-20 3286 11 -1 -1
+-2 S:Operand"3290 11 3296 -1
+-6 I:0 3288 1 3312 3272
+6070 I:0 3304 1 -1 3288
+-15 I:0 3296 1 -1 -1
+-8 I:-1 3306 11 -1 -1
+-2 S:ConstInt"3310 11 3316 -1
+-6 I:0 3308 1 3332 3292
+6070 I:0 3324 1 -1 3308
+-15 I:0 3316 1 -1 -1
+-8 I:-10 3326 11 -1 -1
+-2 S:ConstFloat"3330 11 3336 -1
+-6 I:0 3328 1 3352 3312
+6070 I:0 3344 1 -1 3328
+-15 I:0 3336 1 -1 -1
+-8 I:-11 3346 11 -1 -1
+-2 S:Const"3350 11 3356 -1
+-6 I:0 3348 1 3372 3332
+6070 I:0 3364 1 -1 3348
+-15 I:0 3356 1 -1 -1
+-8 I:-13 3366 11 -1 -1
+-2 S:VarPointer"3370 11 3376 -1
+-6 I:0 3368 1 3392 3352
+6070 I:0 3384 1 -1 3368
+-15 I:0 3376 1 -1 -1
+-8 I:-14 3386 11 -1 -1
+-2 S:IcPointer"3390 11 3396 -1
+-6 I:0 3388 1 3412 3372
+6070 I:0 3404 1 -1 3388
+-15 I:0 3396 1 -1 -1
+-8 I:-15 3406 11 -1 -1
+-2 S:AtrPointer"3410 11 3416 -1
+-6 I:0 3408 1 3432 3392
+6070 I:0 3424 1 -1 3408
+-15 I:0 3416 1 -1 -1
+-8 I:-18 3426 11 -1 -1
+-2 S:MkList"3430 11 3436 -1
+-6 I:0 3428 1 3452 3412
+6070 I:0 3444 1 -1 3428
+-15 I:0 3436 1 -1 -1
+-8 I:-21 3446 11 -1 -1
+-2 S:FUTypeList"3450 11 3456 -1
+-6 I:0 3448 1 3472 3432
+6070 I:0 3464 1 -1 3448
+-15 I:0 3456 1 -1 -1
+-8 I:-23 3466 11 -1 -1
+-2 S:Mk"3470 11 3476 -1
+-6 I:0 3468 1 3492 3452
+6070 I:0 3484 1 -1 3468
+-15 I:0 3476 1 -1 -1
+-8 I:-24 3486 11 -1 -1
+-2 S:Exeption"3490 11 3496 -1
+-6 I:0 3488 1 3512 3472
+6070 I:0 3504 1 -1 3488
+-15 I:0 3496 1 -1 -1
+-8 I:-40 3506 11 -1 -1
+-2 S:Comment"3510 11 3516 -1
+-6 I:0 3508 1 3532 3492
+6070 I:0 3524 1 -1 3508
+-15 I:0 3516 1 -1 -1
+-8 I:-54 3526 11 -1 -1
+-2 S:FUContext"3530 11 3536 -1
+-6 I:0 3528 1 3552 3512
+6070 I:0 3544 1 -1 3528
+-15 I:0 3536 1 -1 -1
+-8 I:-57 3546 11 -1 -1
+-2 S:PointPointer"3550 11 3556 -1
+-6 I:0 3548 1 3572 3532
+6070 I:0 3564 1 -1 3548
+-15 I:0 3556 1 -1 -1
+-8 I:-63 3566 11 -1 -1
+-2 S:MkTree"3570 11 3576 -1
+-6 I:0 3568 1 3592 3552
+6070 I:0 3584 1 -1 3568
+-15 I:0 3576 1 -1 -1
+-8 I:-64 3586 11 -1 -1
+-2 S:ListPointer"3590 11 3596 -1
+-6 I:0 3588 1 3612 3572
+6070 I:0 3604 1 -1 3588
+-15 I:0 3596 1 -1 -1
+-8 I:-66 3606 11 -1 -1
+-2 S:CounterAtr"3610 11 3616 -1
+-6 I:0 3608 1 3632 3592
+6070 I:0 3624 1 -1 3608
+-15 I:0 3616 1 -1 -1
+-8 I:-68 3626 11 -1 -1
+-2 S:FUName"3630 11 3636 -1
+-6 I:0 3628 1 3652 3612
+6070 I:0 3644 1 -1 3628
+-15 I:0 3636 1 -1 -1
+-8 I:-69 3646 11 -1 -1
+-2 S:FUTypeDef"3650 11 3656 -1
+-6 I:0 3648 1 3672 3632
+6070 I:0 3664 1 -1 3648
+-15 I:0 3656 1 -1 -1
+-8 I:-70 3666 11 -1 -1
+-2 S:RepeatProg"3670 11 3676 -1
+-6 I:0 3668 1 3692 3652
+6070 I:0 3684 1 -1 3668
+-15 I:0 3676 1 -1 -1
+-24 I:901 3686 11 -1 -1
+-2 S:ElseProgSet"3690 11 3696 -1
+-6 I:0 3688 1 3712 3672
+6070 I:0 3704 1 -1 3688
+-15 I:0 3696 1 -1 -1
+-24 I:953 3706 11 -1 -1
+-2 S:ProgSetExec"3710 11 3716 -1
+-6 I:0 3708 1 3732 3692
+6070 I:0 3724 1 -1 3708
+-15 I:0 3716 1 -1 -1
+-24 I:954 3726 11 -1 -1
+-2 S:ProgStopAll"3730 11 3736 -1
+-6 I:0 3728 1 3752 3712
+6070 I:0 3744 1 -1 3728
+-15 I:0 3736 1 -1 -1
+-24 I:988 3746 11 -1 -1
+-2 S:ProgStop"3750 11 3756 -1
+-6 I:0 3748 1 3772 3732
+6070 I:0 3764 1 -1 3748
+-15 I:0 3756 1 -1 -1
+-24 I:989 3766 11 -1 -1
+-2 S:ProgExec"3770 11 3776 -1
+-6 I:0 3768 1 3792 3752
+6070 I:0 3784 1 -1 3768
+-15 I:0 3776 1 -1 -1
+-24 I:990 3786 11 -1 -1
+-2 S:ProgSet"3790 11 3796 -1
+-6 I:0 3788 1 3812 3772
+6070 I:0 3804 1 -1 3788
+-15 I:0 3796 1 -1 -1
+-24 I:991 3806 11 -1 -1
+-2 S:FUBusNew"3810 11 3816 -1
+-6 I:0 3808 1 3832 3792
+6070 I:0 3824 1 -1 3808
+-15 I:0 3816 1 -1 -1
+-13 I:0 3826 11 -1 -1
+-2 S:FUConsNew"3830 11 3836 -1
+-6 I:0 3828 1 3852 3812
+6070 I:0 3844 1 -1 3828
+-15 I:0 3836 1 -1 -1
+-13 I:1 3846 11 -1 -1
+-2 S:FUStrGenNew"3850 11 3856 -1
+-6 I:0 3848 1 3872 3832
+6070 I:0 3864 1 -1 3848
+-15 I:0 3856 1 -1 -1
+-13 I:2 3866 11 -1 -1
+-2 S:FULexNew"3870 11 3876 -1
+-6 I:0 3868 1 3892 3852
+6070 I:0 3884 1 -1 3868
+-15 I:0 3876 1 -1 -1
+-13 I:3 3886 11 -1 -1
+-2 S:FUFindNew"3890 11 3896 -1
+-6 I:0 3888 1 3912 3872
+6070 I:0 3904 1 -1 3888
+-15 I:0 3896 1 -1 -1
+-13 I:4 3906 11 -1 -1
+-2 S:FUListNew"3910 11 3916 -1
+-6 I:0 3908 1 3936 3892
+14001 I:0 2864 13 3920 3908
+6070 I:0 3928 1 -1 3916
+-15 I:0 3920 1 -1 -1
+-13 I:5 3930 11 -1 -1
+-2 S:FUGraphTransfNew"3934 11 3940 -1
+-6 I:0 3932 1 3956 3912
+6070 I:0 3948 1 -1 3932
+-15 I:0 3940 1 -1 -1
+-13 I:6 3950 11 -1 -1
+-2 S:FUIntAluNew"3954 11 3960 -1
+-6 I:0 3952 1 3976 3936
+6070 I:0 3968 1 -1 3952
+-15 I:0 3960 1 -1 -1
+-13 I:7 3970 11 -1 -1
+-2 S:FUInOutNew"3974 11 3980 -1
+-6 I:0 3972 1 3996 3956
+6070 I:0 3988 1 -1 3972
+-15 I:0 3980 1 -1 -1
+-13 I:8 3990 11 -1 -1
+-2 S:FUMeanShiftNew"3994 11 4000 -1
+-6 I:0 3992 1 4016 3976
+6070 I:0 4008 1 -1 3992
+-15 I:0 4000 1 -1 -1
+-13 I:14 4010 11 -1 -1
+-2 S:FUStreamFloatALUNew"4014 11 4020 -1
+-6 I:0 4012 1 4036 3996
+6070 I:0 4028 1 -1 4012
+-15 I:0 4020 1 -1 -1
+-13 I:15 4030 11 -1 -1
+-2 S:FUGaussNew"4034 11 4040 -1
+-6 I:0 4032 1 4056 4016
+6070 I:0 4048 1 -1 4032
+-15 I:0 4040 1 -1 -1
+-13 I:16 4050 11 -1 -1
+-2 S:FUALUNew"4054 11 4060 -1
+-6 I:0 4052 1 4080 4036
+14001 I:0 2940 13 4064 4052
 6070 I:0 4072 1 -1 4060
 -15 I:0 4064 1 -1 -1
--300 I:1000 4074 11 -1 -1
--2 S:Cons"4078 11 4084 -1
--6 I:0 4076 1 4108 4052
--42 S:Главная консоль"4086 11 4088 4076
-14001 I:0 296 13 4092 4084
-6070 I:0 4100 1 -1 4088
--15 I:0 4092 1 -1 -1
--300 I:2000 4102 11 -1 -1
--2 S:IntAluPeer"4106 11 4112 -1
--6 I:0 4104 1 4136 4080
--42 S:Шаблон для пользовательских IntAlu ФУ"4114 11 4116 4104
-14001 I:0 2312 13 4120 4112
-6070 I:0 4128 1 -1 4116
--15 I:0 4120 1 -1 -1
--300 I:7000 4130 11 -1 -1
--2 S:ListPeer"4134 11 4140 -1
--6 I:0 4132 1 4164 4108
--42 S:Template row for user List FUs"4142 11 4144 4132
-14001 I:0 380 13 4148 4140
-6070 I:0 4156 1 -1 4144
--15 I:0 4148 1 -1 -1
--300 I:4000 4158 11 -1 -1
--2 S:Lex"4162 11 4168 -1
--6 I:0 4160 1 4192 4136
--42 S:Template row for user Lex FUs"4170 11 4172 4160
-14001 I:0 2084 13 4176 4168
-6070 I:0 4184 1 -1 4172
--15 I:0 4176 1 -1 -1
--300 I:6000 4186 11 -1 -1
--2 S:MnemoTable"4190 11 4196 -1
--6 I:0 4188 1 -1 4164
--42 S:Mnemonic table self row at FU idx 5"4198 11 4200 4188
-14001 I:0 1232 13 4204 4196
-6070 I:0 4212 1 -1 4200
+-13 I:17 4074 11 -1 -1
+-2 S:FUIndexFileNew"4078 11 4084 -1
+-6 I:0 4076 1 4100 4056
+6070 I:0 4092 1 -1 4076
+-15 I:0 4084 1 -1 -1
+-13 I:26 4094 11 -1 -1
+-2 S:FURouterNew"4098 11 4104 -1
+-6 I:0 4096 1 4120 4080
+6070 I:0 4112 1 -1 4096
+-15 I:0 4104 1 -1 -1
+-13 I:20 4114 11 -1 -1
+-2 S:FUGatewayNew"4118 11 4124 -1
+-6 I:0 4116 1 4140 4100
+6070 I:0 4132 1 -1 4116
+-15 I:0 4124 1 -1 -1
+-13 I:21 4134 11 -1 -1
+-2 S:FUStreamIntALUNew"4138 11 4144 -1
+-6 I:0 4136 1 4160 4120
+6070 I:0 4152 1 -1 4136
+-15 I:0 4144 1 -1 -1
+-13 I:23 4154 11 -1 -1
+-2 S:FUMatPlotNew"4158 11 4164 -1
+-6 I:0 4156 1 4180 4140
+6070 I:0 4172 1 -1 4156
+-15 I:0 4164 1 -1 -1
+-13 I:24 4174 11 -1 -1
+-2 S:FUGraphDisplayNew"4178 11 4184 -1
+-6 I:0 4176 1 4200 4160
+6070 I:0 4192 1 -1 4176
+-15 I:0 4184 1 -1 -1
+-13 I:25 4194 11 -1 -1
+-2 S:FUCons"4198 11 4204 -1
+-6 I:0 4196 1 4224 4180
+6070 I:0 4212 1 4216 4196
 -15 I:0 4204 1 -1 -1
--300 I:5000 4214 11 -1 -1
-16005 I:1 4218 11 4220 2932
-16001 I:0 4228 13 4296 4216
--303 I:0 -1 0 4232 -1
--6 I:0 4224 1 4240 -1
-16418 I:1001 4234 11 -1 4224
--22 I:0 -1 0 4244 -1
--6 I:0 4236 1 4252 4228
-418 I:1001 4246 11 -1 4236
--72 I:0 -1 0 4256 -1
--6 I:0 4248 1 4284 4240
-416 I:5161 4258 11 4260 4248
-5161 I:0 4268 1 4272 4256
--15 I:0 4260 1 -1 -1
--300 I:0 -1 0 -1 -1
-1041 I:5185 4274 11 4276 4260
-418 I:1025 4278 11 -1 4272
--42 I:0 -1 0 4288 -1
--6 I:0 4280 1 -1 4252
-2002 S:Hint"4290 11 4292 4280
-416 I:5161 4294 11 -1 4288
-53005 I:1 4298 11 4300 4220
-53007 I:1 4302 11 4304 4296
-53001 I:0 4312 13 4452 4300
--22 I:1 4310 11 4316 -1
--6 I:0 4308 1 4348 -1
-52155 I:5161 4318 11 4320 4308
-5229 I:0 4328 1 4332 4316
+-13 I:1 4214 11 -1 -1
+2002 S:FUCons !"4218 11 -1 4204
+-2 S:Bus"4222 11 4228 -1
+-6 I:0 4220 1 4252 4200
+-42 S:Главная шина"4230 11 4232 4220
+14001 I:0 2652 13 4236 4228
+6070 I:0 4244 1 -1 4232
+-15 I:0 4236 1 -1 -1
+-300 I:1000 4246 11 -1 -1
+-2 S:Cons"4250 11 4256 -1
+-6 I:0 4248 1 4280 4224
+-42 S:Главная консоль"4258 11 4260 4248
+14001 I:0 296 13 4264 4256
+6070 I:0 4272 1 -1 4260
+-15 I:0 4264 1 -1 -1
+-300 I:2000 4274 11 -1 -1
+-2 S:StrGenPeer"4278 11 4284 -1
+-6 I:0 4276 1 4308 4252
+-42 S:Template row for StrGen FUs"4286 11 4288 4276
+14001 I:0 2980 13 4292 4284
+6070 I:0 4300 1 -1 4288
+-15 I:0 4292 1 -1 -1
+-300 I:3000 4302 11 -1 -1
+-2 S:IntAluPeer"4306 11 4312 -1
+-6 I:0 4304 1 4336 4280
+-42 S:Шаблон для пользовательских IntAlu ФУ"4314 11 4316 4304
+14001 I:0 2376 13 4320 4312
+6070 I:0 4328 1 -1 4316
 -15 I:0 4320 1 -1 -1
--2 S:Cons"4330 11 -1 -1
-5178 I:0 -1 0 4336 4320
-1041 I:5148 4338 11 4340 4332
-5155 I:57161 4342 11 -1 4336
--22 I:3 4346 11 4352 -1
--6 I:0 4344 1 4384 4312
-52155 I:5161 4354 11 4356 4344
-5229 I:0 4364 1 4368 4352
--15 I:0 4356 1 -1 -1
--2 S:Lex"4366 11 -1 -1
-5178 I:0 -1 0 4372 4356
-1041 I:5148 4374 11 4376 4368
-5155 I:57161 4378 11 -1 4372
--22 I:5 4382 11 4388 -1
--6 I:0 4380 1 4420 4348
-52155 I:5161 4390 11 4392 4380
-5229 I:0 4400 1 4404 4388
--15 I:0 4392 1 -1 -1
--2 S:ListPeer"4402 11 -1 -1
-5178 I:0 -1 0 4408 4392
-1041 I:5148 4410 11 4412 4404
-5155 I:57161 4414 11 -1 4408
--22 I:7 4418 11 4424 -1
--6 I:0 4416 1 -1 4384
-52155 I:5161 4426 11 4428 4416
-5229 I:0 4436 1 4440 4424
--15 I:0 4428 1 -1 -1
--2 S:IntAluPeer"4438 11 -1 -1
-5178 I:0 -1 0 4444 4428
-1041 I:5148 4446 11 4448 4440
-5155 I:57161 4450 11 -1 4444
-19001 I:0 4460 13 4920 4304
--2 I:0 -1 0 4464 -1
--6 I:0 4456 1 4496 -1
-6005 I:20229 4466 11 4468 4456
-30 I:5161 4470 11 4472 4464
-5170 I:0 4480 1 4484 4468
--15 I:0 4472 1 -1 -1
+-300 I:7000 4330 11 -1 -1
+-2 S:ListPeer"4334 11 4340 -1
+-6 I:0 4332 1 4364 4308
+-42 S:Template row for user List FUs"4342 11 4344 4332
+14001 I:0 380 13 4348 4340
+6070 I:0 4356 1 -1 4344
+-15 I:0 4348 1 -1 -1
+-300 I:4000 4358 11 -1 -1
+-2 S:Lex"4362 11 4368 -1
+-6 I:0 4360 1 4392 4336
+-42 S:Template row for user Lex FUs"4370 11 4372 4360
+14001 I:0 2148 13 4376 4368
+6070 I:0 4384 1 -1 4372
+-15 I:0 4376 1 -1 -1
+-300 I:6000 4386 11 -1 -1
+-2 S:MnemoTable"4390 11 4396 -1
+-6 I:0 4388 1 -1 4364
+-42 S:Mnemonic table self row at FU idx 5"4398 11 4400 4388
+14001 I:0 1264 13 4404 4396
+6070 I:0 4412 1 -1 4400
+-15 I:0 4404 1 -1 -1
+-300 I:5000 4414 11 -1 -1
+16005 I:1 4418 11 4420 3084
+16001 I:0 4428 13 4496 4416
+-303 I:0 -1 0 4432 -1
+-6 I:0 4424 1 4440 -1
+16418 I:1001 4434 11 -1 4424
+-22 I:0 -1 0 4444 -1
+-6 I:0 4436 1 4452 4428
+418 I:1001 4446 11 -1 4436
+-72 I:0 -1 0 4456 -1
+-6 I:0 4448 1 4484 4440
+416 I:5161 4458 11 4460 4448
+5161 I:0 4468 1 4472 4456
+-15 I:0 4460 1 -1 -1
+-300 I:0 -1 0 -1 -1
+1041 I:5185 4474 11 4476 4460
+418 I:1025 4478 11 -1 4472
+-42 I:0 -1 0 4488 -1
+-6 I:0 4480 1 -1 4452
+2002 S:Hint"4490 11 4492 4480
+416 I:5161 4494 11 -1 4488
+53005 I:1 4498 11 4500 4420
+53007 I:1 4502 11 4504 4496
+53001 I:0 4512 13 4688 4500
+-22 I:1 4510 11 4516 -1
+-6 I:0 4508 1 4548 -1
+52155 I:5161 4518 11 4520 4508
+5229 I:0 4528 1 4532 4516
+-15 I:0 4520 1 -1 -1
+-2 S:Cons"4530 11 -1 -1
+5178 I:0 -1 0 4536 4520
+1041 I:5148 4538 11 4540 4532
+5155 I:57161 4542 11 -1 4536
+-22 I:2 4546 11 4552 -1
+-6 I:0 4544 1 4584 4512
+52155 I:5161 4554 11 4556 4544
+5229 I:0 4564 1 4568 4552
+-15 I:0 4556 1 -1 -1
+-2 S:StrGenPeer"4566 11 -1 -1
+5178 I:0 -1 0 4572 4556
+1041 I:5148 4574 11 4576 4568
+5155 I:57161 4578 11 -1 4572
+-22 I:3 4582 11 4588 -1
+-6 I:0 4580 1 4620 4548
+52155 I:5161 4590 11 4592 4580
+5229 I:0 4600 1 4604 4588
+-15 I:0 4592 1 -1 -1
+-2 S:Lex"4602 11 -1 -1
+5178 I:0 -1 0 4608 4592
+1041 I:5148 4610 11 4612 4604
+5155 I:57161 4614 11 -1 4608
+-22 I:5 4618 11 4624 -1
+-6 I:0 4616 1 4656 4584
+52155 I:5161 4626 11 4628 4616
+5229 I:0 4636 1 4640 4624
+-15 I:0 4628 1 -1 -1
+-2 S:ListPeer"4638 11 -1 -1
+5178 I:0 -1 0 4644 4628
+1041 I:5148 4646 11 4648 4640
+5155 I:57161 4650 11 -1 4644
+-22 I:7 4654 11 4660 -1
+-6 I:0 4652 1 -1 4620
+52155 I:5161 4662 11 4664 4652
+5229 I:0 4672 1 4676 4660
+-15 I:0 4664 1 -1 -1
+-2 S:IntAluPeer"4674 11 -1 -1
+5178 I:0 -1 0 4680 4664
+1041 I:5148 4682 11 4684 4676
+5155 I:57161 4686 11 -1 4680
+19001 I:0 4696 13 5164 4504
+-2 I:0 -1 0 4700 -1
+-6 I:0 4692 1 4732 -1
+6005 I:20229 4702 11 4704 4692
+30 I:5161 4706 11 4708 4700
+5170 I:0 4716 1 4720 4704
+-15 I:0 4708 1 -1 -1
 6070 I:0 -1 0 -1 -1
-52003 I:1287 4486 11 4488 4472
-2002 S:Root Mnemo"4490 11 -1 4484
--24 I:0 -1 0 4500 -1
--6 I:0 4492 1 4532 4460
--8 I:0 -1 0 4504 4492
-6005 I:28229 4506 11 4508 4500
-15170 I:0 -1 0 4512 4504
-36 I:15189 4514 11 4516 4508
-15286 I:8001 4518 11 4520 4512
-52003 I:1287 4522 11 4524 4516
-2002 S:Root Mk/Atr"4526 11 -1 4520
--14 I:0 -1 0 4536 -1
--6 I:0 4528 1 4560 4496
-6005 I:19229 4538 11 4540 4528
-6002 I:44229 4542 11 4544 4536
-30 I:6070 4546 11 4548 4540
-52003 I:1287 4550 11 4552 4544
-2002 S:Root Var->ALE"4554 11 -1 4548
--300 I:0 -1 0 4564 -1
--6 I:0 4556 1 4588 4532
--22 I:0 -1 0 4568 4556
-6005 I:29229 4570 11 4572 4564
-36 I:8001 4574 11 4576 4568
-52003 I:1287 4578 11 4580 4572
-2002 S:Root FU/FUType"4582 11 -1 4576
--4 C:."4586 11 4592 -1
--6 I:0 4584 1 4628 4560
-6005 I:26228 4594 11 4596 4584
-6015 I:-2 4598 11 4600 4592
-6016 I:14228 4602 11 4604 4596
-14012 I:0 4612 1 4616 4600
--15 I:0 4604 1 -1 -1
-400 I:6070 4614 11 -1 -1
-52003 I:1287 4618 11 4620 4604
-2002 S:Root ."4622 11 -1 4616
--320 I:0 -1 0 4632 -1
--6 I:0 4624 1 4656 4588
-6005 I:19229 4634 11 4636 4624
-6002 I:51229 4638 11 4640 4632
-30 I:6070 4642 11 4644 4636
-52003 I:1287 4646 11 4648 4640
-2002 S:Root HLPLOperator->HLPL"4650 11 -1 4644
--4 C:>"4654 11 4660 -1
--6 I:0 4652 1 4696 4628
--4 C:<"4662 11 4664 4652
-6005 I:19229 4666 11 4668 4660
-4161 I:0 4676 1 4680 4664
--15 I:0 4668 1 -1 -1
--4 C:>"4678 11 -1 -1
-15243 I:0 -1 0 4684 4668
-52003 I:1287 4686 11 4688 4680
-2002 S:Root > list (self-loop)"4690 11 -1 4684
--4 C:}"4694 11 4700 -1
--6 I:0 4692 1 4856 4656
-6005 I:19229 4702 11 4704 4692
-4222 I:0 4712 1 4716 4700
--15 I:0 4704 1 -1 -1
+52003 I:1287 4722 11 4724 4708
+2002 S:Root Mnemo"4726 11 -1 4720
+-24 I:0 -1 0 4736 -1
+-6 I:0 4728 1 4772 4696
+-8 I:0 -1 0 4740 4728
+-10 I:0 -1 0 4744 4736
+6005 I:28229 4746 11 4748 4740
+15170 I:0 -1 0 4752 4744
+36 I:15189 4754 11 4756 4748
+15286 I:8001 4758 11 4760 4752
+52003 I:1287 4762 11 4764 4756
+2002 S:Root Mk/Atr"4766 11 -1 4760
+-14 I:0 -1 0 4776 -1
+-6 I:0 4768 1 4800 4732
+6005 I:19229 4778 11 4780 4768
+6002 I:44229 4782 11 4784 4776
+30 I:6070 4786 11 4788 4780
+52003 I:1287 4790 11 4792 4784
+2002 S:Root Var->ALE"4794 11 -1 4788
+-300 I:0 -1 0 4804 -1
+-6 I:0 4796 1 4828 4772
+-22 I:0 -1 0 4808 4796
+6005 I:29229 4810 11 4812 4804
+36 I:8001 4814 11 4816 4808
+52003 I:1287 4818 11 4820 4812
+2002 S:Root FU/FUType"4822 11 -1 4816
+-4 C:."4826 11 4832 -1
+-6 I:0 4824 1 4868 4800
+6005 I:26228 4834 11 4836 4824
+6015 I:-2 4838 11 4840 4832
+6016 I:14228 4842 11 4844 4836
+14012 I:0 4852 1 4856 4840
+-15 I:0 4844 1 -1 -1
+400 I:6070 4854 11 -1 -1
+52003 I:1287 4858 11 4860 4844
+2002 S:Root ."4862 11 -1 4856
+-320 I:0 -1 0 4872 -1
+-6 I:0 4864 1 4896 4828
+6005 I:19229 4874 11 4876 4864
+6002 I:51229 4878 11 4880 4872
+30 I:6070 4882 11 4884 4876
+52003 I:1287 4886 11 4888 4880
+2002 S:Root HLPLOperator->HLPL"4890 11 -1 4884
+-4 C:>"4894 11 4900 -1
+-6 I:0 4892 1 4936 4868
+-4 C:<"4902 11 4904 4892
+6005 I:19229 4906 11 4908 4900
+4161 I:0 4916 1 4920 4904
+-15 I:0 4908 1 -1 -1
+-4 C:>"4918 11 -1 -1
+15243 I:0 -1 0 4924 4908
+52003 I:1287 4926 11 4928 4920
+2002 S:Root > list (self-loop)"4930 11 -1 4924
+-4 C:}"4934 11 4940 -1
+-6 I:0 4932 1 5096 4896
+6005 I:19229 4942 11 4944 4932
+4222 I:0 4952 1 4956 4940
+-15 I:0 4944 1 -1 -1
 -2000 I:0 -1 0 -1 -1
-4023 I:0 4724 1 4756 4704
--15 I:0 4716 1 -1 -1
-4157 I:0 -1 0 4728 -1
-52249 I:0 -1 0 4732 4724
-12131 I:0 -1 0 4736 4728
-12065 I:0 4744 1 -1 4732
--15 I:0 4736 1 -1 -1
-52155 I:1001 4746 11 4748 -1
-52155 I:53228 4750 11 4752 4744
-52263 I:1100 4754 11 -1 4748
-4222 I:0 4764 1 4768 4716
--15 I:0 4756 1 -1 -1
--4 C:{"4766 11 -1 -1
-4024 I:0 4776 1 4788 4756
--15 I:0 4768 1 -1 -1
-6099 I:0 -1 0 4780 -1
-2002 S:SYNTAX ERROR Root: '}' without matching '{'"4782 11 4784 4776
-988 I:0 -1 0 -1 4780
-4157 I:0 -1 0 4792 4768
-4222 I:0 4800 1 4804 4788
--15 I:0 4792 1 -1 -1
--2002 I:0 -1 0 -1 -1
-4023 I:0 4812 1 4816 4792
--15 I:0 4804 1 -1 -1
-6005 I:50229 4814 11 -1 -1
-4222 I:0 4824 1 4828 4804
--15 I:0 4816 1 -1 -1
--304 I:0 -1 0 -1 -1
-4023 I:0 4836 1 4844 4816
--15 I:0 4828 1 -1 -1
-4157 I:0 -1 0 4840 -1
-15425 I:1100 4842 11 -1 4836
-52003 I:1287 4846 11 4848 4828
-2002 S:Root }"4850 11 -1 4844
--4 S:"4854 11 4860 -1
--6 I:0 4852 1 4896 4696
-2002 S:End of program"4862 11 4864 4852
-4222 I:0 4872 1 4876 4860
--15 I:0 4864 1 -1 -1
--304 I:0 -1 0 -1 -1
-4023 I:0 4884 1 -1 4864
--15 I:0 4876 1 -1 -1
-4157 I:0 -1 0 4888 -1
-15425 I:1100 4890 11 -1 4884
--13 I:0 -1 0 4900 -1
--6 I:0 4892 1 4908 4856
-6005 I:19229 4902 11 -1 4892
-0 I:0 -1 0 4912 -1
--6 I:0 4904 1 -1 4896
-2002 S:SYNTAX ERROR Root: unexpected token"4914 11 4916 4904
-30 I:2002 4918 11 -1 4912
-20001 I:0 4928 13 5112 4452
--4 C:="4926 11 4932 -1
--6 I:0 4924 1 4944 -1
-6005 I:22229 4934 11 4936 4924
-2002 S:MnemoAnalysis ="4938 11 -1 4932
--4 C:>"4942 11 4948 -1
--6 I:0 4940 1 4988 4928
--4 C:<"4950 11 4952 4940
-6005 I:30229 4954 11 4956 4948
-4161 I:0 4964 1 4968 4952
+4023 I:0 4964 1 4996 4944
 -15 I:0 4956 1 -1 -1
+4157 I:0 -1 0 4968 -1
+52249 I:0 -1 0 4972 4964
+12131 I:0 -1 0 4976 4968
+12065 I:0 4984 1 -1 4972
+-15 I:0 4976 1 -1 -1
+52155 I:1001 4986 11 4988 -1
+52155 I:53228 4990 11 4992 4984
+52263 I:1100 4994 11 -1 4988
+4222 I:0 5004 1 5008 4956
+-15 I:0 4996 1 -1 -1
+-4 C:{"5006 11 -1 -1
+4024 I:0 5016 1 5028 4996
+-15 I:0 5008 1 -1 -1
+6099 I:0 -1 0 5020 -1
+2002 S:SYNTAX ERROR Root: '}' without matching '{'"5022 11 5024 5016
+988 I:0 -1 0 -1 5020
+4157 I:0 -1 0 5032 5008
+4222 I:0 5040 1 5044 5028
+-15 I:0 5032 1 -1 -1
 -2002 I:0 -1 0 -1 -1
-12130 I:0 -1 0 4972 4956
-5155 I:54161 4974 11 4976 4968
-55001 I:1 4978 11 4980 4972
-2002 S:MnemoAnalysis > <"4982 11 -1 4976
--4 C:#"4986 11 4992 -1
--6 I:0 4984 1 5004 4944
-6005 I:43229 4994 11 4996 4984
-2002 S:MnemoAnalysis #"4998 11 -1 4992
--4 C:*"5002 11 5008 -1
--6 I:0 5000 1 5020 4988
-6005 I:21229 5010 11 5012 5000
-2002 S:MnemoAnalysis *"5014 11 -1 5008
--4 C:("5018 11 5024 -1
--6 I:0 5016 1 5036 5004
-6005 I:23229 5026 11 5028 5016
-2002 S:MnemoAnalysis ("5030 11 -1 5024
--4 C:{"5034 11 5040 -1
--6 I:0 5032 1 5068 5020
-6005 I:19229 5042 11 5044 5032
-4161 I:0 5052 1 5056 5040
+4023 I:0 5052 1 5056 5032
 -15 I:0 5044 1 -1 -1
--4 C:{"5054 11 -1 -1
-15163 I:0 -1 0 5060 5044
-2002 S:MnemoAnalysis {"5062 11 -1 5056
-0 I:0 -1 0 5072 -1
--6 I:0 5064 1 -1 5036
-6005 I:19229 5074 11 5076 5064
-5163 I:0 5084 1 5088 5072
--15 I:0 5076 1 -1 -1
--8 I:0 -1 0 -1 -1
-5170 I:0 5096 1 5100 5076
--15 I:0 5088 1 -1 -1
-6070 I:0 -1 0 -1 -1
-7021 I:5186 5102 11 5104 5088
-5156 I:0 -1 0 5108 5100
-2002 S:MnemoAnalysis else (Atr)"5110 11 -1 5104
-22001 I:0 5120 13 5304 4920
--4 C:["5118 11 5124 -1
--6 I:0 5116 1 5164 -1
-6005 I:44229 5126 11 5128 5116
-5163 I:0 5136 1 5140 5124
--15 I:0 5128 1 -1 -1
--14 I:0 -1 0 -1 -1
-4161 I:0 5148 1 5152 5128
--15 I:0 5140 1 -1 -1
--4 C:["5150 11 -1 -1
-9001 I:0 5154 11 5156 5140
-2002 S:VarIniWait [ -> ALE"5158 11 -1 5152
--13 I:0 -1 0 5168 -1
--6 I:0 5160 1 5204 5120
-6005 I:19229 5170 11 5172 5160
-5163 I:0 5180 1 5184 5168
--15 I:0 5172 1 -1 -1
--14 I:0 -1 0 -1 -1
-36 I:5185 5186 11 5188 5172
-5174 I:0 5190 11 5192 5184
-5156 I:0 -1 0 5196 5188
-2002 S:VarIniWait Const"5198 11 -1 5192
--8 I:0 -1 0 5208 -1
--6 I:0 5200 1 5244 5164
-6005 I:19229 5210 11 5212 5200
-5163 I:0 5220 1 5224 5208
--15 I:0 5212 1 -1 -1
--14 I:0 -1 0 -1 -1
-36 I:5185 5226 11 5228 5212
-5174 I:0 5230 11 5232 5224
-5156 I:0 -1 0 5236 5228
-2002 S:VarIniWait Atr"5238 11 -1 5232
--14 I:0 -1 0 5248 -1
--6 I:0 5240 1 5264 5204
-6005 I:19229 5250 11 5252 5240
-30 I:5170 5254 11 5256 5248
-2002 S:VarIniWait Var"5258 11 -1 5252
--306 I:0 -1 0 5268 -1
--6 I:0 5260 1 5284 5244
-6005 I:19229 5270 11 5272 5260
-30 I:5170 5274 11 5276 5268
-2002 S:VarIniWait Vect"5278 11 -1 5272
-0 I:0 -1 0 5288 -1
--6 I:0 5280 1 -1 5264
-6099 I:0 -1 0 5292 5280
-2002 S:SYNTAX ERROR VarIniWait: value (Const, Var, Vect or '[') expected after '='"5294 11 5296 5288
-30 I:2002 5298 11 5300 5292
-988 I:0 -1 0 -1 5296
-43001 I:0 5312 13 5392 5112
--13 I:0 -1 0 5316 -1
--6 I:0 5308 1 5356 -1
--14 I:0 -1 0 5320 5308
--306 I:0 -1 0 5324 5316
-6005 I:42229 5326 11 5328 5320
-280 I:0 -1 0 5332 5324
-5163 I:0 5340 1 5344 5328
--15 I:0 5332 1 -1 -1
--306 I:0 -1 0 -1 -1
-36 I:290 5346 11 5348 5332
-2002 S:ConstWait -> VectWait"5350 11 -1 5344
--4 C:["5354 11 5360 -1
--6 I:0 5352 1 5372 5312
-6005 I:44229 5362 11 5364 5352
-2002 S:ConstWait ["5366 11 -1 5360
-0 I:0 -1 0 5376 -1
--6 I:0 5368 1 -1 5356
-6099 I:0 -1 0 5380 5368
-2002 S:SYNTAX ERROR ConstWait: Const, Var, Vect or '[' expected after '#'"5382 11 5384 5376
-30 I:2002 5386 11 5388 5380
-988 I:0 -1 0 -1 5384
-21001 I:0 5400 13 5460 5304
--13 I:0 -1 0 5404 -1
--6 I:0 5396 1 5440 -1
-6005 I:19229 5406 11 5408 5396
-5163 I:0 5416 1 5420 5404
--15 I:0 5408 1 -1 -1
--8 I:0 -1 0 -1 -1
-36 I:8001 5422 11 5424 5408
-8021 I:5185 5426 11 5428 5420
-5156 I:0 -1 0 5432 5424
-2002 S:ConstWait2 Const"5434 11 -1 5428
-0 I:0 -1 0 5444 -1
--6 I:0 5436 1 -1 5400
-6099 I:0 -1 0 5448 5436
-2002 S:SYNTAX ERROR ConstWait2: integer constant expected after '*'"5450 11 5452 5444
-30 I:2002 5454 11 5456 5448
-988 I:0 -1 0 -1 5452
-42001 I:0 5468 13 5504 5392
--4 C:,"5466 11 5472 -1
--6 I:0 5464 1 5484 -1
-6005 I:41229 5474 11 5476 5464
-2002 S:VectWait ,"5478 11 -1 5472
-0 I:0 -1 0 5488 -1
--6 I:0 5480 1 -1 5468
-6005 I:19229 5490 11 5492 5480
-17 I:0 -1 0 5496 5488
-30 I:6070 5498 11 5500 5492
-2002 S:VectWait else->Root"5502 11 -1 5496
-41001 I:0 5512 13 5556 5460
--13 I:0 -1 0 5516 -1
--6 I:0 5508 1 5536 -1
--14 I:0 -1 0 5520 5508
-6005 I:40229 5522 11 5524 5516
-36 I:290 5526 11 5528 5520
-2002 S:VectNext4 element added"5530 11 -1 5524
-0 I:0 -1 0 5540 -1
--6 I:0 5532 1 -1 5512
-6099 I:0 -1 0 5544 5532
-2002 S:SYNTAX ERROR VectNext4: vector element (Const or Var) expected after ','"5546 11 5548 5540
-30 I:2002 5550 11 5552 5544
-988 I:0 -1 0 -1 5548
-40001 I:0 5564 13 5596 5504
--4 C:,"5562 11 5568 -1
--6 I:0 5560 1 5580 -1
-6005 I:41229 5570 11 5572 5560
-2002 S:VectNext5 ,"5574 11 -1 5568
-0 I:0 -1 0 5584 -1
--6 I:0 5576 1 -1 5564
-6005 I:19229 5586 11 5588 5576
-30 I:6070 5590 11 5592 5584
-2002 S:VectNext5 else->Root"5594 11 -1 5588
-23001 I:0 5604 13 5704 5556
--2 I:0 -1 0 5608 -1
--6 I:0 5600 1 5636 -1
-6005 I:24229 5610 11 5612 5600
-30 I:5161 5614 11 5616 5608
-5170 I:0 5624 1 5628 5612
--15 I:0 5616 1 -1 -1
-6070 I:0 -1 0 -1 -1
-2002 S:AtrAtr Mnemo"5630 11 -1 5616
--300 I:0 -1 0 5640 -1
--6 I:0 5632 1 5660 5604
--22 I:0 -1 0 5644 5632
-6005 I:29229 5646 11 5648 5640
-36 I:8001 5650 11 5652 5644
-2002 S:AtrAtr FU/FUType"5654 11 -1 5648
--24 I:0 -1 0 5664 -1
--6 I:0 5656 1 5684 5636
--8 I:0 -1 0 5668 5656
-6005 I:27229 5670 11 5672 5664
-36 I:15189 5674 11 5676 5668
-2002 S:AtrAtr Mk/Atr"5678 11 -1 5672
-0 I:0 -1 0 5688 -1
--6 I:0 5680 1 -1 5660
-6099 I:0 -1 0 5692 5680
-2002 S:SYNTAX ERROR AtrAtr: Mnemo, FU, Mk or Atr expected inside '('"5694 11 5696 5688
-30 I:2002 5698 11 5700 5692
-988 I:0 -1 0 -1 5696
-24001 I:0 5712 13 5740 5596
--4 C:("5710 11 5716 -1
--6 I:0 5708 1 5728 -1
-6005 I:25229 5718 11 5720 5708
-2002 S:AtrAtr2 ("5722 11 -1 5716
-0 I:0 -1 0 5732 -1
--6 I:0 5724 1 -1 5712
-6005 I:19229 5734 11 5736 5724
-30 I:6070 5738 11 -1 5732
-25001 I:0 5748 13 5812 5704
--300 I:0 -1 0 5752 -1
--6 I:0 5744 1 5768 -1
-6005 I:29229 5754 11 5756 5744
-36 I:8001 5758 11 5760 5752
-2002 S:AtrAtr3 FU"5762 11 -1 5756
--24 I:0 -1 0 5772 -1
--6 I:0 5764 1 5792 5748
--8 I:0 -1 0 5776 5764
-6005 I:27229 5778 11 5780 5772
-36 I:15189 5782 11 5784 5776
-2002 S:AtrAtr3 Mk/Atr"5786 11 -1 5780
-0 I:0 -1 0 5796 -1
--6 I:0 5788 1 -1 5768
-6099 I:0 -1 0 5800 5788
-2002 S:SYNTAX ERROR AtrAtr3: FU, Mk or Atr expected after 'Mnemo('"5802 11 5804 5796
-30 I:2002 5806 11 5808 5800
-988 I:0 -1 0 -1 5804
-29001 I:0 5820 13 5900 5740
--4 C:."5818 11 5824 -1
--6 I:0 5816 1 5856 -1
-6005 I:26228 5826 11 5828 5816
-6015 I:-2 5830 11 5832 5824
-6016 I:14228 5834 11 5836 5828
-14012 I:0 5844 1 5848 5832
--15 I:0 5836 1 -1 -1
-400 I:6070 5846 11 -1 -1
-2002 S:FUAfter ."5850 11 -1 5836
--4 C:("5854 11 5860 -1
--6 I:0 5852 1 5888 5820
-6005 I:19229 5862 11 5864 5852
-4161 I:0 5872 1 5876 5860
--15 I:0 5864 1 -1 -1
--307 I:0 -1 0 -1 -1
-14003 I:4185 5878 11 5880 5864
-2002 S:FUAfter ("5882 11 -1 5876
-0 I:0 -1 0 5892 -1
--6 I:0 5884 1 -1 5856
-6005 I:19229 5894 11 5896 5884
-30 I:6070 5898 11 -1 5892
-26001 I:0 5908 13 5960 5812
--24 I:0 -1 0 5912 -1
--6 I:0 5904 1 5936 -1
-6005 I:27229 5914 11 5916 5904
-418 I:8140 5918 11 5920 5912
-6015 I:-2 5922 11 5924 5916
-6016 I:5229 5926 11 5928 5920
-2002 S:MkWait MkForFU"5930 11 -1 5924
-0 I:0 -1 0 5940 -1
--6 I:0 5932 1 -1 5908
-6005 I:19229 5942 11 5944 5932
-6015 I:-2 5946 11 5948 5940
-6016 I:5229 5950 11 5952 5944
-30 I:6070 5954 11 5956 5948
-2002 S:MkWait else->Root"5958 11 -1 5952
-27001 I:0 5968 13 6024 5900
--4 C:)"5966 11 5972 -1
--6 I:0 5964 1 6008 -1
-6005 I:19229 5974 11 5976 5964
-4222 I:0 5984 1 5988 5972
--15 I:0 5976 1 -1 -1
--307 I:0 -1 0 -1 -1
-4023 I:0 5996 1 6000 5976
--15 I:0 5988 1 -1 -1
-4262 I:0 -1 0 -1 -1
-2002 S:AtrBrack )"6002 11 -1 5988
-0 I:0 -1 0 6012 -1
--6 I:0 6004 1 -1 5968
-6005 I:28229 6014 11 6016 6004
-30 I:6070 6018 11 6020 6012
-2002 S:AtrBrack else->EqualWait"6022 11 -1 6016
-28001 I:0 6032 13 6076 5960
--4 C:="6030 11 6036 -1
--6 I:0 6028 1 6048 -1
-6005 I:34229 6038 11 6040 6028
-2002 S:EqualWait ="6042 11 -1 6036
-0 I:0 -1 0 6052 -1
--6 I:0 6044 1 -1 6032
-6005 I:19229 6054 11 6056 6044
-8021 I:52021 6058 11 6060 6052
-52160 I:0 6062 11 6064 6056
-8001 I:0 6066 11 6068 6060
-30 I:6070 6070 11 6072 6064
-2002 S:EqualWait else->Root"6074 11 -1 6068
-34001 I:0 6084 13 6468 6024
--300 I:0 -1 0 6088 -1
--6 I:0 6080 1 6112 -1
--22 I:0 -1 0 6092 6080
-6005 I:33229 6094 11 6096 6088
-8021 I:52021 6098 11 6100 6092
-36 I:8001 6102 11 6104 6096
-2002 S:EqualAfter FU"6106 11 -1 6100
--24 I:0 -1 0 6116 -1
--6 I:0 6108 1 6132 6084
-6005 I:39229 6118 11 6120 6108
-36 I:15185 6122 11 6124 6116
-2002 S:EqualAfter Mk"6126 11 -1 6120
--2 I:0 -1 0 6136 -1
--6 I:0 6128 1 6168 6112
-6005 I:36229 6138 11 6140 6128
-30 I:5161 6142 11 6144 6136
-5170 I:0 6152 1 6156 6140
--15 I:0 6144 1 -1 -1
-6070 I:0 -1 0 -1 -1
-30 I:56161 6158 11 6160 6144
-2002 S:EqualAfter Mnemo"6162 11 -1 6156
--13 I:0 -1 0 6172 -1
--6 I:0 6164 1 6212 6132
--14 I:0 -1 0 6176 6164
--306 I:0 -1 0 6180 6172
-6005 I:35229 6182 11 6184 6176
-36 I:15185 6186 11 6188 6180
-8021 I:52021 6190 11 6192 6184
-36 I:52160 6194 11 6196 6188
-9001 I:0 6198 11 6200 6192
-36 I:10001 6202 11 6204 6196
-2002 S:EqualAfter Const/Var/Vect"6206 11 -1 6200
--8 I:0 -1 0 6216 -1
--6 I:0 6208 1 6248 6168
-6005 I:35229 6218 11 6220 6208
-36 I:15185 6222 11 6224 6216
-8021 I:52021 6226 11 6228 6220
-36 I:52160 6230 11 6232 6224
-9001 I:0 6234 11 6236 6228
-36 I:10001 6238 11 6240 6232
-2002 S:EqualAfter Atr"6242 11 -1 6236
--4 C:{"6246 11 6252 -1
--6 I:0 6244 1 6320 6212
-6005 I:19229 6254 11 6256 6244
-4161 I:0 6264 1 6268 6252
--15 I:0 6256 1 -1 -1
--4 C:{"6266 11 -1 -1
-15163 I:0 -1 0 6272 6256
-8062 I:0 6280 1 6312 6268
--15 I:0 6272 1 -1 -1
-8021 I:52021 6282 11 6284 -1
-52160 I:0 6286 11 6288 6280
-52240 I:0 -1 0 6292 6284
-12130 I:0 -1 0 6296 6288
-4161 I:0 6304 1 6308 6292
--15 I:0 6296 1 -1 -1
--2000 I:0 -1 0 -1 -1
-8001 I:0 6310 11 -1 6296
-2002 S:EqualAfter {"6314 11 -1 6272
--4 C:>"6318 11 6324 -1
--6 I:0 6316 1 6388 6248
--4 C:<"6326 11 6328 6316
-6005 I:30229 6330 11 6332 6324
-4161 I:0 6340 1 6344 6328
--15 I:0 6332 1 -1 -1
--4 C:>"6342 11 -1 -1
-15243 I:0 -1 0 6348 6332
-8021 I:52021 6350 11 6352 6344
-52160 I:0 6354 11 6356 6348
-52240 I:0 -1 0 6360 6352
-12130 I:0 -1 0 6364 6356
-4161 I:0 6372 1 6376 6360
--15 I:0 6364 1 -1 -1
+6005 I:50229 5054 11 -1 -1
+4222 I:0 5064 1 5068 5044
+-15 I:0 5056 1 -1 -1
+-304 I:0 -1 0 -1 -1
+4023 I:0 5076 1 5084 5056
+-15 I:0 5068 1 -1 -1
+4157 I:0 -1 0 5080 -1
+15425 I:1100 5082 11 -1 5076
+52003 I:1287 5086 11 5088 5068
+2002 S:Root }"5090 11 -1 5084
+-4 S:"5094 11 5100 -1
+-6 I:0 5092 1 5136 4936
+2002 S:End of program"5102 11 5104 5092
+4222 I:0 5112 1 5116 5100
+-15 I:0 5104 1 -1 -1
+-304 I:0 -1 0 -1 -1
+4023 I:0 5124 1 -1 5104
+-15 I:0 5116 1 -1 -1
+4157 I:0 -1 0 5128 -1
+15425 I:1100 5130 11 -1 5124
+-13 I:0 -1 0 5140 -1
+-6 I:0 5132 1 5152 5096
+-10 I:0 -1 0 5144 5132
+6005 I:19229 5146 11 -1 5140
+0 I:0 -1 0 5156 -1
+-6 I:0 5148 1 -1 5136
+2002 S:SYNTAX ERROR Root: unexpected token"5158 11 5160 5148
+30 I:2002 5162 11 -1 5156
+20001 I:0 5172 13 5388 4688
+-4 C:="5170 11 5176 -1
+-6 I:0 5168 1 5188 -1
+6005 I:22229 5178 11 5180 5168
+2002 S:MnemoAnalysis ="5182 11 -1 5176
+-4 C:>"5186 11 5192 -1
+-6 I:0 5184 1 5244 5172
+-4 C:<"5194 11 5196 5184
+6005 I:30229 5198 11 5200 5192
+4161 I:0 5208 1 5212 5196
+-15 I:0 5200 1 -1 -1
 -2002 I:0 -1 0 -1 -1
-8001 I:0 6378 11 6380 6364
-2002 S:EqualAfter > <"6382 11 -1 6376
--4 C:("6386 11 6392 -1
--6 I:0 6384 1 6428 6320
-9001 I:0 6394 11 6396 6384
-6002 I:44229 6398 11 6400 6392
-9005 I:0 6402 11 6404 6396
-10005 I:0 6406 11 6408 6400
-4161 I:0 6416 1 6420 6404
--15 I:0 6408 1 -1 -1
--4 C:("6418 11 -1 -1
-2002 S:EqualAfter ( -> ALE"6422 11 -1 6408
--322 I:0 -1 0 6432 -1
--6 I:0 6424 1 6448 6388
-6005 I:45229 6434 11 6436 6424
-11021 I:10001 6438 11 6440 6432
-2002 S:EqualAfter parenVal"6442 11 -1 6436
-0 I:0 -1 0 6452 -1
--6 I:0 6444 1 -1 6428
-6099 I:0 -1 0 6456 6444
-2002 S:SYNTAX ERROR EqualAfter: value (FU, Mk, Mnemo, Const, Var, Vect, '{', '(' or '>') expected after '='"6458 11 6460 6452
-30 I:2002 6462 11 6464 6456
-988 I:0 -1 0 -1 6460
-33001 I:0 6476 13 6528 6076
--4 C:."6474 11 6480 -1
--6 I:0 6472 1 6512 -1
-6005 I:32228 6482 11 6484 6472
-6015 I:-2 6486 11 6488 6480
-6016 I:14228 6490 11 6492 6484
-14012 I:0 6500 1 6504 6488
--15 I:0 6492 1 -1 -1
-400 I:6070 6502 11 -1 -1
-2002 S:FUAfter2 ."6506 11 -1 6492
-0 I:0 -1 0 6516 -1
--6 I:0 6508 1 -1 6476
-6005 I:19229 6518 11 6520 6508
-8021 I:15185 6522 11 6524 6516
-30 I:6070 6526 11 -1 6520
-32001 I:0 6536 13 6588 6468
--24 I:0 -1 0 6540 -1
--6 I:0 6532 1 6564 -1
-6005 I:39229 6542 11 6544 6532
-418 I:8140 6546 11 6548 6540
-6015 I:-2 6550 11 6552 6544
-6016 I:5229 6554 11 6556 6548
-2002 S:MkWait2 MkForFU"6558 11 -1 6552
-0 I:0 -1 0 6568 -1
--6 I:0 6560 1 -1 6536
-6005 I:19229 6570 11 6572 6560
-6015 I:-2 6574 11 6576 6568
-6016 I:5229 6578 11 6580 6572
-8021 I:15185 6582 11 6584 6576
-30 I:6070 6586 11 -1 6580
-36001 I:0 6596 13 6748 6528
--4 C:!"6594 11 6600 -1
--6 I:0 6592 1 6644 -1
-6005 I:35229 6602 11 6604 6592
-56155 I:54229 6606 11 6608 6600
-54023 I:0 6616 1 6628 6604
--15 I:0 6608 1 -1 -1
-54164 I:15185 6618 11 6620 -1
-8021 I:52021 6622 11 6624 6616
-54164 I:52160 6626 11 -1 6620
-5151 I:0 -1 0 6632 6608
-56151 I:0 -1 0 6636 6628
-2002 S:MnemoLoad ! consume"6638 11 -1 6632
--4 C:("6642 11 6648 -1
--6 I:0 6640 1 6660 6596
-6005 I:37229 6650 11 6652 6640
-2002 S:MnemoLoad ("6654 11 -1 6648
--4 C:>"6658 11 6664 -1
--6 I:0 6656 1 6696 6644
--4 C:<"6666 11 6668 6656
-6005 I:30229 6670 11 6672 6664
-4161 I:0 6680 1 6684 6668
--15 I:0 6672 1 -1 -1
--4 C:>"6682 11 -1 -1
-15244 I:0 -1 0 6688 6672
-2002 S:MnemoLoad > <"6690 11 -1 6684
--4 C:{"6694 11 6700 -1
--6 I:0 6692 1 6732 6660
-6005 I:19229 6702 11 6704 6692
+12130 I:0 -1 0 5216 5200
+52021 I:-6 5218 11 5220 5212
+52160 I:0 5222 11 5224 5216
+52240 I:0 -1 0 5228 5220
+5155 I:54161 5230 11 5232 5224
+55001 I:1 5234 11 5236 5228
+2002 S:MnemoAnalysis > <"5238 11 -1 5232
+-4 C:#"5242 11 5248 -1
+-6 I:0 5240 1 5260 5188
+6005 I:43229 5250 11 5252 5240
+2002 S:MnemoAnalysis #"5254 11 -1 5248
+-4 C:*"5258 11 5264 -1
+-6 I:0 5256 1 5276 5244
+6005 I:21229 5266 11 5268 5256
+2002 S:MnemoAnalysis *"5270 11 -1 5264
+-4 C:("5274 11 5280 -1
+-6 I:0 5272 1 5292 5260
+6005 I:23229 5282 11 5284 5272
+2002 S:MnemoAnalysis ("5286 11 -1 5280
+-4 C:{"5290 11 5296 -1
+-6 I:0 5288 1 5324 5276
+6005 I:19229 5298 11 5300 5288
+4161 I:0 5308 1 5312 5296
+-15 I:0 5300 1 -1 -1
+-4 C:{"5310 11 -1 -1
+15163 I:0 -1 0 5316 5300
+2002 S:MnemoAnalysis {"5318 11 -1 5312
+-4 C:."5322 11 5328 -1
+-6 I:0 5320 1 5344 5292
+6099 I:0 -1 0 5332 5320
+2002 S:SYNTAX ERROR: method call (dot) on an unresolved FU -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row"5334 11 5336 5328
+988 I:0 -1 0 -1 5332
+0 I:0 -1 0 5348 -1
+-6 I:0 5340 1 -1 5324
+6005 I:19229 5350 11 5352 5340
+5163 I:0 5360 1 5364 5348
+-15 I:0 5352 1 -1 -1
+-8 I:0 -1 0 -1 -1
+5170 I:0 5372 1 5376 5352
+-15 I:0 5364 1 -1 -1
+6070 I:0 -1 0 -1 -1
+7021 I:5186 5378 11 5380 5364
+5156 I:0 -1 0 5384 5376
+2002 S:MnemoAnalysis else (Atr)"5386 11 -1 5380
+22001 I:0 5396 13 5584 5164
+-4 C:["5394 11 5400 -1
+-6 I:0 5392 1 5440 -1
+6005 I:44229 5402 11 5404 5392
+5163 I:0 5412 1 5416 5400
+-15 I:0 5404 1 -1 -1
+-14 I:0 -1 0 -1 -1
+4161 I:0 5424 1 5428 5404
+-15 I:0 5416 1 -1 -1
+-4 C:["5426 11 -1 -1
+9001 I:0 5430 11 5432 5416
+2002 S:VarIniWait [ -> ALE"5434 11 -1 5428
+-13 I:0 -1 0 5444 -1
+-6 I:0 5436 1 5484 5396
+-10 I:0 -1 0 5448 5436
+6005 I:19229 5450 11 5452 5444
+5163 I:0 5460 1 5464 5448
+-15 I:0 5452 1 -1 -1
+-14 I:0 -1 0 -1 -1
+36 I:5185 5466 11 5468 5452
+5174 I:0 5470 11 5472 5464
+5156 I:0 -1 0 5476 5468
+2002 S:VarIniWait Const"5478 11 -1 5472
+-8 I:0 -1 0 5488 -1
+-6 I:0 5480 1 5524 5440
+6005 I:19229 5490 11 5492 5480
+5163 I:0 5500 1 5504 5488
+-15 I:0 5492 1 -1 -1
+-14 I:0 -1 0 -1 -1
+36 I:5185 5506 11 5508 5492
+5174 I:0 5510 11 5512 5504
+5156 I:0 -1 0 5516 5508
+2002 S:VarIniWait Atr"5518 11 -1 5512
+-14 I:0 -1 0 5528 -1
+-6 I:0 5520 1 5544 5484
+6005 I:19229 5530 11 5532 5520
+30 I:5170 5534 11 5536 5528
+2002 S:VarIniWait Var"5538 11 -1 5532
+-306 I:0 -1 0 5548 -1
+-6 I:0 5540 1 5564 5524
+6005 I:19229 5550 11 5552 5540
+30 I:5170 5554 11 5556 5548
+2002 S:VarIniWait Vect"5558 11 -1 5552
+0 I:0 -1 0 5568 -1
+-6 I:0 5560 1 -1 5544
+6099 I:0 -1 0 5572 5560
+2002 S:SYNTAX ERROR VarIniWait: value (Const, Var, Vect or '[') expected after '='"5574 11 5576 5568
+30 I:2002 5578 11 5580 5572
+988 I:0 -1 0 -1 5576
+43001 I:0 5592 13 5676 5388
+-13 I:0 -1 0 5596 -1
+-6 I:0 5588 1 5640 -1
+-10 I:0 -1 0 5600 5588
+-14 I:0 -1 0 5604 5596
+-306 I:0 -1 0 5608 5600
+6005 I:42229 5610 11 5612 5604
+280 I:0 -1 0 5616 5608
+5163 I:0 5624 1 5628 5612
+-15 I:0 5616 1 -1 -1
+-306 I:0 -1 0 -1 -1
+36 I:290 5630 11 5632 5616
+2002 S:ConstWait -> VectWait"5634 11 -1 5628
+-4 C:["5638 11 5644 -1
+-6 I:0 5636 1 5656 5592
+6005 I:44229 5646 11 5648 5636
+2002 S:ConstWait ["5650 11 -1 5644
+0 I:0 -1 0 5660 -1
+-6 I:0 5652 1 -1 5640
+6099 I:0 -1 0 5664 5652
+2002 S:SYNTAX ERROR ConstWait: Const, Var, Vect or '[' expected after '#'"5666 11 5668 5660
+30 I:2002 5670 11 5672 5664
+988 I:0 -1 0 -1 5668
+21001 I:0 5684 13 5748 5584
+-13 I:0 -1 0 5688 -1
+-6 I:0 5680 1 5728 -1
+-10 I:0 -1 0 5692 5680
+6005 I:19229 5694 11 5696 5688
+5163 I:0 5704 1 5708 5692
+-15 I:0 5696 1 -1 -1
+-8 I:0 -1 0 -1 -1
+36 I:8001 5710 11 5712 5696
+8021 I:5185 5714 11 5716 5708
+5156 I:0 -1 0 5720 5712
+2002 S:ConstWait2 Const"5722 11 -1 5716
+0 I:0 -1 0 5732 -1
+-6 I:0 5724 1 -1 5684
+6099 I:0 -1 0 5736 5724
+2002 S:SYNTAX ERROR ConstWait2: integer constant expected after '*'"5738 11 5740 5732
+30 I:2002 5742 11 5744 5736
+988 I:0 -1 0 -1 5740
+42001 I:0 5756 13 5792 5676
+-4 C:,"5754 11 5760 -1
+-6 I:0 5752 1 5772 -1
+6005 I:41229 5762 11 5764 5752
+2002 S:VectWait ,"5766 11 -1 5760
+0 I:0 -1 0 5776 -1
+-6 I:0 5768 1 -1 5756
+6005 I:19229 5778 11 5780 5768
+17 I:0 -1 0 5784 5776
+30 I:6070 5786 11 5788 5780
+2002 S:VectWait else->Root"5790 11 -1 5784
+41001 I:0 5800 13 5848 5748
+-13 I:0 -1 0 5804 -1
+-6 I:0 5796 1 5828 -1
+-10 I:0 -1 0 5808 5796
+-14 I:0 -1 0 5812 5804
+6005 I:40229 5814 11 5816 5808
+36 I:290 5818 11 5820 5812
+2002 S:VectNext4 element added"5822 11 -1 5816
+0 I:0 -1 0 5832 -1
+-6 I:0 5824 1 -1 5800
+6099 I:0 -1 0 5836 5824
+2002 S:SYNTAX ERROR VectNext4: vector element (Const or Var) expected after ','"5838 11 5840 5832
+30 I:2002 5842 11 5844 5836
+988 I:0 -1 0 -1 5840
+40001 I:0 5856 13 5888 5792
+-4 C:,"5854 11 5860 -1
+-6 I:0 5852 1 5872 -1
+6005 I:41229 5862 11 5864 5852
+2002 S:VectNext5 ,"5866 11 -1 5860
+0 I:0 -1 0 5876 -1
+-6 I:0 5868 1 -1 5856
+6005 I:19229 5878 11 5880 5868
+30 I:6070 5882 11 5884 5876
+2002 S:VectNext5 else->Root"5886 11 -1 5880
+23001 I:0 5896 13 5996 5848
+-2 I:0 -1 0 5900 -1
+-6 I:0 5892 1 5928 -1
+6005 I:24229 5902 11 5904 5892
+30 I:5161 5906 11 5908 5900
+5170 I:0 5916 1 5920 5904
+-15 I:0 5908 1 -1 -1
+6070 I:0 -1 0 -1 -1
+2002 S:AtrAtr Mnemo"5922 11 -1 5908
+-300 I:0 -1 0 5932 -1
+-6 I:0 5924 1 5952 5896
+-22 I:0 -1 0 5936 5924
+6005 I:29229 5938 11 5940 5932
+36 I:8001 5942 11 5944 5936
+2002 S:AtrAtr FU/FUType"5946 11 -1 5940
+-24 I:0 -1 0 5956 -1
+-6 I:0 5948 1 5976 5928
+-8 I:0 -1 0 5960 5948
+6005 I:27229 5962 11 5964 5956
+36 I:15189 5966 11 5968 5960
+2002 S:AtrAtr Mk/Atr"5970 11 -1 5964
+0 I:0 -1 0 5980 -1
+-6 I:0 5972 1 -1 5952
+6099 I:0 -1 0 5984 5972
+2002 S:SYNTAX ERROR AtrAtr: Mnemo, FU, Mk or Atr expected inside '('"5986 11 5988 5980
+30 I:2002 5990 11 5992 5984
+988 I:0 -1 0 -1 5988
+24001 I:0 6004 13 6032 5888
+-4 C:("6002 11 6008 -1
+-6 I:0 6000 1 6020 -1
+6005 I:25229 6010 11 6012 6000
+2002 S:AtrAtr2 ("6014 11 -1 6008
+0 I:0 -1 0 6024 -1
+-6 I:0 6016 1 -1 6004
+6005 I:19229 6026 11 6028 6016
+30 I:6070 6030 11 -1 6024
+25001 I:0 6040 13 6104 5996
+-300 I:0 -1 0 6044 -1
+-6 I:0 6036 1 6060 -1
+6005 I:29229 6046 11 6048 6036
+36 I:8001 6050 11 6052 6044
+2002 S:AtrAtr3 FU"6054 11 -1 6048
+-24 I:0 -1 0 6064 -1
+-6 I:0 6056 1 6084 6040
+-8 I:0 -1 0 6068 6056
+6005 I:27229 6070 11 6072 6064
+36 I:15189 6074 11 6076 6068
+2002 S:AtrAtr3 Mk/Atr"6078 11 -1 6072
+0 I:0 -1 0 6088 -1
+-6 I:0 6080 1 -1 6060
+6099 I:0 -1 0 6092 6080
+2002 S:SYNTAX ERROR AtrAtr3: FU, Mk or Atr expected after 'Mnemo('"6094 11 6096 6088
+30 I:2002 6098 11 6100 6092
+988 I:0 -1 0 -1 6096
+29001 I:0 6112 13 6192 6032
+-4 C:."6110 11 6116 -1
+-6 I:0 6108 1 6148 -1
+6005 I:26228 6118 11 6120 6108
+6015 I:-2 6122 11 6124 6116
+6016 I:14228 6126 11 6128 6120
+14012 I:0 6136 1 6140 6124
+-15 I:0 6128 1 -1 -1
+400 I:6070 6138 11 -1 -1
+2002 S:FUAfter ."6142 11 -1 6128
+-4 C:("6146 11 6152 -1
+-6 I:0 6144 1 6180 6112
+6005 I:19229 6154 11 6156 6144
+4161 I:0 6164 1 6168 6152
+-15 I:0 6156 1 -1 -1
+-307 I:0 -1 0 -1 -1
+14003 I:4185 6170 11 6172 6156
+2002 S:FUAfter ("6174 11 -1 6168
+0 I:0 -1 0 6184 -1
+-6 I:0 6176 1 -1 6148
+6005 I:19229 6186 11 6188 6176
+30 I:6070 6190 11 -1 6184
+26001 I:0 6200 13 6252 6104
+-24 I:0 -1 0 6204 -1
+-6 I:0 6196 1 6228 -1
+6005 I:27229 6206 11 6208 6196
+418 I:8140 6210 11 6212 6204
+6015 I:-2 6214 11 6216 6208
+6016 I:5229 6218 11 6220 6212
+2002 S:MkWait MkForFU"6222 11 -1 6216
+0 I:0 -1 0 6232 -1
+-6 I:0 6224 1 -1 6200
+6005 I:19229 6234 11 6236 6224
+6015 I:-2 6238 11 6240 6232
+6016 I:5229 6242 11 6244 6236
+30 I:6070 6246 11 6248 6240
+2002 S:MkWait else->Root"6250 11 -1 6244
+27001 I:0 6260 13 6316 6192
+-4 C:)"6258 11 6264 -1
+-6 I:0 6256 1 6300 -1
+6005 I:19229 6266 11 6268 6256
+4222 I:0 6276 1 6280 6264
+-15 I:0 6268 1 -1 -1
+-307 I:0 -1 0 -1 -1
+4023 I:0 6288 1 6292 6268
+-15 I:0 6280 1 -1 -1
+4262 I:0 -1 0 -1 -1
+2002 S:AtrBrack )"6294 11 -1 6280
+0 I:0 -1 0 6304 -1
+-6 I:0 6296 1 -1 6260
+6005 I:28229 6306 11 6308 6296
+30 I:6070 6310 11 6312 6304
+2002 S:AtrBrack else->EqualWait"6314 11 -1 6308
+28001 I:0 6324 13 6368 6252
+-4 C:="6322 11 6328 -1
+-6 I:0 6320 1 6340 -1
+6005 I:34229 6330 11 6332 6320
+2002 S:EqualWait ="6334 11 -1 6328
+0 I:0 -1 0 6344 -1
+-6 I:0 6336 1 -1 6324
+6005 I:19229 6346 11 6348 6336
+8021 I:52021 6350 11 6352 6344
+52160 I:0 -1 0 6356 6348
+8001 I:0 6358 11 6360 6352
+30 I:6070 6362 11 6364 6356
+2002 S:EqualWait else->Root"6366 11 -1 6360
+34001 I:0 6376 13 6764 6316
+-300 I:0 -1 0 6380 -1
+-6 I:0 6372 1 6404 -1
+-22 I:0 -1 0 6384 6372
+6005 I:33229 6386 11 6388 6380
+8021 I:52021 6390 11 6392 6384
+36 I:8001 6394 11 6396 6388
+2002 S:EqualAfter FU"6398 11 -1 6392
+-24 I:0 -1 0 6408 -1
+-6 I:0 6400 1 6424 6376
+6005 I:39229 6410 11 6412 6400
+36 I:15185 6414 11 6416 6408
+2002 S:EqualAfter Mk"6418 11 -1 6412
+-2 I:0 -1 0 6428 -1
+-6 I:0 6420 1 6460 6404
+6005 I:36229 6430 11 6432 6420
+30 I:5161 6434 11 6436 6428
+5170 I:0 6444 1 6448 6432
+-15 I:0 6436 1 -1 -1
+6070 I:0 -1 0 -1 -1
+30 I:56161 6450 11 6452 6436
+2002 S:EqualAfter Mnemo"6454 11 -1 6448
+-13 I:0 -1 0 6464 -1
+-6 I:0 6456 1 6508 6424
+-10 I:0 -1 0 6468 6456
+-14 I:0 -1 0 6472 6464
+-306 I:0 -1 0 6476 6468
+6005 I:35229 6478 11 6480 6472
+36 I:15185 6482 11 6484 6476
+8021 I:52021 6486 11 6488 6480
+36 I:52160 6490 11 6492 6484
+9001 I:0 6494 11 6496 6488
+36 I:10001 6498 11 6500 6492
+2002 S:EqualAfter Const/Var/Vect"6502 11 -1 6496
+-8 I:0 -1 0 6512 -1
+-6 I:0 6504 1 6544 6460
+6005 I:35229 6514 11 6516 6504
+36 I:15185 6518 11 6520 6512
+8021 I:52021 6522 11 6524 6516
+36 I:52160 6526 11 6528 6520
+9001 I:0 6530 11 6532 6524
+36 I:10001 6534 11 6536 6528
+2002 S:EqualAfter Atr"6538 11 -1 6532
+-4 C:{"6542 11 6548 -1
+-6 I:0 6540 1 6616 6508
+6005 I:19229 6550 11 6552 6540
+4161 I:0 6560 1 6564 6548
+-15 I:0 6552 1 -1 -1
+-4 C:{"6562 11 -1 -1
+15163 I:0 -1 0 6568 6552
+8062 I:0 6576 1 6608 6564
+-15 I:0 6568 1 -1 -1
+8021 I:52021 6578 11 6580 -1
+52160 I:0 6582 11 6584 6576
+52240 I:0 -1 0 6588 6580
+12130 I:0 -1 0 6592 6584
+4161 I:0 6600 1 6604 6588
+-15 I:0 6592 1 -1 -1
+-2000 I:0 -1 0 -1 -1
+8001 I:0 6606 11 -1 6592
+2002 S:EqualAfter {"6610 11 -1 6568
+-4 C:>"6614 11 6620 -1
+-6 I:0 6612 1 6684 6544
+-4 C:<"6622 11 6624 6612
+6005 I:30229 6626 11 6628 6620
+4161 I:0 6636 1 6640 6624
+-15 I:0 6628 1 -1 -1
+-4 C:>"6638 11 -1 -1
+15243 I:0 -1 0 6644 6628
+8021 I:52021 6646 11 6648 6640
+52160 I:0 6650 11 6652 6644
+52240 I:0 -1 0 6656 6648
+12130 I:0 -1 0 6660 6652
+4161 I:0 6668 1 6672 6656
+-15 I:0 6660 1 -1 -1
+-2002 I:0 -1 0 -1 -1
+8001 I:0 6674 11 6676 6660
+2002 S:EqualAfter > <"6678 11 -1 6672
+-4 C:("6682 11 6688 -1
+-6 I:0 6680 1 6724 6616
+9001 I:0 6690 11 6692 6680
+6002 I:44229 6694 11 6696 6688
+9005 I:0 6698 11 6700 6692
+10005 I:0 6702 11 6704 6696
 4161 I:0 6712 1 6716 6700
 -15 I:0 6704 1 -1 -1
--4 C:{"6714 11 -1 -1
-15160 I:0 -1 0 6720 6704
-15163 I:0 -1 0 6724 6716
-2002 S:MnemoLoad {"6726 11 -1 6720
-0 I:0 -1 0 6736 -1
--6 I:0 6728 1 -1 6696
-6005 I:19229 6738 11 6740 6728
-30 I:6070 6742 11 6744 6736
-2002 S:MnemoLoad else->Root"6746 11 -1 6740
-35001 I:0 6756 13 6848 6588
--321 I:0 -1 0 6760 -1
--6 I:0 6752 1 6800 -1
--4 C:+"6762 11 6764 6752
--4 C:-"6766 11 6768 6760
--4 C:*"6770 11 6772 6764
--4 C:/"6774 11 6776 6768
--4 C:%"6778 11 6780 6772
-6002 I:45229 6782 11 6784 6776
-30 I:6070 6786 11 6788 6780
-52156 I:11001 6790 11 6792 6784
-2002 S:EqVar Operator -> ALE"6794 11 -1 6788
-0 I:0 -1 0 6804 -1
--6 I:0 6796 1 -1 6756
-6005 I:19229 6806 11 6808 6796
-8021 I:52021 6810 11 6812 6804
-8061 I:0 6820 1 6832 6808
--15 I:0 6812 1 -1 -1
-12065 I:0 6828 1 -1 -1
--15 I:0 6820 1 -1 -1
-52116 I:1100 6830 11 -1 -1
-9001 I:0 6834 11 6836 6812
-8001 I:0 6838 11 6840 6832
-30 I:6070 6842 11 6844 6836
-2002 S:EqVar else -> Root"6846 11 -1 6840
-37001 I:0 6856 13 6900 6748
--13 I:0 -1 0 6860 -1
--6 I:0 6852 1 6884 -1
--14 I:0 -1 0 6864 6852
--306 I:0 -1 0 6868 6860
-6005 I:38229 6870 11 6872 6864
-36 I:15185 6874 11 6876 6868
-2002 S:LoadVar Const/Var/Vect"6878 11 -1 6872
-0 I:0 -1 0 6888 -1
--6 I:0 6880 1 -1 6856
-6005 I:19229 6890 11 6892 6880
-30 I:6070 6894 11 6896 6888
-2002 S:LoadVar else->Root"6898 11 -1 6892
-38001 I:0 6908 13 6984 6848
--321 I:0 -1 0 6912 -1
--6 I:0 6904 1 6948 -1
--4 C:+"6914 11 6916 6904
--4 C:-"6918 11 6920 6912
--4 C:*"6922 11 6924 6916
--4 C:/"6926 11 6928 6920
--4 C:%"6930 11 6932 6924
-6002 I:45229 6934 11 6936 6928
-30 I:6070 6938 11 6940 6932
-2002 S:BrackLoadVar Operator -> ALE"6942 11 -1 6936
--4 C:)"6946 11 6952 -1
--6 I:0 6944 1 6964 6908
-6005 I:19229 6954 11 6956 6944
-2002 S:BrackLoadVar )"6958 11 -1 6952
-0 I:0 -1 0 6968 -1
--6 I:0 6960 1 -1 6948
-6005 I:44229 6970 11 6972 6960
-6002 I:44229 6974 11 6976 6968
-30 I:6070 6978 11 6980 6972
-2002 S:BrackLoadVar else -> ALE"6982 11 -1 6976
-39001 I:0 6992 13 7060 6900
--4 C:="6990 11 6996 -1
--6 I:0 6988 1 7012 -1
-6005 I:34229 6998 11 7000 6988
-8021 I:15210 7002 11 7004 6996
-2002 S:LoadAfter ="7006 11 -1 7000
-0 I:0 -1 0 7016 -1
--6 I:0 7008 1 -1 6992
-6005 I:19229 7018 11 7020 7008
-8021 I:15185 7022 11 7024 7016
-8021 I:52160 7026 11 7028 7020
-8061 I:0 7036 1 7048 7024
--15 I:0 7028 1 -1 -1
-12065 I:0 7044 1 -1 -1
--15 I:0 7036 1 -1 -1
-52116 I:1100 7046 11 -1 -1
-8001 I:0 7050 11 7052 7028
-30 I:19229 7054 11 7056 7048
-2002 S:LoadAfter else->Root"7058 11 -1 7052
-30001 I:0 7068 13 7228 6984
--4 C:{"7066 11 7072 -1
--6 I:0 7064 1 7132 -1
-6005 I:19229 7074 11 7076 7064
-4161 I:0 7084 1 7088 7072
--15 I:0 7076 1 -1 -1
--4 C:{"7086 11 -1 -1
-15160 I:0 -1 0 7092 7076
-15192 I:0 -1 0 7096 7088
-52021 I:-6 7098 11 7100 7092
-52160 I:0 7102 11 7104 7096
-52240 I:0 -1 0 7108 7100
-12130 I:0 -1 0 7112 7104
-4161 I:0 7120 1 7124 7108
--15 I:0 7112 1 -1 -1
--2000 I:0 -1 0 -1 -1
-2002 S:ListAfter {"7126 11 -1 7112
--24 I:0 -1 0 7136 -1
--6 I:0 7128 1 7164 7068
--8 I:0 -1 0 7140 7128
--13 I:0 -1 0 7144 7136
--14 I:0 -1 0 7148 7140
-6005 I:19229 7150 11 7152 7144
-408 I:15185 7154 11 7156 7148
-2002 S:ListAfter Mk/Atr/Const/Var"7158 11 -1 7152
--2 I:0 -1 0 7168 -1
--6 I:0 7160 1 7196 7132
-6005 I:31229 7170 11 7172 7160
-30 I:5161 7174 11 7176 7168
-5170 I:0 7184 1 7188 7172
--15 I:0 7176 1 -1 -1
-6070 I:0 -1 0 -1 -1
-2002 S:ListAfter Mnemo"7190 11 -1 7176
--4 C:>"7194 11 7200 -1
--6 I:0 7192 1 7216 7164
--4 C:<"7202 11 7204 7192
-6005 I:30229 7206 11 7208 7200
-2002 S:ListAfter > <"7210 11 -1 7204
-0 I:0 -1 0 7220 -1
--6 I:0 7212 1 -1 7196
-6005 I:19229 7222 11 7224 7212
-30 I:6070 7226 11 -1 7220
-50001 I:0 7236 13 7340 7060
--4 C:>"7234 11 7240 -1
--6 I:0 7232 1 7256 -1
--4 C:<"7242 11 7244 7232
-6005 I:30229 7246 11 7248 7240
-2002 S:ListAfterClose >"7250 11 -1 7244
-0 I:0 -1 0 7260 -1
--6 I:0 7252 1 -1 7236
-6005 I:19229 7262 11 7264 7252
-4222 I:0 7272 1 7276 7260
--15 I:0 7264 1 -1 -1
--2002 I:0 -1 0 -1 -1
-4023 I:0 7284 1 7332 7264
--15 I:0 7276 1 -1 -1
-4157 I:0 -1 0 7288 -1
-52249 I:0 -1 0 7292 7284
-12131 I:0 -1 0 7296 7288
-12065 I:0 7304 1 7328 7292
--15 I:0 7296 1 -1 -1
-55061 I:0 7312 1 7324 -1
--15 I:0 7304 1 -1 -1
-52263 I:54170 7314 11 7316 -1
-55001 I:0 7318 11 7320 7312
-2002 S:VARDEF-STORED"7322 11 -1 7316
-52263 I:1100 7326 11 -1 7304
-4157 I:0 -1 0 -1 7296
-30 I:6070 7334 11 7336 7276
-2002 S:ListAfterClose else -> Root"7338 11 -1 7332
-31001 I:0 7348 13 7448 7228
--4 C:{"7346 11 7352 -1
--6 I:0 7344 1 7432 -1
-6005 I:19229 7354 11 7356 7344
-4161 I:0 7364 1 7368 7352
+-4 C:("6714 11 -1 -1
+2002 S:EqualAfter ( -> ALE"6718 11 -1 6704
+-322 I:0 -1 0 6728 -1
+-6 I:0 6720 1 6744 6684
+6005 I:45229 6730 11 6732 6720
+11021 I:10001 6734 11 6736 6728
+2002 S:EqualAfter parenVal"6738 11 -1 6732
+0 I:0 -1 0 6748 -1
+-6 I:0 6740 1 -1 6724
+6099 I:0 -1 0 6752 6740
+2002 S:SYNTAX ERROR EqualAfter: value (FU, Mk, Mnemo, Const, Var, Vect, '{', '(' or '>') expected after '='"6754 11 6756 6748
+30 I:2002 6758 11 6760 6752
+988 I:0 -1 0 -1 6756
+33001 I:0 6772 13 6824 6368
+-4 C:."6770 11 6776 -1
+-6 I:0 6768 1 6808 -1
+6005 I:32228 6778 11 6780 6768
+6015 I:-2 6782 11 6784 6776
+6016 I:14228 6786 11 6788 6780
+14012 I:0 6796 1 6800 6784
+-15 I:0 6788 1 -1 -1
+400 I:6070 6798 11 -1 -1
+2002 S:FUAfter2 ."6802 11 -1 6788
+0 I:0 -1 0 6812 -1
+-6 I:0 6804 1 -1 6772
+6005 I:19229 6814 11 6816 6804
+8021 I:15185 6818 11 6820 6812
+30 I:6070 6822 11 -1 6816
+32001 I:0 6832 13 6884 6764
+-24 I:0 -1 0 6836 -1
+-6 I:0 6828 1 6860 -1
+6005 I:39229 6838 11 6840 6828
+418 I:8140 6842 11 6844 6836
+6015 I:-2 6846 11 6848 6840
+6016 I:5229 6850 11 6852 6844
+2002 S:MkWait2 MkForFU"6854 11 -1 6848
+0 I:0 -1 0 6864 -1
+-6 I:0 6856 1 -1 6832
+6005 I:19229 6866 11 6868 6856
+6015 I:-2 6870 11 6872 6864
+6016 I:5229 6874 11 6876 6868
+8021 I:15185 6878 11 6880 6872
+30 I:6070 6882 11 -1 6876
+36001 I:0 6892 13 7064 6824
+-4 C:!"6890 11 6896 -1
+-6 I:0 6888 1 6940 -1
+6005 I:35229 6898 11 6900 6888
+56155 I:54229 6902 11 6904 6896
+54023 I:0 6912 1 6924 6900
+-15 I:0 6904 1 -1 -1
+54164 I:15185 6914 11 6916 -1
+8021 I:52021 6918 11 6920 6912
+54164 I:52160 6922 11 -1 6916
+5151 I:0 -1 0 6928 6904
+56151 I:0 -1 0 6932 6924
+2002 S:MnemoLoad ! consume"6934 11 -1 6928
+-4 C:("6938 11 6944 -1
+-6 I:0 6936 1 6956 6892
+6005 I:37229 6946 11 6948 6936
+2002 S:MnemoLoad ("6950 11 -1 6944
+-4 C:>"6954 11 6960 -1
+-6 I:0 6952 1 6992 6940
+-4 C:<"6962 11 6964 6952
+6005 I:30229 6966 11 6968 6960
+4161 I:0 6976 1 6980 6964
+-15 I:0 6968 1 -1 -1
+-4 C:>"6978 11 -1 -1
+15244 I:0 -1 0 6984 6968
+2002 S:MnemoLoad > <"6986 11 -1 6980
+-4 C:{"6990 11 6996 -1
+-6 I:0 6988 1 7028 6956
+6005 I:19229 6998 11 7000 6988
+4161 I:0 7008 1 7012 6996
+-15 I:0 7000 1 -1 -1
+-4 C:{"7010 11 -1 -1
+15160 I:0 -1 0 7016 7000
+15163 I:0 -1 0 7020 7012
+2002 S:MnemoLoad {"7022 11 -1 7016
+-4 C:."7026 11 7032 -1
+-6 I:0 7024 1 7048 6992
+6099 I:0 -1 0 7036 7024
+2002 S:SYNTAX ERROR: method call (dot) on an unresolved FU in RHS/load position -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row"7038 11 7040 7032
+988 I:0 -1 0 -1 7036
+0 I:0 -1 0 7052 -1
+-6 I:0 7044 1 -1 7028
+6005 I:19229 7054 11 7056 7044
+30 I:6070 7058 11 7060 7052
+2002 S:MnemoLoad else->Root"7062 11 -1 7056
+35001 I:0 7072 13 7164 6884
+-321 I:0 -1 0 7076 -1
+-6 I:0 7068 1 7116 -1
+-4 C:+"7078 11 7080 7068
+-4 C:-"7082 11 7084 7076
+-4 C:*"7086 11 7088 7080
+-4 C:/"7090 11 7092 7084
+-4 C:%"7094 11 7096 7088
+6002 I:45229 7098 11 7100 7092
+30 I:6070 7102 11 7104 7096
+52156 I:11001 7106 11 7108 7100
+2002 S:EqVar Operator -> ALE"7110 11 -1 7104
+0 I:0 -1 0 7120 -1
+-6 I:0 7112 1 -1 7072
+6005 I:19229 7122 11 7124 7112
+8021 I:52021 7126 11 7128 7120
+8061 I:0 7136 1 7148 7124
+-15 I:0 7128 1 -1 -1
+12065 I:0 7144 1 -1 -1
+-15 I:0 7136 1 -1 -1
+52116 I:1100 7146 11 -1 -1
+9001 I:0 7150 11 7152 7128
+8001 I:0 7154 11 7156 7148
+30 I:6070 7158 11 7160 7152
+2002 S:EqVar else -> Root"7162 11 -1 7156
+37001 I:0 7172 13 7220 7064
+-13 I:0 -1 0 7176 -1
+-6 I:0 7168 1 7204 -1
+-10 I:0 -1 0 7180 7168
+-14 I:0 -1 0 7184 7176
+-306 I:0 -1 0 7188 7180
+6005 I:38229 7190 11 7192 7184
+36 I:15185 7194 11 7196 7188
+2002 S:LoadVar Const/Var/Vect"7198 11 -1 7192
+0 I:0 -1 0 7208 -1
+-6 I:0 7200 1 -1 7172
+6005 I:19229 7210 11 7212 7200
+30 I:6070 7214 11 7216 7208
+2002 S:LoadVar else->Root"7218 11 -1 7212
+38001 I:0 7228 13 7304 7164
+-321 I:0 -1 0 7232 -1
+-6 I:0 7224 1 7268 -1
+-4 C:+"7234 11 7236 7224
+-4 C:-"7238 11 7240 7232
+-4 C:*"7242 11 7244 7236
+-4 C:/"7246 11 7248 7240
+-4 C:%"7250 11 7252 7244
+6002 I:45229 7254 11 7256 7248
+30 I:6070 7258 11 7260 7252
+2002 S:BrackLoadVar Operator -> ALE"7262 11 -1 7256
+-4 C:)"7266 11 7272 -1
+-6 I:0 7264 1 7284 7228
+6005 I:19229 7274 11 7276 7264
+2002 S:BrackLoadVar )"7278 11 -1 7272
+0 I:0 -1 0 7288 -1
+-6 I:0 7280 1 -1 7268
+6005 I:44229 7290 11 7292 7280
+6002 I:44229 7294 11 7296 7288
+30 I:6070 7298 11 7300 7292
+2002 S:BrackLoadVar else -> ALE"7302 11 -1 7296
+39001 I:0 7312 13 7380 7220
+-4 C:="7310 11 7316 -1
+-6 I:0 7308 1 7332 -1
+6005 I:34229 7318 11 7320 7308
+8021 I:15210 7322 11 7324 7316
+2002 S:LoadAfter ="7326 11 -1 7320
+0 I:0 -1 0 7336 -1
+-6 I:0 7328 1 -1 7312
+6005 I:19229 7338 11 7340 7328
+8021 I:15185 7342 11 7344 7336
+8021 I:52160 7346 11 7348 7340
+8061 I:0 7356 1 7368 7344
+-15 I:0 7348 1 -1 -1
+12065 I:0 7364 1 -1 -1
 -15 I:0 7356 1 -1 -1
--4 C:{"7366 11 -1 -1
-5163 I:0 7376 1 7380 7356
--15 I:0 7368 1 -1 -1
--102 I:0 -1 0 -1 -1
-15160 I:0 -1 0 7384 7368
-15192 I:0 -1 0 7388 7380
-15155 I:5185 7390 11 7392 7384
-5156 I:0 -1 0 7396 7388
-52021 I:-6 7398 11 7400 7392
-52160 I:0 7402 11 7404 7396
-52240 I:0 -1 0 7408 7400
-12130 I:0 -1 0 7412 7404
-4161 I:0 7420 1 7424 7408
--15 I:0 7412 1 -1 -1
+52116 I:1100 7366 11 -1 -1
+8001 I:0 7370 11 7372 7348
+30 I:19229 7374 11 7376 7368
+2002 S:LoadAfter else->Root"7378 11 -1 7372
+30001 I:0 7388 13 7552 7304
+-4 C:{"7386 11 7392 -1
+-6 I:0 7384 1 7452 -1
+6005 I:19229 7394 11 7396 7384
+4161 I:0 7404 1 7408 7392
+-15 I:0 7396 1 -1 -1
+-4 C:{"7406 11 -1 -1
+15160 I:0 -1 0 7412 7396
+15192 I:0 -1 0 7416 7408
+52021 I:-6 7418 11 7420 7412
+52160 I:0 7422 11 7424 7416
+52240 I:0 -1 0 7428 7420
+12130 I:0 -1 0 7432 7424
+4161 I:0 7440 1 7444 7428
+-15 I:0 7432 1 -1 -1
 -2000 I:0 -1 0 -1 -1
-2002 S:ListAfterMnemo {"7426 11 -1 7412
-0 I:0 -1 0 7436 -1
--6 I:0 7428 1 -1 7348
-6005 I:30229 7438 11 7440 7428
-30 I:6070 7442 11 7444 7436
-2002 S:ListAfterMnemo else"7446 11 -1 7440
-44001 I:0 7456 13 7592 7340
--13 I:0 -1 0 7460 -1
--6 I:0 7452 1 7484 -1
--14 I:0 -1 0 7464 7452
--306 I:0 -1 0 7468 7460
-6005 I:45229 7470 11 7472 7464
-36 I:10001 7474 11 7476 7468
-2002 S:ALE operand"7478 11 -1 7472
--4 C:("7482 11 7488 -1
--6 I:0 7480 1 7520 7456
-6002 I:44229 7490 11 7492 7480
-9005 I:0 7494 11 7496 7488
-10005 I:0 7498 11 7500 7492
-4161 I:0 7508 1 7512 7496
+2002 S:ListAfter {"7446 11 -1 7432
+-24 I:0 -1 0 7456 -1
+-6 I:0 7448 1 7488 7388
+-8 I:0 -1 0 7460 7448
+-13 I:0 -1 0 7464 7456
+-10 I:0 -1 0 7468 7460
+-14 I:0 -1 0 7472 7464
+6005 I:19229 7474 11 7476 7468
+408 I:15185 7478 11 7480 7472
+2002 S:ListAfter Mk/Atr/Const/Var"7482 11 -1 7476
+-2 I:0 -1 0 7492 -1
+-6 I:0 7484 1 7520 7452
+6005 I:31229 7494 11 7496 7484
+30 I:5161 7498 11 7500 7492
+5170 I:0 7508 1 7512 7496
 -15 I:0 7500 1 -1 -1
--4 C:("7510 11 -1 -1
-2002 S:ALE ("7514 11 -1 7500
--322 I:0 -1 0 7524 -1
--6 I:0 7516 1 7540 7484
-6005 I:45229 7526 11 7528 7516
-11021 I:10001 7530 11 7532 7524
-2002 S:ALE parenVal"7534 11 -1 7528
--4 C:-"7538 11 7544 -1
--6 I:0 7536 1 7556 7520
-6005 I:49229 7546 11 7548 7536
-2002 S:ALE unary"7550 11 -1 7544
--4 C:+"7554 11 7560 -1
--6 I:0 7552 1 7572 7540
-6005 I:44229 7562 11 7564 7552
-2002 S:ALE unary"7566 11 -1 7560
-0 I:0 -1 0 7576 -1
--6 I:0 7568 1 -1 7556
-6099 I:0 -1 0 7580 7568
-2002 S:SYNTAX ERROR ALE: operand or '(' expected"7582 11 7584 7576
-30 I:2002 7586 11 7588 7580
-988 I:0 -1 0 -1 7584
-45001 I:0 7600 13 7960 7448
--4 C:+"7598 11 7604 -1
--6 I:0 7596 1 7620 -1
-6005 I:44229 7606 11 7608 7596
-10021 I:9140 7610 11 7612 7604
-2002 S:ALEAfter op"7614 11 -1 7608
--4 C:-"7618 11 7624 -1
--6 I:0 7616 1 7640 7600
-6005 I:49229 7626 11 7628 7616
-10021 I:9140 7630 11 7632 7624
-2002 S:ALEAfter op"7634 11 -1 7628
--4 C:*"7638 11 7644 -1
--6 I:0 7636 1 7656 7620
-6005 I:46229 7646 11 7648 7636
-2002 S:ALEAfter op"7650 11 -1 7644
--4 C:/"7654 11 7660 -1
--6 I:0 7652 1 7672 7640
-6005 I:47229 7662 11 7664 7652
-2002 S:ALEAfter op"7666 11 -1 7660
--4 C:%"7670 11 7676 -1
--6 I:0 7668 1 7688 7656
-6005 I:48229 7678 11 7680 7668
-2002 S:ALEAfter op"7682 11 -1 7676
--321 I:0 -1 0 7692 -1
--6 I:0 7684 1 7708 7672
-6005 I:44229 7694 11 7696 7684
-10021 I:9140 7698 11 7700 7692
-2002 S:ALEAfter op"7702 11 -1 7696
--4 C:)"7706 11 7712 -1
--6 I:0 7704 1 7832 7688
-4222 I:0 7720 1 7724 7704
--15 I:0 7712 1 -1 -1
--4 C:("7722 11 -1 -1
-4023 I:0 7732 1 7772 7712
--15 I:0 7724 1 -1 -1
-10021 I:9140 7734 11 7736 -1
-9021 I:11001 7738 11 7740 7732
-9008 I:0 7742 11 7744 7736
-10008 I:0 7746 11 7748 7740
-4157 I:0 -1 0 7752 7744
-6003 I:0 -1 0 7756 7748
-6070 I:0 7764 1 7768 7752
--15 I:0 7756 1 -1 -1
+6070 I:0 -1 0 -1 -1
+2002 S:ListAfter Mnemo"7514 11 -1 7500
+-4 C:>"7518 11 7524 -1
+-6 I:0 7516 1 7540 7488
+-4 C:<"7526 11 7528 7516
+6005 I:30229 7530 11 7532 7524
+2002 S:ListAfter > <"7534 11 -1 7528
+0 I:0 -1 0 7544 -1
+-6 I:0 7536 1 -1 7520
+6005 I:19229 7546 11 7548 7536
+30 I:6070 7550 11 -1 7544
+50001 I:0 7560 13 7664 7380
+-4 C:>"7558 11 7564 -1
+-6 I:0 7556 1 7580 -1
+-4 C:<"7566 11 7568 7556
+6005 I:30229 7570 11 7572 7564
+2002 S:ListAfterClose >"7574 11 -1 7568
+0 I:0 -1 0 7584 -1
+-6 I:0 7576 1 -1 7560
+6005 I:19229 7586 11 7588 7576
+4222 I:0 7596 1 7600 7584
+-15 I:0 7588 1 -1 -1
+-2002 I:0 -1 0 -1 -1
+4023 I:0 7608 1 7656 7588
+-15 I:0 7600 1 -1 -1
+4157 I:0 -1 0 7612 -1
+52249 I:0 -1 0 7616 7608
+12131 I:0 -1 0 7620 7612
+12065 I:0 7628 1 7652 7616
+-15 I:0 7620 1 -1 -1
+55061 I:0 7636 1 7648 -1
+-15 I:0 7628 1 -1 -1
+52116 I:54170 7638 11 7640 -1
+55001 I:0 7642 11 7644 7636
+2002 S:VARDEF-STORED"7646 11 -1 7640
+52263 I:1100 7650 11 -1 7628
+4157 I:0 -1 0 -1 7620
+30 I:6070 7658 11 7660 7600
+2002 S:ListAfterClose else -> Root"7662 11 -1 7656
+31001 I:0 7672 13 7772 7552
+-4 C:{"7670 11 7676 -1
+-6 I:0 7668 1 7756 -1
+6005 I:19229 7678 11 7680 7668
+4161 I:0 7688 1 7692 7676
+-15 I:0 7680 1 -1 -1
+-4 C:{"7690 11 -1 -1
+5163 I:0 7700 1 7704 7680
+-15 I:0 7692 1 -1 -1
+-102 I:0 -1 0 -1 -1
+15160 I:0 -1 0 7708 7692
+15192 I:0 -1 0 7712 7704
+15155 I:5185 7714 11 7716 7708
+5156 I:0 -1 0 7720 7712
+52021 I:-6 7722 11 7724 7716
+52160 I:0 7726 11 7728 7720
+52240 I:0 -1 0 7732 7724
+12130 I:0 -1 0 7736 7728
+4161 I:0 7744 1 7748 7732
+-15 I:0 7736 1 -1 -1
+-2000 I:0 -1 0 -1 -1
+2002 S:ListAfterMnemo {"7750 11 -1 7736
+0 I:0 -1 0 7760 -1
+-6 I:0 7752 1 -1 7672
+6005 I:30229 7762 11 7764 7752
+30 I:6070 7766 11 7768 7760
+2002 S:ListAfterMnemo else"7770 11 -1 7764
+44001 I:0 7780 13 7920 7664
+-13 I:0 -1 0 7784 -1
+-6 I:0 7776 1 7812 -1
+-10 I:0 -1 0 7788 7776
+-14 I:0 -1 0 7792 7784
+-306 I:0 -1 0 7796 7788
+6005 I:45229 7798 11 7800 7792
+36 I:10001 7802 11 7804 7796
+2002 S:ALE operand"7806 11 -1 7800
+-4 C:("7810 11 7816 -1
+-6 I:0 7808 1 7848 7780
+6002 I:44229 7818 11 7820 7808
+9005 I:0 7822 11 7824 7816
+10005 I:0 7826 11 7828 7820
+4161 I:0 7836 1 7840 7824
+-15 I:0 7828 1 -1 -1
+-4 C:("7838 11 -1 -1
+2002 S:ALE ("7842 11 -1 7828
+-322 I:0 -1 0 7852 -1
+-6 I:0 7844 1 7868 7812
+6005 I:45229 7854 11 7856 7844
+11021 I:10001 7858 11 7860 7852
+2002 S:ALE parenVal"7862 11 -1 7856
+-4 C:-"7866 11 7872 -1
+-6 I:0 7864 1 7884 7848
+6005 I:49229 7874 11 7876 7864
+2002 S:ALE unary"7878 11 -1 7872
+-4 C:+"7882 11 7888 -1
+-6 I:0 7880 1 7900 7868
+6005 I:44229 7890 11 7892 7880
+2002 S:ALE unary"7894 11 -1 7888
+0 I:0 -1 0 7904 -1
+-6 I:0 7896 1 -1 7884
+6099 I:0 -1 0 7908 7896
+2002 S:SYNTAX ERROR ALE: operand or '(' expected"7910 11 7912 7904
+30 I:2002 7914 11 7916 7908
+988 I:0 -1 0 -1 7912
+45001 I:0 7928 13 8288 7772
+-4 C:+"7926 11 7932 -1
+-6 I:0 7924 1 7948 -1
+6005 I:44229 7934 11 7936 7924
+10021 I:9140 7938 11 7940 7932
+2002 S:ALEAfter op"7942 11 -1 7936
+-4 C:-"7946 11 7952 -1
+-6 I:0 7944 1 7968 7928
+6005 I:49229 7954 11 7956 7944
+10021 I:9140 7958 11 7960 7952
+2002 S:ALEAfter op"7962 11 -1 7956
+-4 C:*"7966 11 7972 -1
+-6 I:0 7964 1 7984 7948
+6005 I:46229 7974 11 7976 7964
+2002 S:ALEAfter op"7978 11 -1 7972
+-4 C:/"7982 11 7988 -1
+-6 I:0 7980 1 8000 7968
+6005 I:47229 7990 11 7992 7980
+2002 S:ALEAfter op"7994 11 -1 7988
+-4 C:%"7998 11 8004 -1
+-6 I:0 7996 1 8016 7984
+6005 I:48229 8006 11 8008 7996
+2002 S:ALEAfter op"8010 11 -1 8004
+-321 I:0 -1 0 8020 -1
+-6 I:0 8012 1 8036 8000
+6005 I:44229 8022 11 8024 8012
+10021 I:9140 8026 11 8028 8020
+2002 S:ALEAfter op"8030 11 -1 8024
+-4 C:)"8034 11 8040 -1
+-6 I:0 8032 1 8160 8016
+4222 I:0 8048 1 8052 8032
+-15 I:0 8040 1 -1 -1
+-4 C:("8050 11 -1 -1
+4023 I:0 8060 1 8100 8040
+-15 I:0 8052 1 -1 -1
+10021 I:9140 8062 11 8064 -1
+9021 I:11001 8066 11 8068 8060
+9008 I:0 8070 11 8072 8064
+10008 I:0 8074 11 8076 8068
+4157 I:0 -1 0 8080 8072
+6003 I:0 -1 0 8084 8076
+6070 I:0 8092 1 8096 8080
+-15 I:0 8084 1 -1 -1
 -322 I:0 -1 0 -1 -1
-2002 S:ALEAfter )"7770 11 -1 7756
-4024 I:0 7780 1 -1 7724
--15 I:0 7772 1 -1 -1
-6005 I:19229 7782 11 7784 -1
-10021 I:9140 7786 11 7788 7780
-8021 I:52021 7790 11 7792 7784
-9021 I:52160 7794 11 7796 7788
-8061 I:0 7804 1 7816 7792
--15 I:0 7796 1 -1 -1
-12065 I:0 7812 1 -1 -1
--15 I:0 7804 1 -1 -1
-52116 I:1100 7814 11 -1 -1
-8001 I:0 7818 11 7820 7796
-30 I:6070 7822 11 7824 7816
-2002 S:ALEAfter done -> Root"7826 11 -1 7820
--4 C:]"7830 11 7836 -1
--6 I:0 7828 1 7908 7708
-4222 I:0 7844 1 7848 7828
--15 I:0 7836 1 -1 -1
--4 C:["7846 11 -1 -1
-4023 I:0 7856 1 7884 7836
--15 I:0 7848 1 -1 -1
-4157 I:0 -1 0 7860 -1
-10021 I:9140 7862 11 7864 7856
-9021 I:5185 7866 11 7868 7860
-5174 I:0 7870 11 7872 7864
-5156 I:0 -1 0 7876 7868
-6005 I:19229 7878 11 7880 7872
-2002 S:ALEAfter ] -> var bound"7882 11 -1 7876
-4024 I:0 7892 1 -1 7848
--15 I:0 7884 1 -1 -1
-6099 I:0 -1 0 7896 -1
-2002 S:SYNTAX ERROR ALEAfter: ']' without matching '['"7898 11 7900 7892
-988 I:0 -1 0 -1 7896
-0 I:0 -1 0 7912 -1
--6 I:0 7904 1 -1 7832
-6005 I:19229 7914 11 7916 7904
-10021 I:9140 7918 11 7920 7912
-8021 I:52021 7922 11 7924 7916
-9021 I:52160 7926 11 7928 7920
-8061 I:0 7936 1 7948 7924
--15 I:0 7928 1 -1 -1
-12065 I:0 7944 1 -1 -1
--15 I:0 7936 1 -1 -1
-52116 I:1100 7946 11 -1 -1
-8001 I:0 7950 11 7952 7928
-30 I:6070 7954 11 7956 7948
-2002 S:ALEAfter done -> Root"7958 11 -1 7952
-46001 I:0 7968 13 8068 7592
--13 I:0 -1 0 7972 -1
--6 I:0 7964 1 7996 -1
--14 I:0 -1 0 7976 7964
--306 I:0 -1 0 7980 7972
-6005 I:45229 7982 11 7984 7976
-36 I:10142 7986 11 7988 7980
-2002 S:AleMul operand"7990 11 -1 7984
--4 C:("7994 11 8000 -1
--6 I:0 7992 1 8032 7968
-6002 I:44229 8002 11 8004 7992
-9005 I:0 8006 11 8008 8000
-10005 I:0 8010 11 8012 8004
-4161 I:0 8020 1 8024 8008
--15 I:0 8012 1 -1 -1
--4 C:("8022 11 -1 -1
-2002 S:AleMul ("8026 11 -1 8012
--322 I:0 -1 0 8036 -1
--6 I:0 8028 1 8052 7996
-6005 I:45229 8038 11 8040 8028
-11021 I:10142 8042 11 8044 8036
-2002 S:AleMul parenVal"8046 11 -1 8040
-0 I:0 -1 0 8056 -1
--6 I:0 8048 1 -1 8032
-6099 I:0 -1 0 8060 8048
-2002 S:SYNTAX ERROR: operand expected after '*'"8062 11 8064 8056
-988 I:0 -1 0 -1 8060
-47001 I:0 8076 13 8176 7960
--13 I:0 -1 0 8080 -1
--6 I:0 8072 1 8104 -1
--14 I:0 -1 0 8084 8072
--306 I:0 -1 0 8088 8080
-6005 I:45229 8090 11 8092 8084
-36 I:10143 8094 11 8096 8088
-2002 S:AleDiv operand"8098 11 -1 8092
--4 C:("8102 11 8108 -1
--6 I:0 8100 1 8140 8076
-6002 I:44229 8110 11 8112 8100
-9005 I:0 8114 11 8116 8108
-10005 I:0 8118 11 8120 8112
-4161 I:0 8128 1 8132 8116
--15 I:0 8120 1 -1 -1
--4 C:("8130 11 -1 -1
-2002 S:AleDiv ("8134 11 -1 8120
--322 I:0 -1 0 8144 -1
--6 I:0 8136 1 8160 8104
-6005 I:45229 8146 11 8148 8136
-11021 I:10143 8150 11 8152 8144
-2002 S:AleDiv parenVal"8154 11 -1 8148
-0 I:0 -1 0 8164 -1
--6 I:0 8156 1 -1 8140
-6099 I:0 -1 0 8168 8156
-2002 S:SYNTAX ERROR: operand expected after '/'"8170 11 8172 8164
-988 I:0 -1 0 -1 8168
-48001 I:0 8184 13 8284 8068
--13 I:0 -1 0 8188 -1
--6 I:0 8180 1 8212 -1
--14 I:0 -1 0 8192 8180
--306 I:0 -1 0 8196 8188
-6005 I:45229 8198 11 8200 8192
-36 I:10144 8202 11 8204 8196
-2002 S:AleMod operand"8206 11 -1 8200
--4 C:("8210 11 8216 -1
--6 I:0 8208 1 8248 8184
-6002 I:44229 8218 11 8220 8208
-9005 I:0 8222 11 8224 8216
-10005 I:0 8226 11 8228 8220
-4161 I:0 8236 1 8240 8224
--15 I:0 8228 1 -1 -1
--4 C:("8238 11 -1 -1
-2002 S:AleMod ("8242 11 -1 8228
--322 I:0 -1 0 8252 -1
--6 I:0 8244 1 8268 8212
-6005 I:45229 8254 11 8256 8244
-11021 I:10144 8258 11 8260 8252
-2002 S:AleMod parenVal"8262 11 -1 8256
-0 I:0 -1 0 8272 -1
--6 I:0 8264 1 -1 8248
-6099 I:0 -1 0 8276 8264
-2002 S:SYNTAX ERROR: operand expected after '%%'"8278 11 8280 8272
-988 I:0 -1 0 -1 8276
-49001 I:0 8292 13 8400 8176
--13 I:0 -1 0 8296 -1
--6 I:0 8288 1 8324 -1
--14 I:0 -1 0 8300 8288
--306 I:0 -1 0 8304 8296
-6005 I:45229 8306 11 8308 8300
-36 I:10001 8310 11 8312 8304
-10142 I:-1 8314 11 8316 8308
-2002 S:AleNeg operand"8318 11 -1 8312
--4 C:("8322 11 8328 -1
--6 I:0 8320 1 8360 8292
-6002 I:44229 8330 11 8332 8320
-9005 I:0 8334 11 8336 8328
-10005 I:0 8338 11 8340 8332
-4161 I:0 8348 1 8352 8336
--15 I:0 8340 1 -1 -1
--4 C:("8350 11 -1 -1
-2002 S:AleNeg ("8354 11 -1 8340
--322 I:0 -1 0 8364 -1
--6 I:0 8356 1 8384 8324
-6005 I:45229 8366 11 8368 8356
-11021 I:10001 8370 11 8372 8364
-10142 I:-1 8374 11 8376 8368
-2002 S:AleNeg parenVal"8378 11 -1 8372
+2002 S:ALEAfter )"8098 11 -1 8084
+4024 I:0 8108 1 -1 8052
+-15 I:0 8100 1 -1 -1
+6005 I:19229 8110 11 8112 -1
+10021 I:9140 8114 11 8116 8108
+8021 I:52021 8118 11 8120 8112
+9021 I:52160 8122 11 8124 8116
+8061 I:0 8132 1 8144 8120
+-15 I:0 8124 1 -1 -1
+12065 I:0 8140 1 -1 -1
+-15 I:0 8132 1 -1 -1
+52116 I:1100 8142 11 -1 -1
+8001 I:0 8146 11 8148 8124
+30 I:6070 8150 11 8152 8144
+2002 S:ALEAfter done -> Root"8154 11 -1 8148
+-4 C:]"8158 11 8164 -1
+-6 I:0 8156 1 8236 8036
+4222 I:0 8172 1 8176 8156
+-15 I:0 8164 1 -1 -1
+-4 C:["8174 11 -1 -1
+4023 I:0 8184 1 8212 8164
+-15 I:0 8176 1 -1 -1
+4157 I:0 -1 0 8188 -1
+10021 I:9140 8190 11 8192 8184
+9021 I:5185 8194 11 8196 8188
+5174 I:0 8198 11 8200 8192
+5156 I:0 -1 0 8204 8196
+6005 I:19229 8206 11 8208 8200
+2002 S:ALEAfter ] -> var bound"8210 11 -1 8204
+4024 I:0 8220 1 -1 8176
+-15 I:0 8212 1 -1 -1
+6099 I:0 -1 0 8224 -1
+2002 S:SYNTAX ERROR ALEAfter: ']' without matching '['"8226 11 8228 8220
+988 I:0 -1 0 -1 8224
+0 I:0 -1 0 8240 -1
+-6 I:0 8232 1 -1 8160
+6005 I:19229 8242 11 8244 8232
+10021 I:9140 8246 11 8248 8240
+8021 I:52021 8250 11 8252 8244
+9021 I:52160 8254 11 8256 8248
+8061 I:0 8264 1 8276 8252
+-15 I:0 8256 1 -1 -1
+12065 I:0 8272 1 -1 -1
+-15 I:0 8264 1 -1 -1
+52116 I:1100 8274 11 -1 -1
+8001 I:0 8278 11 8280 8256
+30 I:6070 8282 11 8284 8276
+2002 S:ALEAfter done -> Root"8286 11 -1 8280
+46001 I:0 8296 13 8400 7920
+-13 I:0 -1 0 8300 -1
+-6 I:0 8292 1 8328 -1
+-10 I:0 -1 0 8304 8292
+-14 I:0 -1 0 8308 8300
+-306 I:0 -1 0 8312 8304
+6005 I:45229 8314 11 8316 8308
+36 I:10142 8318 11 8320 8312
+2002 S:AleMul operand"8322 11 -1 8316
+-4 C:("8326 11 8332 -1
+-6 I:0 8324 1 8364 8296
+6002 I:44229 8334 11 8336 8324
+9005 I:0 8338 11 8340 8332
+10005 I:0 8342 11 8344 8336
+4161 I:0 8352 1 8356 8340
+-15 I:0 8344 1 -1 -1
+-4 C:("8354 11 -1 -1
+2002 S:AleMul ("8358 11 -1 8344
+-322 I:0 -1 0 8368 -1
+-6 I:0 8360 1 8384 8328
+6005 I:45229 8370 11 8372 8360
+11021 I:10142 8374 11 8376 8368
+2002 S:AleMul parenVal"8378 11 -1 8372
 0 I:0 -1 0 8388 -1
--6 I:0 8380 1 -1 8360
+-6 I:0 8380 1 -1 8364
 6099 I:0 -1 0 8392 8380
-2002 S:SYNTAX ERROR: operand expected after '-'"8394 11 8396 8388
+2002 S:SYNTAX ERROR: operand expected after '*'"8394 11 8396 8388
 988 I:0 -1 0 -1 8392
-6005 I:19229 8402 11 -1 8284
+47001 I:0 8408 13 8512 8288
+-13 I:0 -1 0 8412 -1
+-6 I:0 8404 1 8440 -1
+-10 I:0 -1 0 8416 8404
+-14 I:0 -1 0 8420 8412
+-306 I:0 -1 0 8424 8416
+6005 I:45229 8426 11 8428 8420
+36 I:10143 8430 11 8432 8424
+2002 S:AleDiv operand"8434 11 -1 8428
+-4 C:("8438 11 8444 -1
+-6 I:0 8436 1 8476 8408
+6002 I:44229 8446 11 8448 8436
+9005 I:0 8450 11 8452 8444
+10005 I:0 8454 11 8456 8448
+4161 I:0 8464 1 8468 8452
+-15 I:0 8456 1 -1 -1
+-4 C:("8466 11 -1 -1
+2002 S:AleDiv ("8470 11 -1 8456
+-322 I:0 -1 0 8480 -1
+-6 I:0 8472 1 8496 8440
+6005 I:45229 8482 11 8484 8472
+11021 I:10143 8486 11 8488 8480
+2002 S:AleDiv parenVal"8490 11 -1 8484
+0 I:0 -1 0 8500 -1
+-6 I:0 8492 1 -1 8476
+6099 I:0 -1 0 8504 8492
+2002 S:SYNTAX ERROR: operand expected after '/'"8506 11 8508 8500
+988 I:0 -1 0 -1 8504
+48001 I:0 8520 13 8624 8400
+-13 I:0 -1 0 8524 -1
+-6 I:0 8516 1 8552 -1
+-10 I:0 -1 0 8528 8516
+-14 I:0 -1 0 8532 8524
+-306 I:0 -1 0 8536 8528
+6005 I:45229 8538 11 8540 8532
+36 I:10144 8542 11 8544 8536
+2002 S:AleMod operand"8546 11 -1 8540
+-4 C:("8550 11 8556 -1
+-6 I:0 8548 1 8588 8520
+6002 I:44229 8558 11 8560 8548
+9005 I:0 8562 11 8564 8556
+10005 I:0 8566 11 8568 8560
+4161 I:0 8576 1 8580 8564
+-15 I:0 8568 1 -1 -1
+-4 C:("8578 11 -1 -1
+2002 S:AleMod ("8582 11 -1 8568
+-322 I:0 -1 0 8592 -1
+-6 I:0 8584 1 8608 8552
+6005 I:45229 8594 11 8596 8584
+11021 I:10144 8598 11 8600 8592
+2002 S:AleMod parenVal"8602 11 -1 8596
+0 I:0 -1 0 8612 -1
+-6 I:0 8604 1 -1 8588
+6099 I:0 -1 0 8616 8604
+2002 S:SYNTAX ERROR: operand expected after '%%'"8618 11 8620 8612
+988 I:0 -1 0 -1 8616
+49001 I:0 8632 13 8744 8512
+-13 I:0 -1 0 8636 -1
+-6 I:0 8628 1 8668 -1
+-10 I:0 -1 0 8640 8628
+-14 I:0 -1 0 8644 8636
+-306 I:0 -1 0 8648 8640
+6005 I:45229 8650 11 8652 8644
+36 I:10001 8654 11 8656 8648
+10142 I:-1 8658 11 8660 8652
+2002 S:AleNeg operand"8662 11 -1 8656
+-4 C:("8666 11 8672 -1
+-6 I:0 8664 1 8704 8632
+6002 I:44229 8674 11 8676 8664
+9005 I:0 8678 11 8680 8672
+10005 I:0 8682 11 8684 8676
+4161 I:0 8692 1 8696 8680
+-15 I:0 8684 1 -1 -1
+-4 C:("8694 11 -1 -1
+2002 S:AleNeg ("8698 11 -1 8684
+-322 I:0 -1 0 8708 -1
+-6 I:0 8700 1 8728 8668
+6005 I:45229 8710 11 8712 8700
+11021 I:10001 8714 11 8716 8708
+10142 I:-1 8718 11 8720 8712
+2002 S:AleNeg parenVal"8722 11 -1 8716
+0 I:0 -1 0 8732 -1
+-6 I:0 8724 1 -1 8704
+6099 I:0 -1 0 8736 8724
+2002 S:SYNTAX ERROR: operand expected after '-'"8738 11 8740 8732
+988 I:0 -1 0 -1 8736
+6005 I:19229 8746 11 -1 8624

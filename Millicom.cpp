@@ -13,6 +13,7 @@
 #include "MeanShift.h"
 #include "ALU.h"
 #include "StreamFloatALU.h"
+#include "IndexFile.h"
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -143,10 +144,23 @@ int main(int argc, char* argv[])
 
 	if (haveOutFile)
 	{
-		// After the Lex pass, dump the compiler's accumulated capsule buffer
-		// (Bus MKs 250..) to <path> as a .ind file. This is how CompileCC.oap
-		// emits its compiled output.
-		Bus.ProgFU(1253, { Cstring, &outFile });
+		// Emission mirrors Delphi main.pas:480-493, which (post-compile) CLI-injects
+		// `GatewayFile.FileNameSet=...` then `Bus={CapsManager.IndexVectPopMk=GatewayFile.IndexVectWrite}`.
+		// We inject the same shape against the IndexFile FU, split into Delphi's two phases:
+		//   1. BUILD  -- CapsList.IndexVectPopMk = IndexFile.IndexVectFromList  (CapsManager role)
+		//   2. WRITE  -- IndexFile.IndexVectWrite                               (GatewayFile role)
+		// The serialization layout lives in the FU primitives (as it does on the Delphi/Pascal
+		// side); only the orchestration is bus-call injection.
+		IndexFile* idx = new IndexFile(&Bus, nullptr);
+		Bus.FUs.push_back(idx);
+		long idxAddr = Bus.FUMkRange * (long)(Bus.FUs.size() - 1);
+		idx->FUMkGlobalAdr = idxAddr;
+		idx->FileName = outFile;                 // == GatewayFile.FileNameSet
+		if (Bus.capsListFu != nullptr) {
+			long buildMk = idxAddr + 22;         // IndexFile.IndexVectFromList
+			Bus.capsListFu->ProgFU(256, { Cint, &buildMk }, nullptr); // phase 1: CapsList.IndexVectPopMk=...
+		}
+		idx->ProgFU(idxAddr + 21, { Cint, nullptr }, nullptr);        // phase 2: IndexFile.IndexVectWrite
 	}
 
 	return 0;

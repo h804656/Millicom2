@@ -161,6 +161,7 @@
     <ClCompile Include="Gateway.cpp" />
     <ClCompile Include="GraphTransf.cpp" />
     <ClCompile Include="IndFileConvertOld.cpp" />
+    <ClCompile Include="IndexFile.cpp" />
     <ClCompile Include="InOut.cpp" />
     <ClCompile Include="JSON-OAConeverter.cpp" />
     <ClCompile Include="Lex.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="FUini.h" />
     <ClInclude Include="Gateway.h" />
     <ClInclude Include="Gauss.h" />
+    <ClInclude Include="IndexFile.h" />
     <ClInclude Include="GraphTransf.h" />
     <ClInclude Include="IndFileConvertOld.h" />
     <ClInclude Include="InOut.h" />

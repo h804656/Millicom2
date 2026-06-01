@@ -149,6 +149,7 @@ ListMkTable
 >{Mk=229 Mnemo="FindAnd"           Hint="AND-search across rows"}
 >{Mk=243 Mnemo="PushTied"          Hint="Push tied sub-list"}
 >{Mk=244 Mnemo="PushTiedCopy"      Hint="Push tied sub-list (copy)"}
+>{Mk=240 Mnemo="Push"            Hint="Push sub-list level (List; no-op in C++ like Delphi built-in)"}
 >{Mk=262 Mnemo="PopMkDel"          Hint="Pop, dispatch via Load MK, delete"}
 >{Mk=285 Mnemo="LastAtrOut"        Hint="Write last line's atr to Load"}
 >{Mk=286 Mnemo="LastAtrOutMk"      Hint="Dispatch last line's atr via Load MK"}
@@ -168,6 +169,7 @@ ListMkTable
 >{Mk=249 Mnemo="LevelPrevAdd"           Hint="Add previous level"}
 >{Mk=263 Mnemo="MarkLastCopyOutMk"      Hint="Mark last copy, dispatch via Load MK"}
 >{Mk=451 Mnemo="BiggerExec"             Hint="Exec Load if LineNum increased"}
+>{Mk=256 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 
 // MnemoListMkTable: an exact duplicate of ListMkTable, used ONLY by the
 // "MnemoTable" self-row below. The .ind serializer (MakeIndexVect in
@@ -210,6 +212,7 @@ MnemoListMkTable
 >{Mk=229 Mnemo="FindAnd"           Hint="AND-search across rows"}
 >{Mk=243 Mnemo="PushTied"          Hint="Push tied sub-list"}
 >{Mk=244 Mnemo="PushTiedCopy"      Hint="Push tied sub-list (copy)"}
+>{Mk=240 Mnemo="Push"            Hint="Push sub-list level (List; no-op in C++ like Delphi built-in)"}
 >{Mk=262 Mnemo="PopMkDel"          Hint="Pop, dispatch via Load MK, delete"}
 >{Mk=285 Mnemo="LastAtrOut"        Hint="Write last line's atr to Load"}
 >{Mk=286 Mnemo="LastAtrOutMk"      Hint="Dispatch last line's atr via Load MK"}
@@ -229,6 +232,7 @@ MnemoListMkTable
 >{Mk=249 Mnemo="LevelPrevAdd"           Hint="Add previous level"}
 >{Mk=263 Mnemo="MarkLastCopyOutMk"      Hint="Mark last copy, dispatch via Load MK"}
 >{Mk=451 Mnemo="BiggerExec"             Hint="Exec Load if LineNum increased"}
+>{Mk=256 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 
 LexMkTable
 >{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}
@@ -297,6 +301,16 @@ AluSelfMkTable
 >{Mk=290 Mnemo="Append"}
 >{Mk=17  Mnemo="PopMk"}
 
+StrGenMkTable
+>{Mk=4 Mnemo="Stop" Hint="Halt the string generator"}
+
+// IndexFile FU method table (.ind emission FU, mirrors Delphi GatewayFile).
+IndexFileMkList
+>{Mk=287 Mnemo="CapsListRegister" Hint="Capture the active CapsList accumulator FU"}
+>{Mk=21  Mnemo="IndexVectWrite"   Hint="Write the built index vector to a .ind file"}
+>{Mk=22  Mnemo="IndexVectFromList" Hint="Build the index vector from the caps tree"}
+>{Mk=25  Mnemo="FileNameSet"      Hint="Set the output .ind path"}
+
 // Unknown mnemo: first try FUNameTable (the survivor copy of user-FU rows). On the self-host second
 // pass the MnemoTable.Set= rebuild has wiped the freshly re-registered FU-name rows, but their
 // copies persist in FUNameTable. A find there (MkMode on) runs the row's Lex.SendToReceiver={FU=addr}
@@ -362,6 +376,7 @@ MnemoTable.Set= //         mnemonic translation table
 >{Mnemo="FUStreamFloatALUNew" Lex.SendToReceiver={Const=15}}
 >{Mnemo="FUGaussNew"         Lex.SendToReceiver={Const=16}}
 >{Mnemo="FUALUNew"           MkTable.Set=AluSelfMkTable! Lex.SendToReceiver={Const=17}}
+>{Mnemo="FUIndexFileNew"     Lex.SendToReceiver={Const=26}}
 >{Mnemo="FURouterNew"        Lex.SendToReceiver={Const=20}}
 >{Mnemo="FUGatewayNew"       Lex.SendToReceiver={Const=21}}
 >{Mnemo="FUStreamIntALUNew"  Lex.SendToReceiver={Const=23}}
@@ -370,6 +385,7 @@ MnemoTable.Set= //         mnemonic translation table
 >{Mnemo="FUCons" 	 Lex.SendToReceiver={Const=1} Console.OutLn="FUCons !"}
 >{Mnemo="Bus" Hint="Главная шина" MkTable.Set=BusMkTable! Lex.SendToReceiver={FU=1000}}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
+>{Mnemo="StrGenPeer" Hint="Template row for StrGen FUs" MkTable.Set=StrGenMkTable! Lex.SendToReceiver={FU=3000}}
 >{Mnemo="IntAluPeer" Hint="Шаблон для пользовательских IntAlu ФУ" MkTable.Set=IntAluMkTable! Lex.SendToReceiver={FU=7000}}
 >{Mnemo="ListPeer" Hint="Template row for user List FUs" MkTable.Set=ListMkTable! Lex.SendToReceiver={FU=4000}}
 >{Mnemo="Lex" Hint="Template row for user Lex FUs" MkTable.Set=LexMkTable! Lex.SendToReceiver={FU=6000}}
@@ -390,6 +406,7 @@ RegPeer.MultiLineModeSet=1
 RegPeer.MkModeSet=1
 RegPeer.Set=
 >{FUType=1   CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="Cons"}       MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet MnemoTable.LastOutMk=FUNameTable.LineCopyAdd}
+>{FUType=2   CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="StrGenPeer"}       MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet MnemoTable.LastOutMk=FUNameTable.LineCopyAdd}
 >{FUType=3    CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="Lex"}        MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet MnemoTable.LastOutMk=FUNameTable.LineCopyAdd}
 >{FUType=5   CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="ListPeer"}   MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet MnemoTable.LastOutMk=FUNameTable.LineCopyAdd}
 >{FUType=7 CapsList.LastOutMk=MnemoTable.LineCopyAdd MnemoTable.FindAnd={Mnemo="IntAluPeer"} MnemoTable.LineCopyToLast Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastSubLoadSet MnemoTable.LastOutMk=FUNameTable.LineCopyAdd}
@@ -401,7 +418,7 @@ Root.Set=
   CapsList.OutMk=Main_Bus.CapsListRegister
   Console.OutLn="Root Mnemo"
 }
->{Mk Atr Lex.ReceiverMkSet=EqualWait.FindAnd
+>{Mk Atr ConstInt Lex.ReceiverMkSet=EqualWait.FindAnd
   OAList.LastAttach
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
   OAList.LastAtrOutMk=MkCalc.Set
@@ -459,7 +476,7 @@ Root.Set=
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Main_Bus.MkExec}
 }
->{Const Lex.ReceiverMkSet=Root.FindAnd}
+>{Const ConstInt Lex.ReceiverMkSet=Root.FindAnd}
 >{0 Console.OutLn="SYNTAX ERROR Root: unexpected token"
   FUListNew.ReceivedOutMk=Console.OutLn
 }
@@ -472,6 +489,9 @@ MnemoAnalysis.Set=
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
   Stack.LineCopyAdd={ListOuterMark}
   CapsDepth.Inc
+  CapsList.LineAtrDef=-6
+  CapsList.LineAdd=0
+  CapsList.Push
   MnemoTable.LastOutMk=VarStore.LineCopyAdd
   VarFlag.Set=1
   Console.OutLn="MnemoAnalysis > <"
@@ -490,6 +510,7 @@ MnemoAnalysis.Set=
   OAList.LineCopyAddPrevLoadSet
   Console.OutLn="MnemoAnalysis {"
 }
+>{Sep="." Lex.Stop Console.OutLn="SYNTAX ERROR: method call (dot) on an unresolved FU -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row" ProgStopAll}
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Atr}
   MnemoTable.LastAttach={Lex.SendToReceiver}
@@ -506,7 +527,7 @@ VarIniWait.Set=
   AleResult.Set=0
   Console.OutLn="VarIniWait [ -> ALE"
 }
->{Const Lex.ReceiverMkSet=Root.FindAnd
+>{Const ConstInt Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Var}
   FUListNew.ReceivedLoadOutMk=MnemoTable.LastLoadSet
   MnemoTable.LastLoadConstVarTypeSet=0
@@ -535,7 +556,7 @@ VarIniWait.Set=
 
 
 ConstWait.Set=
->{Const Var Vect Lex.ReceiverMkSet=VectWait.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=VectWait.FindAnd
   FUALUNew.VectNew
   MnemoTable.LineCopyAddPrevLoadSet={Vect}
   FUListNew.ReceivedLoadOutMk=FUALUNew.Append
@@ -551,7 +572,7 @@ ConstWait.Set=
 
 
 ConstWait2.Set=
->{Const Lex.ReceiverMkSet=Root.FindAnd
+>{Const ConstInt Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Atr}
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
   MkCalc.OutMk=MnemoTable.LastLoadSet
@@ -576,7 +597,7 @@ VectWait.Set=
 
 
 VectNext4.Set=
->{Const Var Lex.ReceiverMkSet=VectNext5.FindAnd
+>{Const ConstInt Var Lex.ReceiverMkSet=VectNext5.FindAnd
   FUListNew.ReceivedLoadOutMk=FUALUNew.Append
   Console.OutLn="VectNext4 element added"
 }
@@ -687,7 +708,7 @@ EqualWait.Set=
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MkCalc.OutMk=CapsList.LineAtrDef
-  CapsList.LineAdd=0
+  CapsList.LineAdd
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
   Console.OutLn="EqualWait else->Root"
@@ -710,7 +731,7 @@ EqualAfter.Set=
   FUListNew.ReceivedOutMk=VarKey.LineCopyAdd
   Console.OutLn="EqualAfter Mnemo"
 }
->{Const Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
   MkCalc.OutMk=CapsList.LineAtrDef
   FUListNew.ReceivedLoadOutMk=CapsList.LineAdd
@@ -821,6 +842,7 @@ MnemoLoad.Set=
   OAList.LineCopyAddPrevLoadSet
   Console.OutLn="MnemoLoad {"
 }
+>{Sep="." Lex.Stop Console.OutLn="SYNTAX ERROR: method call (dot) on an unresolved FU in RHS/load position -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row" ProgStopAll}
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
   Console.OutLn="MnemoLoad else->Root"
@@ -845,7 +867,7 @@ EqVar.Set=
 
 
 LoadVar.Set=
->{Const Var Vect Lex.ReceiverMkSet=BrackLoadVar.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=BrackLoadVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
   Console.OutLn="LoadVar Const/Var/Vect"
 }
@@ -898,7 +920,7 @@ ListAfter.Set=
   Stack.LineCopyAdd={SubCapMark}
   Console.OutLn="ListAfter {"
 }
->{Mk Atr Const Var Lex.ReceiverMkSet=Root.FindAnd
+>{Mk Atr Const ConstInt Var Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.LoadOutMk=OAList.LastLoadSet
   Console.OutLn="ListAfter Mk/Atr/Const/Var"
 }
@@ -925,7 +947,7 @@ ListAfterClose.Set=
   Stack.SuccessExec={Stack.LastDelMk
                      CapsList.LevelPrevAdd
                      CapsDepth.Dec
-                     CapsDepth.LessEQExec={VarFlag.NEQExec={CapsList.MarkLastCopyOutMk=VarStore.LastAttach
+                     CapsDepth.LessEQExec={VarFlag.NEQExec={CapsList.MarkLastOutMk=VarStore.LastAttach
                                                             VarFlag.Set=0
                                                             Console.OutLn="VARDEF-STORED"}
                                            CapsList.MarkLastCopyOutMk=Main_Bus.MkExec}
@@ -959,7 +981,7 @@ ListAfterMnemo.Set=
 // ALE
 
 ALE.Set=
->{Const Var Vect
+>{Const ConstInt Var Vect
   Lex.ReceiverMkSet=ALEAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=AleOp.Set
   Console.OutLn="ALE operand"
@@ -1044,7 +1066,7 @@ ALEAfter.Set=
 }
 
 AleMulWait.Set=
->{Const Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=AleOp.Mul Console.OutLn="AleMul operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
   AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleMul ("}
@@ -1052,7 +1074,7 @@ AleMulWait.Set=
 >{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '*'" ProgStopAll}
 
 AleDivWait.Set=
->{Const Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=AleOp.Div Console.OutLn="AleDiv operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
   AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleDiv ("}
@@ -1060,7 +1082,7 @@ AleDivWait.Set=
 >{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '/'" ProgStopAll}
 
 AleModWait.Set=
->{Const Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=AleOp.Mod Console.OutLn="AleMod operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
   AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleMod ("}
@@ -1068,7 +1090,7 @@ AleModWait.Set=
 >{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '%%'" ProgStopAll}
 
 AleNegWait.Set=
->{Const Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
+>{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=AleOp.Set AleOp.Mul=-1 Console.OutLn="AleNeg operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
   AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleNeg ("}

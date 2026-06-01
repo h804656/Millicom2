@@ -1,4 +1,4 @@
-// Подпрограммы инициализации ФУ
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 #include "stdafx.h"
 #include "FUini.h"
 #include "Consts.h"
@@ -8,6 +8,7 @@
 #include "Lex.h"
 #include "Find.h"
 #include "List.h"
+#include "IndexFile.h"
 #include "GraphTransf.h"
 #include "ALU.h"
 #include "InOut.h"
@@ -30,7 +31,7 @@
 using namespace std;
 
 
-int SizeOfFUType(unsigned int Type) // Объём данных, занимаемый ФУ определенного типа
+int SizeOfFUType(unsigned int Type) // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 {
 	switch (Type)
 	{
@@ -61,6 +62,7 @@ int SizeOfFUType(unsigned int Type) // Объём данных, занимаемый ФУ определенного
 	case 25: return sizeof(StreamIntALU);
 	case 26: return sizeof(MatPlot);
 	case 27: return sizeof(GraphDisplay);
+	case 28: return sizeof(IndexFile);
 	}
 }
 
@@ -193,4 +195,9 @@ FU* MatPlotIni(FU* BusContext, FU* TEmpl)
 FU* GraphDisplayIni(FU* BusContext, FU* TEmpl)
 {
 	return (FU*) new GraphDisplay(BusContext, TEmpl);
+}
+
+FU* IndexFileIni(FU* BusContext, FU* TEmpl)
+{
+	return (FU*) new IndexFile(BusContext, TEmpl);
 }

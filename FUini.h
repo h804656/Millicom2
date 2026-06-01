@@ -1,9 +1,9 @@
-// Подпрограммы инициализации ФУ
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 #pragma once
 #include "Consts.h"
 #include <array>
 
-int SizeOfFUType(unsigned int Type); // Объём данных, занимаемый ФУ определенного типа
+int SizeOfFUType(unsigned int Type); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 
 FU *BusIni(FU *BusContext, FU *TEmpl);
 FU *ConsIni(FU *BusContext, FU *TEmpl);
@@ -33,28 +33,29 @@ FU* StreamIntALUIni(FU* BusContext, FU* TEmpl);
 FU* StreamIntALUManagerIni(FU* BusContext, FU* TEmpl);
 FU* MatPlotIni(FU* BusContext, FU* TEmpl);
 FU* GraphDisplayIni(FU* BusContext, FU* TEmpl);
+FU* IndexFileIni(FU* BusContext, FU* TEmpl);
 
 const int NFUTypes = 27;
 
 typedef FU* (*FUiniProg)(FU*, FU*);
 
-class FuFabric // Фабрика по созданию ФУ
+class FuFabric // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 {
 private:
 	 array<FUiniProg, NFUTypes> FUTypes = {BusIni, ConsIni, StrGenIni, LexIni, FindIni,
 		ListIni, GraphTrasfIni, IntAluIni, InOutIni, AutomatManagerIni, NeuroIni,
 		NetManagerIni,SchedulerIni,EventserIni, MeanShiftIni, StreamFloatALUIni, GaussIni, ALUIni,
 		CellularAutomatIni, CellularAutomatManagerIni, RouterIni, GatewayIni, StreamFloatALUManagerIni,
-		StreamIntALUIni, MatPlotIni, GraphDisplayIni };
-	 bool FErr = false; // Флаг ошибки созданя ФУ
+		StreamIntALUIni, MatPlotIni, GraphDisplayIni, IndexFileIni };
+	 bool FErr = false; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 public:
-	int GetFuTypeCount() // Выдать количество типов ФУ
+	int GetFuTypeCount() // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 	{
 		return FUTypes.size();
 	};
-	bool GerFErr() // Выдать флаг ошибки создания ФУ
+	bool GerFErr() // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 	{ return FErr; };
-	FU* MakeFu(int t, void* BusUk = nullptr, void* Templ = nullptr) // Создать ФУ по индексу типа
+	FU* MakeFu(int t, void* BusUk = nullptr, void* Templ = nullptr) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	{
 		if (t<0 || t>FUTypes.size())
 		{
@@ -64,7 +65,7 @@ public:
 		return FUTypes[t]((FU*)BusUk, (FU*)Templ);
 	};
 
-	FU* MakeFu(void* Templ) // Создать ФУ по шаблону
+	FU* MakeFu(void* Templ) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	{
 		if (((FU*)Templ)->GetFuType()<0 || ((FU*)Templ)->GetFuType() > FUTypes.size())
 		{

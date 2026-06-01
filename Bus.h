@@ -32,20 +32,11 @@ public:
 	int argInd = -1; // ������ ���������
 	vector<string> argv; // ��������� ��������� ������
 
-	struct CapsEntry {
-		long int atr;
-		LoadPoint load;
-		bool isMarker;
-		bool isNewFuParent = false;
-		long int newFuType = 0;
-		std::string newFuName; // Mnemo of a NewFU declaration (for dedup on emit)
-	};
-
-	vector<CapsEntry> CapsEntries;
-	static constexpr long int SubCapOpenAtr  = -1000;
-	static constexpr long int SubCapCloseAtr = -1001;
+	// FU-range rebase: populated during FU creation (case 1 MakeFU); read by the
+	// IndexFile serializer to remap self-host dual-instance dispatch MKs back to
+	// canonical FU indices. Stays on Bus because it is a creation-time concern.
 	vector<std::pair<long, long>> UserFuRanges;
-	long NextReloadFuIdx = 1;
+	long NextReloadFuIdx = 2;
 	long rebaseAtr(long atr) const {
 		if (atr <= 0) return atr;
 		for (auto& r : UserFuRanges) {
@@ -54,11 +45,15 @@ public:
 		}
 		return atr;
 	}
-	FU* CapsListFu = nullptr;
 	bool capsMakeFuJustFired = false;
 	bool ConsumeCapsMakeFu() override { bool r = capsMakeFuJustFired; capsMakeFuJustFired = false; return r; }
-	void rebuildCapsFromList(class List* cl);
-	void flattenCapsLevel(void* levelIC, vector<CapsEntry>& out);
+	// .ind emission logic lives entirely in the IndexFile FU (off the Bus), driven from
+	// Millicom.cpp. The Bus keeps only: (1) rebaseAtr/UserFuRanges (FU-creation-time
+	// data IndexFile reads), and (2) a 1-line CapsList pointer-capture hook (mk 287) --
+	// it must stay here because the .ind is Lexica-built (`Bus.CapsListRegister` baked
+	// in; Lexica has no IndexFile FU) and FUName is not restored on load, so the active
+	// CapsList can only be identified by the runtime Sender of that dispatch.
+	FU* capsListFu = nullptr;
 private:
 	void FUTypesIni();
 };

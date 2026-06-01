@@ -61,8 +61,16 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				long int range = mkBeg > 0 ? mkBeg : FUMkRange * (FUs.size() - 1);
 				FUs.back()->FUMkGlobalAdr = range;
 				if (fromCaps) {
-					UserFuRanges.push_back({ range, NextReloadFuIdx * FUMkRange });
-					NextReloadFuIdx++;
+					// A re-declared Bus (FUType 0) is skipped from the emitted .ind and maps to
+					// the implicit canonical Bus slot (1); it must NOT consume a user-FU slot.
+					// All other FUs take slots 2,3,4,... matching the loader placing the .ind's
+					// FU declarations after [0]=self and [1]=Bus.
+					if (fuType == 0) {
+						UserFuRanges.push_back({ range, FUMkRange });
+					} else {
+						UserFuRanges.push_back({ range, NextReloadFuIdx * FUMkRange });
+						NextReloadFuIdx++;
+					}
 					capsMakeFuJustFired = true; // so the OAP MarkLastCopyOutMk skips dispatching this NewFU sub-cap
 				}
 			} // ���������� ������ ����������� ��������� ��
@@ -212,116 +220,10 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				ProgExec(Prog);
 			break;
 
-		case 253: // IpBufWrite -- serialize CapsEntries to a .ind file
-			if (CapsListFu != nullptr) rebuildCapsFromList((List*)CapsListFu);
-			if (Load.Point != nullptr) {
-				string path = Load.toStr();
-				ofstream out(path);
-				if (out) {
-					int M = (int)CapsEntries.size();
-					// Pre-pass: mark entries inside NewFuParent sub-caps as skipped.
-					// Also drop the implicit-Bus declaration: Lexica's CapsManager never
-					// serializes the root Bus (its FUType is 0 = FUBusNew). Skipping the
-					// PARENT entry too (not just its sub-cap) removes the whole declaration;
-					// the group-based f3/f4 relink naturally bridges the gap.
-					std::vector<bool> skip(M, false);
-					for (int i = 0; i < M; i++) {
-						if (!CapsEntries[i].isMarker && CapsEntries[i].isNewFuParent
-							&& i + 1 < M && CapsEntries[i + 1].isMarker
-							&& CapsEntries[i + 1].atr == SubCapOpenAtr) {
-							if (CapsEntries[i].newFuType == 0) skip[i] = true; // implicit Bus root
-							int depth = 0;
-							for (int j = i + 1; j < M; j++) {
-								skip[j] = true;
-								if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapOpenAtr) depth++;
-								else if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapCloseAtr) {
-									if (--depth == 0) break;
-								}
-							}
-						}
-					}
-					std::vector<int> capId(M, 0), outIdx(M, -1);
-					std::vector<int>  parentSrc;
-					std::vector<int>  stack = { 0 };
-					int nextCapId = 0;
-					for (int i = 0; i < M; i++) {
-						if (skip[i]) continue;
-						if (CapsEntries[i].isMarker) {
-							if (CapsEntries[i].atr == SubCapOpenAtr) {
-								nextCapId++;
-								int parentCap = stack.back();
-								int p = i - 1;
-								while (p >= 0 && (skip[p] || CapsEntries[p].isMarker || capId[p] != parentCap)) p--;
-								parentSrc.push_back(p);
-								stack.push_back(nextCapId);
-							} else if (CapsEntries[i].atr == SubCapCloseAtr) {
-								if (stack.size() > 1) stack.pop_back();
-							}
-						} else {
-							capId[i] = stack.back();
-						}
-					}
-					int nCaps = nextCapId + 1;
-					std::vector<std::vector<int>> groups(nCaps);
-					for (int i = 0; i < M; i++)
-						if (!CapsEntries[i].isMarker && !skip[i]) groups[capId[i]].push_back(i);
-					int N = 0;
-					std::vector<int> capStart(nCaps);
-					for (int c = 0; c < nCaps; c++) {
-						capStart[c] = N;
-						for (int src : groups[c]) outIdx[src] = N++;
-					}
-					out << N << "\n";
-					for (int c = 0; c < nCaps; c++) {
-						auto& g = groups[c];
-						int n = (int)g.size();
-						for (int j = 0; j < n; j++) {
-							int src = g[j];
-							int gi  = outIdx[src];
-							int f1 = (gi << 2) + 2;
-							for (size_t k = 1; k < parentSrc.size() + 1 && k < (size_t)nCaps; k++) {
-								if (parentSrc[k - 1] == src && !groups[k].empty()) {
-									f1 = (capStart[k] << 2) + 0;
-									break;
-								}
-							}
-							int f2 = 11;
-							int f3 = (j == n - 1) ? -1 : ((outIdx[g[j + 1]]) << 2);
-							int f4 = (j == 0)     ? -1 : ((outIdx[g[j - 1]]) << 2);
-							if (CapsEntries[src].isNewFuParent) {
-								out << 1001 << " I:" << CapsEntries[src].newFuType;
-							} else {
-								long int outAtr = rebaseAtr(CapsEntries[src].atr);
-								auto& ld = CapsEntries[src].load;
-								unsigned int dt = ld.Type >> 1;
-								out << outAtr << " ";
-								if (dt == Dstring || dt == Dchar) {
-									out << "S:" << ld.toStr() << "\"";
-								} else if (dt == Dbool) {
-									out << "B:" << (ld.toBool() ? "T" : "F");
-								} else if (dt == Dfloat || dt == Ddouble) {
-									out << "D:" << ld.toDouble();
-								// (int branch handled below; rebased there)
-								} else {
-									// Rebase int loads too: dispatch MKs captured during
-									// self-host point at the input's dual-instance FU range
-									// (e.g. CreateNewFU.FindOr=73228 at input idx 73); rebaseAtr
-									// remaps them to the canonical reload index (->16228) so the
-									// emitted .ind's wiring targets FUs that actually exist.
-									out << "I:" << rebaseAtr(ld.toInt());
-								}
-							}
-							out << " " << f1 << " " << f2
-							    << " " << f3 << " " << f4 << "\n";
-						}
-					}
-				}
-			}
-			break;
-		case 287: // CapsListRegister -- capture the OAP CapsList FU pointer
-			if (CapsListFu == nullptr && Sender != nullptr) {
-				CapsListFu = Sender;
-			}
+		// mk 253 (IpBufWrite serializer) removed from the Bus -- emission now lives in
+		// the IndexFile FU, driven from Millicom.cpp.
+		case 287: // CapsListRegister -- thin hook: capture the active CapsList FU pointer
+			if (capsListFu == nullptr && Sender != nullptr) capsListFu = Sender;
 			break;
 		default:
 			CommonMk(MK, Load);
@@ -329,83 +231,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		}
 }
 
-
-void BusFU::flattenCapsLevel(void* levelIC, vector<CapsEntry>& out)
-{
-	IC_type level = (IC_type)levelIC;
-	if (level == nullptr) return;
-	for (auto& e : *level) {
-		if (e.atr == SubCapOpenAtr || e.atr == SubCapCloseAtr) {
-			// Literal flat marker (a path not migrated to nested Push/LevelPrevAdd).
-			CapsEntry ce; ce.atr = e.atr; ce.load = { 0, nullptr };
-			ce.isMarker = true; ce.isNewFuParent = false; ce.newFuType = 0;
-			out.push_back(ce);
-		}
-		else if (e.Load.Point != nullptr && e.Load.isIC()) {
-			// Nested sub-capsule: parent line (load cleared) + open marker + body + close.
-			CapsEntry pe; pe.atr = e.atr; pe.load = { 0, nullptr };
-			pe.isMarker = false; pe.isNewFuParent = false; pe.newFuType = 0;
-			out.push_back(pe);
-			CapsEntry op; op.atr = SubCapOpenAtr; op.load = { 0, nullptr };
-			op.isMarker = true; op.isNewFuParent = false; op.newFuType = 0;
-			out.push_back(op);
-			flattenCapsLevel(e.Load.Point, out);
-			CapsEntry cm; cm.atr = SubCapCloseAtr; cm.load = { 0, nullptr };
-			cm.isMarker = true; cm.isNewFuParent = false; cm.newFuType = 0;
-			out.push_back(cm);
-		}
-		else {
-			CapsEntry ce; ce.atr = e.atr; ce.load = e.Load.Clone();
-			ce.isMarker = false; ce.isNewFuParent = false; ce.newFuType = 0;
-			out.push_back(ce);
-		}
-	}
-}
-
-void BusFU::rebuildCapsFromList(List* cl)
-{
-	bool any = false;
-	for (auto grp : cl->ListHead)
-		if (grp != nullptr && !grp->empty()) { any = true; break; }
-	if (!any) return; // not populated yet -> keep native CapsEntries
-	CapsEntries.clear();
-	for (auto grp : cl->ListHead)
-		flattenCapsLevel((void*)grp, CapsEntries);
-	// MakeFU marking (replicates case 257 for the CapsList path): a NewFU body
-	// emits its FUType field as an atr==-22 entry inside a -1000/-1001 sub-cap.
-	// Mark the parent (non-marker entry just before the -1000) isNewFuParent with
-	// newFuType = that value, so the serializer emits `1001 I:<fuType>` and the
-	// skip-prepass drops the sub-cap body.
-	int M = (int)CapsEntries.size();
-	for (int i = 0; i < M; i++) {
-		if (!(CapsEntries[i].isMarker && CapsEntries[i].atr == SubCapOpenAtr)) continue;
-		long fuType = 0; bool found = false; int depth = 0; std::string fuName;
-		for (int j = i + 1; j < M; j++) {
-			if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapOpenAtr) depth++;
-			else if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapCloseAtr) {
-				if (depth == 0) break;
-				depth--;
-			}
-			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -22) {
-				fuType = CapsEntries[j].load.toInt(); found = true;
-			}
-			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -2) {
-				unsigned int dt = CapsEntries[j].load.Type >> 1;
-				if (dt == Dstring || dt == Dchar) fuName = CapsEntries[j].load.toStr();
-			}
-		}
-		// A real NewFU declaration is `NewFU={Mnemo="X" FUType=Y}` -- it has BOTH a
-		// FUType (-22) AND an FU-name Mnemo (-2) at depth 0 of the sub-cap. A RegPeer
-		// match-key row `>{FUType=1 ... FindAnd={Mnemo="Cons"}}` has the FUType but its
-		// Mnemo is nested inside FindAnd (depth>0), so fuName stays empty -- requiring a
-		// depth-0 Mnemo correctly excludes those false positives (they stay regular caps).
-		if (found && !fuName.empty()) {
-			int p = i - 1;
-			while (p >= 0 && CapsEntries[p].isMarker) p--;
-			if (p >= 0) { CapsEntries[p].isNewFuParent = true; CapsEntries[p].newFuType = fuType; CapsEntries[p].newFuName = fuName; }
-		}
-	}
-}
 
 FU* BusFU::Copy() // ��������� ����������� ��
 {

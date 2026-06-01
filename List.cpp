@@ -398,6 +398,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 151: //LastPop Выдать ссылку на последнюю линию списка и удалить из списка
 	case 152: //LastDel Выдать ссылку на последнюю линию списка и удалить из ИК
 		//if (Load.Type == Tvoid)	//!!! Сделать функцию isVoid
+		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size()) break; // guard match 156/157; avoid back()/pop_back on empty (self-emit crash)
 		Load.Write(ListHead.back()->back().Load);
 		if (MK == 152) ICDel((void*)ListHead.back()->back().Load.Point);
 		if (MK == 151 || MK == 152)
@@ -412,7 +413,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 155: //LastOutMK Выдать ссылку на последнюю линию списка
 	case 156: //LastPopMK Выдать ссылку на последнюю линию списка и удалить из списка
 	case 157: //LastDelMk Выдать ссылку на последнюю линию списка и удалить из ИК
-		if (ListHead.back() == nullptr || !ListHead.back()->size()) break;
+		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size()) break; // complete guard: ListHead.back() is UB when ListHead empty (self-emit crash)
 		MkExec(Load, ListHead.back()->back().Load);
 		if (MK == 157) ICDel((void*)ListHead.back()->back().Load.Point);
 		if (MK == 156 || MK == 157)
@@ -424,6 +425,11 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		break;
 	case 169: // LastLoadOutMk Выдать МК с нагрузкой последней ИП последней линии
 		MkExec(Load, ((IC_type)(ListHead.back()->back().Load.Point))->back().Load);
+		break;
+	case 256: // IndexVectPopMk -- forward this caps-manager FU to the Load MK
+		// (CapsList.IndexVectPopMk=IndexFile.IndexVectWrite): dispatch the Load's
+		// global MK with this List as the argument, so IndexFile can serialize it.
+		MkExec(Load.toInt(), { TFU, this });
 		break;
 	case 285: // LastAtrOut Выдать атрибут последней ИП последней линии
 		if (!ListHead.size() || ListHead.back()==nullptr || !ListHead.back()->size() || ListHead.back()->back().Load.Point==nullptr || !ListHead.back()->back().Load.IC()->size()) break;
@@ -966,6 +972,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 231: // FindAndSource Поиск И в источнике
 	{
 		if (!ListHead.size()) break;
+		
 		if (DeepStartSearch == 0)
 		{
 			DeepStartSearch = ListHead.size();

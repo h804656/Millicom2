@@ -61,7 +61,7 @@ public:
 	long int S = 0; // ����� ��������� ������������� ��������
 	bool Work = true; // ���� �������� ������ �������
 //	int MnemoAtr = -2, SeperatAtr = -4, IntAtr = -10, DoubleAtr = -3, BoolAtr = -5, StrAtr = -6, ConstAtr = -13;
-	long int MnemoAtr = -2, SeperatAtr = -4, IntAtr = -13, DoubleAtr = -13, BoolAtr = -13, StrAtr = -13, ConstAtr = -13;
+	long int MnemoAtr = -2, SeperatAtr = -4, IntAtr = -10, DoubleAtr = -13, BoolAtr = -13, StrAtr = -13, ConstAtr = -13;
 	long int ib = 0, SizeBuf = 5; // ������� ������� �������� �� �������� ������� � ������ ������
 	ip *LexBuf; // ����� �������� ������
 	map<long int,MkFu> UnicAtr; // ������ ������������� ���������, �� ������� ���� ��������� ������� ��
