@@ -679,7 +679,7 @@ FUAfter.Set=
 
 MkWait.Set=
 >{Mk Lex.ReceiverMkSet=AtrBrack.FindAnd
-  FUListNew.LoadReceivedOutMk=MkCalc.Add
+  FUListNew.ReceivedLoadOutMk=MkCalc.Add
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MnemoTable.FindAnd
   Console.OutLn="MkWait MkForFU"
 }
@@ -752,7 +752,7 @@ EqualAfter.Set=
   OAList.LineCopyAddPrevLoadSet
   MkCalc.BiggerExec={
     MkCalc.OutMk=CapsList.LineAtrDef
-    CapsList.LineAdd=0
+    CapsList.LineAdd
     CapsList.Push
     CapsDepth.Inc
     Stack.LineCopyAdd={SubCapMark}
@@ -764,7 +764,7 @@ EqualAfter.Set=
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTied
   MkCalc.OutMk=CapsList.LineAtrDef
-  CapsList.LineAdd=0
+  CapsList.LineAdd
   CapsList.Push
   CapsDepth.Inc
   Stack.LineCopyAdd={ListOuterMark}
@@ -802,7 +802,7 @@ FUAfter2.Set=
 MkWait2.Set=
 // Match on 'Mk' atr
 >{Mk Lex.ReceiverMkSet=LoadAfter.FindAnd
-  FUListNew.LoadReceivedOutMk=MkCalc.Add
+  FUListNew.ReceivedLoadOutMk=MkCalc.Add
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MnemoTable.FindAnd
   Console.OutLn="MkWait2 MkForFU"
 }

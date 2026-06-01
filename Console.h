@@ -69,6 +69,7 @@ private:
 	void ExecuteTemplate(); // Функция сборки строки
 	void ReportError(const string& where, const string& msg);
 public:
+	bool Quiet = false; // --run: suppress this (compiler-trace) Console's output
 	void ProgFU(long int MK, LoadPoint Load, FU* Sender = nullptr) override;
 	FU* Copy() override; // Программа копирования ФУ
 	FU* TypeCopy() override; // Создать ФУ такого же типа (не копируя контекст

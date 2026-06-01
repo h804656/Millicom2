@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cstdio>
 #include "MeanShift.h"
 #include "ALU.h"
 #include "StreamFloatALU.h"
@@ -31,6 +32,8 @@ static void Usage()
 	cerr << "  --lex-file <path>  After running the index file, feed the contents of <path>" << endl;
 	cerr << "                     into Lex.Lexing (i.e. parse it through the loaded compiler)." << endl;
 	cerr << "  --lex <text>       Same, but the program text is given inline." << endl;
+	cerr << "  --run <path>       Compile & run <path>, printing only the program's output" << endl;
+	cerr << "                     (the compiler's own state-trace is suppressed)." << endl;
 }
 
 int main(int argc, char* argv[])
@@ -62,6 +65,7 @@ int main(int argc, char* argv[])
 	if(indPath.empty()) indPath = argv[1];
 	string outFile;
 	bool haveOutFile = false;
+	bool runMode = false;
 
 	for (int i = 2; i < argc; i++)
 	{
@@ -81,6 +85,19 @@ int main(int argc, char* argv[])
 		else if (a == "--lex" && i + 1 < argc)
 		{
 			lexInputs.push_back(argv[++i]);
+		}
+		else if (a == "--run" && i + 1 < argc)
+		{
+			ifstream rf(argv[++i], ios::binary);
+			if (!rf)
+			{
+				cerr << "Error: --run file not found: " << argv[i] << endl;
+				return 1;
+			}
+			stringstream ss;
+			ss << rf.rdbuf();
+			lexInputs.push_back(ss.str());
+			runMode = true;
 		}
 		else if (a == "--out-file" && i + 1 < argc)
 		{
@@ -118,6 +135,23 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
+	string runTempOut;
+	if (runMode)
+	{
+		// --run stage 1: compile the input quietly. Silence the compiler's own
+		// Console trace FUs so the compile pass prints nothing; the emitted .ind
+		// is then executed (stage 2) to show only the program's output.
+		for (size_t i = 0; i < Bus.FUs.size(); i++)
+			if (Bus.FUs[i] && Bus.FUs[i]->GetFuType() == 1)
+				static_cast<Console*>(Bus.FUs[i])->Quiet = true;
+		if (!haveOutFile)
+		{
+			runTempOut = indPath + ".run.tmp.ind";
+			outFile = runTempOut;
+			haveOutFile = true;
+		}
+	}
+
 	if (!lexInputs.empty())
 	{
 		// Find the Lex FU (FUtype == 3) and call its Lexing MK (=100) on the supplied text.
@@ -144,13 +178,6 @@ int main(int argc, char* argv[])
 
 	if (haveOutFile)
 	{
-		// Emission mirrors Delphi main.pas:480-493, which (post-compile) CLI-injects
-		// `GatewayFile.FileNameSet=...` then `Bus={CapsManager.IndexVectPopMk=GatewayFile.IndexVectWrite}`.
-		// We inject the same shape against the IndexFile FU, split into Delphi's two phases:
-		//   1. BUILD  -- CapsList.IndexVectPopMk = IndexFile.IndexVectFromList  (CapsManager role)
-		//   2. WRITE  -- IndexFile.IndexVectWrite                               (GatewayFile role)
-		// The serialization layout lives in the FU primitives (as it does on the Delphi/Pascal
-		// side); only the orchestration is bus-call injection.
 		IndexFile* idx = new IndexFile(&Bus, nullptr);
 		Bus.FUs.push_back(idx);
 		long idxAddr = Bus.FUMkRange * (long)(Bus.FUs.size() - 1);
@@ -161,6 +188,16 @@ int main(int argc, char* argv[])
 			Bus.capsListFu->ProgFU(256, { Cint, &buildMk }, nullptr); // phase 1: CapsList.IndexVectPopMk=...
 		}
 		idx->ProgFU(idxAddr + 21, { Cint, nullptr }, nullptr);        // phase 2: IndexFile.IndexVectWrite
+	}
+
+	if (runMode && !runTempOut.empty())
+	{
+		BusFU RunBus;
+		RunBus.ProgFU(200, { Cint, &argc });
+		RunBus.ProgFU(203, { Cchar, argv });
+		string rp = runTempOut;
+		RunBus.ProgFU(10, { Cstring, &rp });
+		std::remove(runTempOut.c_str());
 	}
 
 	return 0;

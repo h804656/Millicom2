@@ -178,7 +178,7 @@ void Console::ExecuteTemplate() {
 		Buffer += FormatValue(Operands[t.index], t.spec);
 	}
 
-	cout << Buffer;;
+	if (!Quiet) cout << Buffer;;
 }
 
 void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
@@ -193,6 +193,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 2: // OutLn Вывод и перевод строки
 	case 3: // LnOut Перевод строки и вывод
 	case 4: // LnOutLn Перевод строки, вывод и снова перевод строки
+		if (Quiet) break;
 		cout << prefix;
 		if (MK == 3 || MK == 4) cout << endl;
 		if (Load.Point != nullptr)

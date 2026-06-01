@@ -112,7 +112,7 @@ if defined FAST (
 echo ---- parser trace ----
 rem CompileCC.oap's handlers print "Root Mnemo" / "ALEAfter op" / etc. as
 rem they see each token -- the live view of the new compiler at work.
-"%EXE%" "%IND%" --lex-file "%OAPDIR%BootstrapCC.oap" --lex-file "%INPUT%" --out-file "%OUTIND%"
+"%EXE%" "%IND%" --lex-file "%INPUT%" --out-file "%OUTIND%"
 set "CRC=!ERRORLEVEL!"
 if not exist "%OUTIND%" (
   echo Error: compile produced no .ind ^(exit=!CRC!^).

@@ -67,20 +67,9 @@ foreach ($lexFile in $testFiles) {
     # tests can exercise Cons.Input / Cons.InputMk paths (runtime values
     # that the compile-time ALE can't fold away).
     $stdinFile = Join-Path $lexFile.DirectoryName "$name.stdin"
-    # BootstrapCC.oap is always prepended as the first --lex-file so the loaded
-    # compiler has MnemoTable + Lex mnemonics + the atr-name rows registered
-    # before the test input is lexed. An optional `<name>.bootstrap` adds EXTRA
-    # --lex-file paths after the default bootstrap, before the test's own `.lex`.
-    $argList = @($Ind, "--lex-file", "oap2\BootstrapCC.oap")
-    $bootstrapFile = Join-Path $lexFile.DirectoryName "$name.bootstrap"
-    if (Test-Path $bootstrapFile) {
-        foreach ($p in (Get-Content $bootstrapFile | Where-Object { $_.Trim() -ne "" -and -not $_.Trim().StartsWith("#") })) {
-            $argList += "--lex-file"
-            $argList += $p.Trim()
-        }
-    }
-    $argList += "--lex-file"
-    $argList += $stripped
+    # The loaded .ind self-contains the compiler (MnemoTable + Lex mnemonics +
+    # atr-name rows are baked in), so the test input is fed directly.
+    $argList = @($Ind, "--lex-file", $stripped)
     $procArgs = @{
         FilePath = $Exe
         ArgumentList = $argList
