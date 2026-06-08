@@ -264,6 +264,7 @@
 				Receiver.back()->ProgFU(ReceiverMK.back(), { TIP, &LexBuf[ib] }, this);
 			else
 				Receiver.back()->ProgFU(ReceiverMK.back(), Load, this);
+				//Receiver.back()->MkExec(ReceiverMK.back(), Load, this);
 
 /*
 			if (Load.Point == nullptr)

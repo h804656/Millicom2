@@ -295,7 +295,7 @@ void StreamManager::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		{
 			t = Field[IndGroup][Ind]->Bus; // Запомнить указатель на шину для второго ФУ
 			Field[IndGroup][Ind]->Bus = Field[IndGroup][Ind2];
-			Field[IndGroup][Ind]->MkExec(Mk1, { Cmk, &Mk2 });
+			Field[IndGroup][Ind]->MkExec(Mk1, { CMk, &Mk2 });
 			Field[IndGroup][Ind]->Bus = t; // Восстановить указатель на шину
 			break;
 		}
@@ -313,7 +313,7 @@ void StreamManager::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		{
 			t = Field[IndGroup][Ind2]->Bus; // Запомнить указатель на шину для второго ФУ
 			Field[IndGroup][Ind2]->Bus = Field[IndGroup][Ind];
-			Field[IndGroup2][Ind2]->MkExec(Mk2, { Cmk, &Mk1 });
+			Field[IndGroup2][Ind2]->MkExec(Mk2, { CMk, &Mk1 });
 			Field[IndGroup][Ind2]->Bus = t; // Восстановить указатель на шину
 			break;
 		}

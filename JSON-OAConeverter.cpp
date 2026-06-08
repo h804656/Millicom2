@@ -14,14 +14,14 @@ void JSON_OAConeverter::Recurs(LoadPoint Load, ofstream& F, string Tab)
 			F << ",";
 		F << "\n" << Tab;
 		F << Tab << "{";
-		//ip* IPTable = AtrFind(MnemoCaps, i.atr);
-		ip* IPCaps = AtrFind(MnemoCaps, i.atr);
+		//ip* IPTable = AtrSearchIP(MnemoCaps, i.atr);
+		ip* IPCaps = AtrSearchIP(MnemoCaps, i.atr);
 		ip* IPTable = nullptr;
 		if(IPCaps ==nullptr && MnemoTable==nullptr)
 			F << "\"" << i.atr << "\":";
 		else
 		{
-			ip* IPCaps = AtrFind(MnemoCaps, i.atr);
+			ip* IPCaps = AtrSearchIP(MnemoCaps, i.atr);
 			if (IPCaps != nullptr)
 				F << "\"" << IPCaps->Load.toStr() << "\":";
 		}
@@ -51,7 +51,7 @@ void JSON_OAConeverter::Recurs(LoadPoint Load, ofstream &F, string Tab)
 		else {
 			F << ",\n" << Tab;
 			F << "{" << " \"";
-			ip* IP = AtrFind(MnemoCaps, i.atr);
+			ip* IP = AtrSearchIP(MnemoCaps, i.atr);
 			if (MnemoCaps == nullptr || IP==nullptr)
 				F << i.atr;
 			else

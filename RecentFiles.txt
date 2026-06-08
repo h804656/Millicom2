@@ -1,17 +1,17 @@
 16 1
-C:\Users\salib\YandexDisk\MillicomNew\Millicom\Bag3.oap 
-C:\Users\salib\YandexDisk\MillicomNew\millicom\SumParallel.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\ListDeep.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\CompileCC.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\CompileCC rez.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\GraphDislay.oap 
+C:\Users\Salibek\Yandex.Disk\MillicomNew\millicom\ListDeep.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\MatPolt3Test.oap 
 C:\Users\salib\YandexDisk\MillicomNew\millicom\MatPlotTest.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\ConsoleFormat.oap 
+C:\Users\Salibek\YandexDisk\MillicomNew\millicom\ConsoleFormat.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\Compil.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\Гляк для лексера.oap 
+C:\Users\salib\YandexDisk\MillicomNew\millicom\SumParallel.oap 
+C:\Users\salib\YandexDisk\MillicomNew\Millicom\Bag3.oap 
 C:\Users\salib\YandexDisk\MillicomNew\millicom\JSON-List.oap 
 C:\Users\salib\YandexDisk\MillicomNew\millicom\Syntaxis.oap 
 C:\Users\salib\YandexDisk\MillicomNew\millicom\Lexer.oap 
-C:\Users\salib\YandexDisk\Методическая работа\Дипломы 2024\Визуализация\SumVect.oap 
-C:\Users\salib\YandexDisk\MillicomNew\millicom\Compil.oap 
-C:\Users\salib\YandexDisk\Методическая работа\Компиляторы\FSM Millicom\test.oap 
-C:\Users\salib\YandexDisk\MillicomNew\millicom\argvTest.oap 
-C:\Users\salib\YandexDisk\MillicomNew\millicom\ALUCellular.oap 
-C:\Users\salib\YandexDisk\Наука Disk\Статьи\Текущие работы\ПАВТ 2025\ExemplePAVT.oap 
-C:\Users\salib\YandexDisk\MillicomNew\millicom\ALE2.oap 
-C:\Users\salib\YandexDisk\MillicomNew\millicom\MatPlotTest2.oap 
-C:\Users\salib\YandexDisk\Методическая работа\Моделирование\FSM Millicom\Lexer.oap 
-C:\Users\salib\YandexDisk\Методическая работа\Моделирование\FSM Millicom\test.oap 

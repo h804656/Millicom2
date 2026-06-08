@@ -1,0 +1,70 @@
+// - обозначение переведенных в комментарии старых ФУ
+\* date *\ //- последняя дата изменения или добавления строк и ФУ
+
+NewFU={Mnemo="Main_Bus" MkBegRange=1000 FUType=FUBusNew} // Описание Bus
+
+\\ Для создания индексного файла сначала надо запустить программу !!!!
+ CapsManager.IndexVectCreate=20000
+ CapsManager.IpIcIdOutMk=MainBus.IpIcIdSet
+ CapsManager.IpIcIdOutMk=VariableManager.IpIcIdSet
+ CapsManager.IpIcIdOutMk=ListSyntez.IpIcIdSet
+ MainBus.ModeSet=1
+\\ -------------------------------------- \\
+MainBus.FUTypeCorrectSet=-96 // Корректировка номера типа ФУ для переноса на новую ОА-платформу
+
+NewFU={Mnemo="Console" FUType=FUConsNew Hint="Консоль для вывода логов"}
+NewFU={Mnemo="MatPlot" FUType=FUMatPlot Hint="Устройство для вывода графиков"}
+NewFU={Mnemo="ALUG" FUType=FUALUNew Hint="АЛУ"}
+NewFU={Mnemo="ALUG2" FUType=FUALUNew Hint="АЛУ"}
+
+MainBus.PartialResetSet \\ Запомнить число созданных ФУ
+MainBus.ModeSet=2
+
+
+MatPlot.XStartSet=0
+MatPlot.XEndSet=3
+
+MatPlot.YStartSet=0
+MatPlot.YEndSet=3
+
+MatPlot.MeshD
+
+
+ALUG.VectNew
+
+ALUG2.VectNew
+ALUG2.Append=0
+ALUG2.Append=1
+ALUG2.Append=2
+ALUG2.Append=3
+ALUG2.Append=2
+
+ALUG2.OutMk=ALUG.Append
+
+ALUG2.VectNew
+ALUG2.Append=0
+ALUG2.Append=1
+ALUG2.Append=2
+ALUG2.Append=3
+ALUG2.Append=3
+
+ALUG2.OutMk=ALUG.Append
+
+ALUG2.VectNew
+ALUG2.Append=0
+ALUG2.Append=1
+ALUG2.Append=2
+ALUG2.Append=3
+ALUG2.Append=4
+
+ALUG2.OutMk=ALUG.Append
+
+ALUG2.VectNew
+ALUG2.Append=0
+ALUG2.Append=1
+ALUG2.Append=2
+ALUG2.Append=3
+ALUG2.Append=3
+
+ALUG2.OutMk=ALUG.Append
+ALUG.OutMk=Console.OutLn // Здесь вместо консоли можно выдать матрицу на ФУ MatPlot

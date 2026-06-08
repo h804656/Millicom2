@@ -452,7 +452,7 @@ Bus={FuTypeIndexes.RowSet=300 FuTypeIndexes.ColSet=1 FuTypeIndexes.Create=10000 
 	FuTypeMkTrees.RowSet=300 FuTypeMkTrees.ColSet=1 FuTypeMkTrees.Create=nil FuTypeMkTrees.IndexModeSet=2
 	FuTypeMkList.RowSet=300 FuTypeMkList.ColSet=1 FuTypeMkList.Create=nil FuTypeMkList.IndexModeSet=2
 }
-// Дырки: 958-970 936-941
+// Дырки: 958-970 939-941
 CommonMkList{
  	Mnemo="Common Mk" Hint="Общие милликоманды для всех типов ФУ" Comment
 
@@ -462,7 +462,7 @@ CommonMkList{
 	Obj={Mnemo="HalfReset" Mk=971 Hint="Установить значение в ячейку памяти"}
 	Obj={Mnemo="ActiveSet" Mk=902 Hint="Установить режим активности/пассивности ФУ"}
 	Obj={Mnemo="FUIndSet" Mk=933 Hint="Установить индекс ФУ"}
-  	Obj={Mnemo="ExecCounterSet" Mk=936 Hint="Установить счетчик итераций выполнения подпрограммыExecCounterAdd"}
+	Obj={Mnemo="ExecCounterSet" Mk=936 Hint="Установить счетчик итераций выполнения подпрограммы"}
  
 	Obj={Mnemo="ValPointerSet" Mk=955 Hint="Сброс ФУ"}
 	Obj={Mnemo="ValSet" Mk=956 Hint="Полусброс ФУ (не сбрасываются основные настройки)"}
@@ -508,12 +508,14 @@ CommonMkList{
 		Obj={Mnemo="PostfixProgSet" Mk=922 Hint="Установить ссылку на подпрограмму, запускаемую после обработки пришедшей милликоманды"}
 		Obj={Mnemo="BusSet" Mk=926 Hint="Установить контекст Шины"}
 		Obj={Mnemo="ProgExec" Mk=990 Hint="Выполнить миллипрограмму"}
+		Obj={Mnemo="Exec" Mk=990 Hint="Выполнить миллипрограмму"}
 		Obj={Mnemo="ProgSet" Mk=991 Hint="Установить указатель на миллипрограмму, выполняемую по милликоманде ProgExec, когда в нарузке nil"}
 		Obj={Mnemo="ElseProgSet" Mk=953 Hint="Установить указатель на альтернативную миллипрограмму"}
 		Obj={Mnemo="ProgSetExec" Mk=954 Hint="Установить указатель на программу и выполнить ее"}
 		Obj={Mnemo="RepeatProg" Mk=901 Hint="Повторить программу"}
 		Obj={Mnemo="IniProgSet" Mk=904 Hint="Установить подпрограмму инициализации ФУ"}
 		Obj={Mnemo="IniProgExec" Mk=903 Hint="Выполнить подпрограмму инициализации ФУ"}
+		Obj={Mnemo="ProgsBlock" Mk=938 Hint="Заблокировать выполнение всех программ для ФУ"}
 	}
 	Obj={Mnemo="Modeling" Comment Hint="Моделирование вычислительного процеса"
 		Obj={Mnemo="SchedulerContextSet" Mk=918 Hint="Установить ссылку на контекст ФУ-планировщика"}
@@ -585,6 +587,8 @@ CommonMkList{
 	Obj={Mnemo="ParentSet" Mk=945 Hint="Установить родителя"}
 	Obj={Mnemo="ParentOut" Mk=943 Hint="Выдать ссылку на родителя"}
 	Obj={Mnemo="ParentOutMk" Mk=942 Hint="Выдать МК со ссылкой на родителя"}
+
+	Obj={Mnemo="MkRedirectSet" Mk=937 Hint="Установть МК для переадресации на другое ФУ (устанавливается начало диапазона МК для другого ФУ)"}
 
 	Obj={Mnemo="FUCommentAdd" Mk=994 Hint="Добавить строку комментария к ФУ"}
 }
@@ -4325,6 +4329,10 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
   Obj={Mnemo="InterpretatorProgExec" Mk=106 Hint="Выполнить программу, если режим интерпретатора"}
   Obj={Mnemo="CompilyatorProgExec" Mk=107 Hint="Выполнить программу, если режим компилятора"}
   Obj={Mnemo="FUTypeCorrectSet" Mk=155 Hint="Установить коррекцию номера типа ФУ (для переноса ОА-программы на другую ОА-платформу)"}
+
+  Obj={Mnemo="FuNextSwap" Mk=160 Hint="Поменять местами указанный и следующий ФУ (на входе начало диапазона МК для первого ФУ)"}
+  Obj={Mnemo="FuSwapSet" Mk=161 Hint="Установить первой ФУ для обмена (на входе начало диапазона МК для второго ФУ)"}
+  Obj={Mnemo="FuSwap" Mk=162 Hint="Поменять местами два ФУ"}
   Obj={Mnemo="FU index" Hint="Работа с индексами управляемых ФУ" Comment
   	Obj={Mnemo="FuContextOut" Mk=45 Hint="Выдать контекст ФУ по его МК"}
   	Obj={Mnemo="FuContextOutMk" Mk=46 Hint="Выдать МК с контекстом ФУ по его МК"}
@@ -4377,7 +4385,33 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
   Obj={Mnemo="InputMk" Mk=101 Hint="Ввод данных и выдача МК с ними"}
   Obj={Mnemo="InputBool" Mk=105 Hint="Ввод буленова значения"}
   Obj={Mnemo="InputBoolMk" Mk=106 Hint="Ввод буленова значения и выдача МК с ним"}
+  Obj={Mnemo="InputInt" Mk=110 Hint="Ввод целого значения значения"}
+  Obj={Mnemo="InputIntMk" Mk=111 Hint="Ввод целого значения и выдача МК с ним"}
 
+  Obj={Mnemo="NoVarToOutProgSet" Mk=200 Hint="Установить подрограмму реакции на ошибку 'Нет переменной для ввода'"}
+  Obj={Mnemo="WrongFormatProgSet" Mk=201 Hint="становить подрограмму реакции на ошибку 'Неправильный формат входных данных'"}
+
+  Obj={Mnemo="TemplSet" Mk=290 Hint="Установить шаблон для вывода"}
+  Obj={Mnemo="OpAdd" Mk=295 Hint="Добавить очередной операнд"}
+  Obj={Mnemo="Operands for format output set" Hint="Установка операндов для форматированного вывода" Comment
+	Obj={Mnemo="Op00Set" Mk=300 Hint="Установить операдн с индексом 0"}
+  	Obj={Mnemo="Op01Set" Mk=301 Hint="Установить операдн с индексом 1"}
+  	Obj={Mnemo="Op02Set" Mk=302 Hint="Установить операдн с индексом 2"}
+  	Obj={Mnemo="Op03Set" Mk=303 Hint="Установить операдн с индексом 3"}
+  	Obj={Mnemo="Op04Set" Mk=304 Hint="Установить операдн с индексом 4"}
+  	Obj={Mnemo="Op05Set" Mk=305 Hint="Установить операдн с индексом 5"}
+  	Obj={Mnemo="Op06Set" Mk=306 Hint="Установить операдн с индексом 6"}
+  	Obj={Mnemo="Op07Set" Mk=307 Hint="Установить операдн с индексом 7"}
+  	Obj={Mnemo="Op08Set" Mk=308 Hint="Установить операдн с индексом 8"}
+  	Obj={Mnemo="Op09Set" Mk=309 Hint="Установить операдн с индексом 9"}
+  	Obj={Mnemo="Op10Set" Mk=310 Hint="Установить операдн с индексом 10"}
+  	Obj={Mnemo="Op11Set" Mk=311 Hint="Установить операдн с индексом 11"}
+  	Obj={Mnemo="Op12Set" Mk=312 Hint="Установить операдн с индексом 12"}
+  	Obj={Mnemo="Op13Set" Mk=313 Hint="Установить операдн с индексом 13"}
+  	Obj={Mnemo="Op14Set" Mk=314 Hint="Установить операдн с индексом 14"}
+  	Obj={Mnemo="Op15Set" Mk=315 Hint="Установить операдн с индексом 15"}
+	}
+  Obj={Mnemo="MnemoTableSet" Mk=400 Hint="Установить ссылку на ФУ мнемоник или список мнемоник"}
   Obj=CommonMkList
 }
 // StrGenNew
@@ -4612,10 +4646,12 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 //    Obj={Mk=181 Mnemo="LastPointConstTypeSet" Hint="Установить тип 'константа' в последней ИП последней линии"}
 //    Obj={Mk=183 Mnemo="LinePointConstTypeSet" Hint=" Установить тип 'константа' в последней ИП текущей линии"}
 
-    Obj={Mk=185 Mnemo="LastLoadSet" Hint="Добавить ссылку в указатель последний ИК последней строки"}
+    Obj={Mk=185 Mnemo="LastLoadSet" Hint="Установить ссылку в указатель последний ИК последней строки"}
+    Obj={Mk=193 Mnemo="LastLoadTypeSet" Hint="Установить тип указателя на последний ИК последней строки"}
     Obj={Mk=195 Mnemo="LineLoadSet" Hint="Добавить ссылку в указатель текущей ИК текущей строки"}
-    Obj={Mk=186 Mnemo="LastLoadCopySet" Hint="Добавить ссылку на копию ИК в указатель последний ИК последней строки"}
-    Obj={Mk=196 Mnemo="LineLoadCopySet" Hint="Добавить ссылку на копию ИК в указатель текущей ИК текущей строки"}
+    Obj={Mk=194 Mnemo="LineLoadTypeSet" Hint="Установить тип указателя текущей ИК текущей строки"}
+    Obj={Mk=186 Mnemo="LastLoadCopySet" Hint="Установить ссылку на копию ИК в указатель последний ИК последней строки"}
+    Obj={Mk=196 Mnemo="LineLoadCopySet" Hint="Установитьссылку на копию ИК в указатель текущей ИК текущей строки"}
     Obj={Mk=189 Mnemo="LastAtrSet" Hint="Установить атрибут последний ИК последней строки"}
     Obj={Mk=199 Mnemo="LineAtrSet" Hint="Установить атрибут последний ИК текущей строки"}
     Obj={Mk=184 Mnemo="LastIndSet" Hint="Установить индекс нагрузки в последней ИП последней строки"}
@@ -4679,7 +4715,8 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
     Obj={Mk=252 Mnemo="SubUpDelGraph" Hint="Перейти на уровень выше и уничтожить текущий уровень с подсписками"}
     Obj={Mk=253 Mnemo="SubDeepOut" Hint="Выдать номер текущего уровня"}
     Obj={Mk=254 Mnemo="SubDeepOutMk" Hint="Выдать МК с номером текущего уровня"}
-    Obj={Mk=255 Mnemo="SubDown" Hint="SubDown Перейти на уровень ниже (переход осуществляется на текущей найденной строке) в нагрузке атрибут указателя на подсписок (по умолчанию атрибут строки). Если в нагрузке IC, то переход текущего списка на этот указатель"}
+    Obj={Mk=255 Mnemo="SubDown" Hint="Перейти на уровень ниже (переход осуществляется на текущей найденной строке) в нагрузке атрибут указателя на подсписок (по умолчанию атрибут строки). Если в нагрузке IC, то переход текущего списка на этот указатель"}
+    Obj={Mk=256 Mnemo="SubRoot" Hint="Перейти к корневому уровную иератхии списка"}
   }
   Obj={Mnemo="Ip work" Hint="Работа с атрибутом линии" Comment
     Obj={Mk=405 Mnemo="IpOut" Hint="Выдать найденную ИП"}
@@ -4699,6 +4736,12 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
     Obj={Mk=211 Mnemo="LineAtrAttach" Hint="Прикрепить к текущей строке ИП с атрибутом из нагрзуки"}
     Obj={Mk=215 Mnemo="LastLoadBackSet" Hint="Записать нагрзуку последней ИП последний строки в предыдущие ИП (на входе количество обратных записей)"}
     Obj={Mk=216 Mnemo="LineLoadBackSet" Hint="Записать нагрзуку последней ИП некущей строки в предыдущие ИП (на входе количество обратных записей)"}
+    Obj={Mk=430 Mnemo="IpLastOut" Hint="Выдать последнюю ИП из найденной строки"}
+    Obj={Mk=431 Mnemo="IpLastOutMk" Hint="Выдать МК с последней ИП из найденной строки"}
+    Obj={Mk=432 Mnemo="IpFirstOut" Hint="Выдать первую ИП из найденной строки"}
+    Obj={Mk=433 Mnemo="IpFirstOutMk" Hint="Выдать МК с первой ИП из найденной строки"}
+    Obj={Mk=434 Mnemo="IpSecondOut" Hint="Выдать вторую ИП из найденной строки"}
+    Obj={Mk=435 Mnemo="IpSecondOutMk" Hint="Выдать МК со второй ИП из найденной строки"}
 
     Obj={Mk=279 Mnemo="LineIpSwap" Hint="Поменять местами две последние ИП текущей линии"}
     Obj={Mk=149 Mnemo="LastIpSwap" Hint="Поменять местами две последние ИП последней линии"}
@@ -4729,9 +4772,13 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
   Obj={Mk=10 Mnemo="SuccessLineProgSet" Hint="Установить указатель на программу, выполняемую при удачном поиска в линии списка"}
   Obj={Mk=11 Mnemo="SuccessAfterLineProgSet" Hint="Установить указатель на программу, выполняемую при удачном поиска в линии списка после обоработки программ линии"}
   Obj={Mk=12 Mnemo="SuccessProgSet" Hint="Установить указатель на программу, выполняемую при удачном поиске в спике"}
-  Obj={Mk=15 Mnemo="FailLineProgSet" Hint="Установить указатель на программу, выполняемую в случае неудачного поиска в линии списка"}
+  Obj={Mk=12 Mnemo="SuccessProgAdd" Hint="Установить указатель на программу, выполняемую при удачном поиске в спике"}
+  Obj={Mk=12 Mnemo="SuccessProgClear" Hint="Добавить в стек указатель на программу, выполняемую при удачном поиске в спике"}
+  Obj={Mk=15 Mnemo="FailLineProgSet" Hint="Очистить список указатетелей на программы, выполняемых в случае неудачного поиска в линии списка"}
   Obj={Mk=16 Mnemo="FailAfterLineProgSet" Hint="Установить указатель на программу, выполняемую в случае неудачного поиска в линии списка после обоработки программ линии"}
   Obj={Mk=17 Mnemo="FailProgSet" Hint="Установить указатель на программу, выполняемую в случае неудачного поиска во всем  списке"}
+  Obj={Mk=17 Mnemo="FailProgAdd" Hint="Добавить в стек указатель на программу, выполняемую в случае неудачного поиска во всем  списке"}
+  Obj={Mk=17 Mnemo="FailProgClear" Hint="Очистить список указателей на программы, выполняемые в случае неудачного поиска во всем  списке"}
   Obj={Mk=18 Mnemo="FailLineProgSet" Hint="Установить указатель на программу, выполняемую в случае неудачного поиска во всем  списке"}
   Obj={Mk=19 Mnemo="FailProgSet" Hint=" Установить указатель на программу, выполняемую в случае неудачного поиска во всем  списке"}
   Obj={Mk=20 Mnemo="ProgAtrSet" Hint="Установить атрибут программы"}
@@ -4840,7 +4887,7 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 	 Obj={Mk=501 Mnemo="MkExtExec" Hint="Выполнить внешнюю МК"}
 	 Obj={Mk=535 Mnemo="ReceiverSet" Hint="Установить примника результата"}
 	 Obj={Mnemo="ExecCounter" Hint="Счетчик количества итераций программы" Comment
-  	 //	Obj={Mk=530 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммыExecCounterAdd"}
+  	 	//Obj={Mk=530 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммыExecCounterAdd"}
   	 	Obj={Mk=531 Mnemo="ExecCounterAdd" Hint="Прибавить к счетчику итераций"}
   	 	Obj={Mk=532 Mnemo="ExecCounterSub" Hint="Вычесть из счетчика итераций"}
   	 	Obj={Mk=533 Mnemo="ExecCounterMul" Hint="Умножить счетчик итераций"}
@@ -4869,13 +4916,16 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 	 	Obj={Mk=66 Mnemo="StackEmptyExec" Hint="Выполнить, если в стеке ничего нет"}
 	 	Obj={Mk=67 Mnemo="StackFullExec" Hint="Выполнить, если стек непустой"}
 		}
-	 Obj={Mk=130 Mnemo="Inc" Hint="Инкремент"}
-	 Obj={Mk=131 Mnemo="Dec" Hint="Декремент"}
+	 Obj={Mk=130 Mnemo="Inc" Hint="Инкремент и выдача результата"}
+	 Obj={Mk=131 Mnemo="Dec" Hint="Декремент и выдача результата"}
+	 Obj={Mk=132 Mnemo="IncMk" Hint="Инкремент и выдача МК"}
+	 Obj={Mk=133 Mnemo="DecMk" Hint="Декремент и выдача МК"}
 	 Obj={Mk=140 Mnemo="Add" Hint="Сложить"}
 	 Obj={Mk=141 Mnemo="Sub" Hint="Вычесть"}
 	 Obj={Mk=142 Mnemo="Mul" Hint="Умножить"}
 	 Obj={Mk=143 Mnemo="Div" Hint="Целочисленное деление"}
 	 Obj={Mk=144 Mnemo="Mod" Hint="Остаток от деления"}
+	 Obj={Mk=145 Mnemo="Pow" Hint="Возвести в степень"}
       Obj=CommonMkList
    }
 
@@ -5349,7 +5399,7 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 			Obj={Mk=46 Mnemo="MatErrProgSet" Hint="Установить программу обработки ошибки математической операции"}
 			Obj={Mk=44 Mnemo="OpIndErrProgSet" Hint="Установить программу при ошибке индекса операнда"}
 			Obj={Mk=45 Mnemo="RezStackIsEmpyProgSet" Hint="Установить программу при чтении из пустого стека результатов"}
-		//	Obj={Mk=64 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммы"}
+			//Obj={Mk=64 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммы"}
 			Obj={Mk=280 Mnemo="ZeroProgSet" Hint="Установить программу при =="}
 			Obj={Mk=281 Mnemo="NZeroProgSet" Hint="Установить программу при !="}
 			Obj={Mk=282 Mnemo="LessProgSet" Hint="Установить программу при <"}
@@ -5498,7 +5548,7 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 	Obj={Mk=535 Mnemo="ReceiverSet" Hint="Установить примника результата"}
 
   Obj={Mnemo="ExecCounter" Hint="Счетчик количества итераций программы" Comment
-  	Obj={Mk=530 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммыExecCounterAdd"}
+  	//Obj={Mk=530 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммыExecCounterAdd"}
   	Obj={Mk=531 Mnemo="ExecCounterAdd" Hint="Прибавить к счетчику итераций"}
   	Obj={Mk=532 Mnemo="ExecCounterSub" Hint="Вычесть из счетчика итераций"}
   	Obj={Mk=533 Mnemo="ExecCounterMul" Hint="Умножить счетчик итераций"}
@@ -6043,7 +6093,7 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 	Obj={Mk=61 Mnemo="CounterAdd" Hint="Прибавить к счетчику (по умолчанию 1)"}
 	Obj={Mk=62 Mnemo="CounterMul" Hint="Умножить считчик (по умолчанию 2)"}
 	Obj={Mk=63 Mnemo="CounterSub" Hint="Умножить считчик (по умолчанию 2)"}
-//	Obj={Mk=64 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммы"}
+	//Obj={Mk=64 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммы"}
 	Obj={Mk=65 Mnemo="ExecCounterAdd" Hint="Прибавить к счетчику итераций"}
 	Obj={Mk=66 Mnemo="ExecCounterSub" Hint="Вычесть из счетчика итераций"}
 	Obj={Mk=67 Mnemo="ExecCounterMul" Hint="Умножить счетчик итераций"}
@@ -6266,7 +6316,7 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 			Obj={Mk=46 Mnemo="MatErrProgSet" Hint="Установить программу обработки ошибки математической операции"}
 			Obj={Mk=44 Mnemo="OpIndErrProgSet" Hint="Установить программу при ошибке индекса операнда"}
 			Obj={Mk=45 Mnemo="RezStackIsEmpyProgSet" Hint="Установить программу при чтении из пустого стека результатов"}
-//			Obj={Mk=64 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммы"}
+			//Obj={Mk=64 Mnemo="ExecCounterSet" Hint="Установить счетчик итераций выполнения подпрограммы"}
 			Obj={Mk=280 Mnemo="ZeroProgSet" Hint="Установить программу при =="}
 			Obj={Mk=281 Mnemo="NZeroProgSet" Hint="Установить программу при !="}
 			Obj={Mk=282 Mnemo="LessProgSet" Hint="Установить программу при <"}
@@ -6443,7 +6493,16 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
 
 	Obj=CommonMkList
 	}
+// GraphDisplay ФУ вывода ОА графа
+     FuTypeIndexes.CellSet=121 FuTypeMkTrees.CellSet=
+	{
+	Obj={Mk=1 Mnemo="Set" Hint="Установить указатель на ОА граф"}
+	Obj={Mk=5 Mnemo="ExtendSet" Hint="Установить флаг разворачивания всех ветвей иерархческого списка"}
+
+	Obj=CommonMkList
+	}
 }
+
 
 //		Obj={Mk= Mnemo="" Hint=""}
 
@@ -7883,6 +7942,10 @@ Bus={FuTypeMkList.RowSet=FUBus; FuTypeMkList.CellPop=temp
      FuTypeMkList.CellPop=temp FuTypeMkTrees.CellPop=temp2
  	MnemoServiceTable.LineAdd={Mnemo="FUMatPlot" TreeParentLevelAtr=1 MkList=temp(nil)! MkTree=temp2(nil)!
  	FUType=120 FUTypeDef=120 Hint="ФУ рисования графиков и импорта-экспорта данных"}
+
+     FuTypeMkList.CellPop=temp FuTypeMkTrees.CellPop=temp2
+ 	MnemoServiceTable.LineAdd={Mnemo="FUGraphDisplay" TreeParentLevelAtr=1 MkList=temp(nil)! MkTree=temp2(nil)!
+ 	FUType=121 FUTypeDef=121 Hint="ФУ рисования графиков и импорта-экспорта данных"}
 }
 FuTypeMkList.IndexModeSet=1
 FuTypeMkTrees.IndexModeSet=1

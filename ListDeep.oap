@@ -1,0 +1,88 @@
+// - обозначение переведенных в комментарии старых ФУ
+\* date *\ //- последняя дата изменения или добавления строк и ФУ
+
+NewFU={Mnemo="Main_Bus" MkBegRange=1000 FUType=FUBusNew} // Описание Bus
+
+\\ Для создания индексного файла сначала надо запустить программу !!!!
+ CapsManager.IndexVectCreate=20000
+ CapsManager.IpIcIdOutMk=MainBus.IpIcIdSet
+ CapsManager.IpIcIdOutMk=VariableManager.IpIcIdSet
+ CapsManager.IpIcIdOutMk=ListSyntez.IpIcIdSet
+ MainBus.ModeSet=1
+\\ -------------------------------------- \\
+MainBus.FUTypeCorrectSet=-96 // Корректировка номера типа ФУ для переноса на новую ОА-платформу
+
+NewFU={Mnemo="List" FUType=FUListNew}
+NewFU={Mnemo="List2" FUType=FUListNew}
+NewFU={Mnemo="Console" FUType=FUConsNew}
+
+MainBus.PartialResetSet \\ Запомнить число созданных ФУ
+MainBus.ModeSet=2
+
+
+List.Set=
+>{Mnemo="Atr" Atr=-8 Hint="Атрибут"}
+>{Mnemo="ListLine" Atr=-80 Hint="Атриут линии списка"}
+>{Mnemo="Obj" Hint="Атрибут объекта" Atr=-6}
+>{Mnemo="ListSub" Atr=-90 Hint="Атрибут подсписка"}
+>{Mnemo="Mnemo" Atr=Mnemo Hint="Атрибут подсписка"}
+>{Mnemo="MkList" Atr=MkList Hint="Атрибут подсписка"}
+>{Mnemo="Mk" Atr=Mk Hint="Атрибут подсписка"}
+>{Mnemo="Hint" Atr=Hint Hint="Атрибут подсписка"}
+>{Mnemo="MkBegRange" Atr=MkBegRange Hint="Атрибут подсписка"}
+>{Mnemo="Cons" MkBegRange=10000 MkList=
+	>{Mnemo="Out" Mk=1 Hint="Печать"}
+//	>{Mnemo="OutLn" Mk=2 Hint="Печатьс переводом строки"}
+//	>{Mnemo="LnOut" Mk=3 Hint="Перевод строки и печать"}
+//	>{Mnemo="LnOutLn" Mk=4 Hint="Перевод строки, печать и перевод строки"}
+//	>{Mnemo="Ln" Mk=10 Hint="Перевод строки"}
+	>{Comment="Input" Hint="Запуск миллипрограмм" Obj=
+		>{Mnemo="Input" Mk=100 Hint="Ввод данных"}
+		>{Mnemo="InputMk" Mk=101 Hint="Ввод данных и выдача МК с ними"}
+	}
+}
+
+>{Mnemo="Bus" MkBegRange=1000 MkList=
+	>{Mk=1 Mnemo="MakeFU" Hint="Создать ФУ (в нагрузке передаётся тип ФУ)"}
+	>{Mk=5 Mnemo="ProgExec" Hint="Выполнить последовательность МК из ИК"}
+	>{Mk=10 Mnemo="FileOldProgExec" Hint="Выполнить последовательность МК из индексного файла старого формата"}
+	>{Mk=20 Mnemo="NFUOut" Hint="Выдать количество ФУ, подключенных к шине"}
+	>{Mk=20 Mnemo="NFUOutMk" Hint="Выдать МК с количеством ФУ, подключенных к шине"}
+}
+
+List.FindAnd={Mnemo="Cons"}
+List.SubDown=MkList
+List.OutMk=Console.OutLn
+Console.OutLn="+++++++++"
+List.MultiListModeSet=True
+List.FindAnd={Mnemo="Input"}
+List.IpSecondOutMk=Console.OutLn
+List.SubUp
+//List.OutMk=Console.OutLn
+
+/*
+//List.OutMk=Console.OutLn
+//Console.OutLn="------------"
+
+List.ContextOutMk=Console.MnemoTableSet
+
+Console.OutLn={Atr=100001 10001=0}
+Console.OutLn="------------"
+
+//List.FindAnd={Atr=Atr}
+//List.LineOutMk=Console.OutLn
+
+//Console.OutLn="------------"
+//List.FindAndLine={Mnemo}
+//List.LoadOutMk=Console.OutLn
+List.OutMk=Console.OutLn
+//List.JsonSave="JSONList.json"
+Console.OutLn="--------"
+List.FindAnd={Mnemo="Atr"}
+List2.Set=
+>{Atr=-8 Console.OutLn="!!!!!"}
+List.IpLastOutMk=Console.OutLn
+List.IpFirstOutMk=Console.OutLn
+List.IpSecondOutMk=Console.OutLn
+List.IpLastOutMk=List2.FindOr
+*/

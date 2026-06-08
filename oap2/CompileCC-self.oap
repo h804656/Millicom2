@@ -158,7 +158,7 @@ ListMkTable
 >{Mk=249 Mnemo="LevelPrevAdd"           Hint="Add previous level"}
 >{Mk=263 Mnemo="MarkLastCopyOutMk"      Hint="Mark last copy, dispatch via Load MK"}
 >{Mk=451 Mnemo="BiggerExec"             Hint="Exec Load if LineNum increased"}
->{Mk=256 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
+>{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 
 // MnemoListMkTable: an exact duplicate of ListMkTable, used ONLY by the
 // "MnemoTable" self-row below. KEEP IN SYNC WITH ListMkTable.
@@ -217,7 +217,7 @@ MnemoListMkTable
 >{Mk=249 Mnemo="LevelPrevAdd"           Hint="Add previous level"}
 >{Mk=263 Mnemo="MarkLastCopyOutMk"      Hint="Mark last copy, dispatch via Load MK"}
 >{Mk=451 Mnemo="BiggerExec"             Hint="Exec Load if LineNum increased"}
->{Mk=256 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
+>{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 
 LexMkTable
 >{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}

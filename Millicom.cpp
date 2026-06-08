@@ -22,8 +22,6 @@
 #include <crtdbg.h>
 #endif
 
-
-
 using namespace std;
 
 static void Usage()
@@ -39,7 +37,7 @@ static void Usage()
 int main(int argc, char* argv[])
 {
 	std::string indPath; //= "C:\\Users\\hacker\\Downloads\\millicom\\oap2\\CompileCC.ind";
-	vector<string> lexInputs; // = {"CompileCC-self.oap"};
+	vector<string> lexInputs; //= {"oap2\\CompileCC-self.oap"};
 	if (argc < 2 && !indPath.size())
 	{
 		Usage();
@@ -47,14 +45,23 @@ int main(int argc, char* argv[])
 	}
 	else {
 #if defined(_WIN32)
-		// Suppress CRT assertion popups and Windows error dialogs; route asserts to
-		// stderr instead so test automation isn't blocked by modal boxes.
 		SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
 		_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
 		_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 		_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
+	}
+	for (string& s : lexInputs) {
+		ifstream lf(s, ios::binary);
+		if (!lf)
+		{
+			cerr << "Error: --lex-file not found: " << s << endl;
+			return 1;
+		}
+		stringstream ss;
+		ss << lf.rdbuf();
+		s = ss.str();
 	}
 
 	if (argc >= 2) {
@@ -135,10 +142,6 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
-	// Create the .ind emit FU before feeding input so the self-host grammar's
-	// `IndexFile.CapsListRegister` dispatch lands on it (capturing the CapsList
-	// accumulator via Sender). The Delphi-built reference grammar instead captures
-	// it on the Bus (`Main_Bus.CapsListRegister`); that path is handled at emit time.
 	IndexFile* idx = nullptr;
 	long idxAddr = 0;
 	if (!lexInputs.empty())
@@ -152,9 +155,6 @@ int main(int argc, char* argv[])
 	string runTempOut;
 	if (runMode)
 	{
-		// --run stage 1: compile the input quietly. Silence the compiler's own
-		// Console trace FUs so the compile pass prints nothing; the emitted .ind
-		// is then executed (stage 2) to show only the program's output.
 		for (size_t i = 0; i < Bus.FUs.size(); i++)
 			if (Bus.FUs[i] && Bus.FUs[i]->GetFuType() == 1)
 				static_cast<Console*>(Bus.FUs[i])->Quiet = true;

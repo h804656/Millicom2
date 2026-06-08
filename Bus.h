@@ -22,15 +22,16 @@ public:
 //		NetManagerIni,SchedulerIni,EventserIni, MeanShiftIni, StreamFloatALUIni, GaussIni, ALUIni,
 //		CellularAutomatIni, CellularAutomatManagerIni, RouterIni, GatewayIni, StreamFloatALUManagerIni, 
 //		StreamIntALUIni, StreamIntALUManagerIni, MatPlotIni };
-	vector <FU *> FUs; // ������ ���������� �� ��������� ��
-	FU * FUTempl = nullptr; // ��������� �� �������� ������� ��
-	long int FUMkRange = 1000; // �������� �� ��� ������� ��
-	long int FUTypeCorrect= fuTypeCorrect; // ��������� ������ ���� �� (��� ������������ �� ������ ��-������)
-	bool InterpretatorMode = false; // ����� �������������� (���� �����������, �� ����������� �� InterpretatorExec
-	long int Ind = 0, Ind2 = 0; // ������� ��, ����������� �����
-	int argc = 0; // ���������� ���������� ��������� ������
-	int argInd = -1; // ������ ���������
-	vector<string> argv; // ��������� ��������� ������
+	vector <FU *> FUs; // Вектор указателей на контексты ФУ
+	FU * FUTempl = nullptr; // Указатель на контекст шаблона ФУ
+	long int FUMkRange = 1000; // Диапазон МК для каждого ФУ
+	long int FUTypeCorrect= fuTypeCorrect; // Коррекция номера типы ФУ (для согласования со старой ОА-средой)
+	bool InterpretatorMode = false; // Режим интерпретатора (если установлено, то выполняется МК InterpretatorExec
+	long int Ind = 0, Ind2 = 0; // Индексы ФУ, управляемых Шиной
+	long int SwapInd = -1; // Индекс для обмена местами ФУ
+	int argc = 0; // Количество аргументов командной строки
+	int argInd = 1; // Индекс аргумента
+	vector<string> argv; // Аргументы командной строки
 
 	/// <summary>
 	/// //////////////////////////////////////////////////////////// d2-2026

@@ -14,6 +14,13 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		PrefixProg = t;
 	}
 	MK %= FUMkRange;
+	if (MkRedirect >= 0) // Переадресация Мк
+	{
+		long t = MkRedirect;
+		MkRedirect = -1;
+		MkExec(t + MK, Load, Sender);
+		return;
+	}
 	switch (MK)
 	{
 	case 0: // Reset
@@ -51,8 +58,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 5:	// MultiLineModeSet
 		MultiLineMode = Load.toInt(1);
 		break;
-	case 6: // MultyListModeSet Установить режим многоуровневого списка для поиска (true по умолчанию)
-		MultyListMode = Load.toBool(true);
+	case 6: // MultiListModeSet Установить режим многоуровневого списка для поиска (true по умолчанию)
+		MultiListMode = Load.toBool(true);
 		break;
 	case 7: // MkModeSet Режим выполнения всех МК в ИК-шаблоне (МК-ой считается любой атрибут, индекс которого больше 0) При пустой нагрузке режим устанавливается
 		Searcher.MkMode = Load.toBool(true);
@@ -63,7 +70,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 27: // CalcMkSet Установить МК для вычисления АЛВ
 		Searcher._CalcMk = Load.toInt();
 		break;
-	case 8:// EmptyProgExec Выполнить программу, если список пуст
+	case 8:// EmptyExec Выполнить программу, если список пуст
 	case 9:// FullExec Выполнить программу, если список не пуст
 	case 14: // OneLineExec Выполнить программу, если в списке только одна строка
 	case 13: // MoreOneLineExec Выполнить программу, если в списке больше одной строка
@@ -81,20 +88,32 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		else if (Load.Point == nullptr)
 			ProgExec(ElseProg);
 		break;
-	case 10: // SuccessLineProgSet Установить указатель на программу, выполняемую при удачном поиска в линии списка
+	case 10: // SuccessLineProgSet Установить указатель на программу, выполняемую при удачном поиске в линии списка
 		Searcher.SuccessProg = (IC_type)Load.Point;
 		break;
 	case 11: // SuccessAfterLineProgSet Установить указатель на программу, выполняемую при удачном поиска в линии списка после обоработки программ линии
 		Searcher.SuccessAfterProg = (IC_type)Load.Point;
 		break;
 	case 12: // SuссessProgSet Установить указатель на программу, выполняемую в случае удачного поиска во всем  списке
-		SuссessProg = Load.Point;
+		SuссessProg=Load.Point;
+		break;
+	case 300: // SuссessProgAdd Добавить в стек указатель на программу, выполняемую в случае удачного поиска во всем  списке
+		SuссessProgs.push_back(Load.Point);
+		break;
+	case 301: // SuссessProgClear
+		SuссessProgs.clear();
+		break;
+	case 302: // FailProgAdd Добавить в стек указатель на программу, выполняемую в случае неудачного поиска во всем списке
+		FailProgs.push_back(Load.Point);
+		break;
+	case 303: // FailProgClear Очистить список указателей на программ, выполняемых в случае неудачного поиска во всем списке
+		FailProgs.clear();
 		break;
 	case 23: // SuссessExec Выполнить программу, если перед этим был удачный поиск
 		if (Searcher.Rez)
 			ProgExec(Load);
 		break;
-	case 24: // FailExec Выполнить программу, если перед этим был удачный поиск
+	case 24: // FailExec Выполнить программу, если перед этим был неудачный поиск
 		if (!Searcher.Rez)
 			ProgExec(Load);
 		break;
@@ -105,7 +124,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Searcher.FailAfterProg = (IC_type)Load.Point;
 		break;
 	case 17: // FailProgSet Установить указатель на программу, выполняемую в случае неудачного поиска во всем  списке
-		FailProg = Load.Point;
+		FailProg=Load.Point;
 		break;
 	case 18: //  Установить указатель на программу, выполняемую в случае удачного поиска в текущей линии
 		SuссessLineProg = Load.Point;
@@ -173,17 +192,17 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		switch (Load.toInt())
 		{
 		case 0:
-			Mode = 0; LineUk = nullptr;
+			Mode = 0; LineUk = { nullptr };
 			break;
 		case 1:
-			Mode = 1; LineUk = &HashLineUk;
+			Mode = 1; LineUk = { &HashLineUk };
 			ListHead.back() = &HashListBack; // Добавить псевдосписок
 			break;
 		}
 		break;
 	case 41: // HashAtrSet Установить атрибут для хеширования
 		HashAtr = Load.toInt();
-		Mode = 1; LineUk = &HashLineUk;
+		Mode = 1; LineUk = { &HashLineUk };
 		ListHead.back() = &HashListBack; // Добавить псевдосписок
 		break;
 	case 100: // RezOut Выдача результата сравнения
@@ -218,24 +237,24 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		MkExec(Load, { TIP, (void*) (ListHead.back()->end() - 2)._Ptr});
 		break;
 	case 119: //MarkSet Установить текущую марку
-		LineUk = (ip*)Load.Point;
+		LineUk.back() = (ip*)Load.Point;
 		break;
 
 	case 120: // MarkAtrSet Установить атрибут текущей строки
-		if (LineUk != nullptr)
-			LineUk->atr = Load.toInt();
+		if (LineUk.back() != nullptr)
+			LineUk.back()->atr = Load.toInt();
 		break;
 	case 121: // LastMarkAtrSet Установить атрибут последней строки
 		if (ListHead.back() != nullptr)
 			(ListHead.back()->end() - 1)->atr = Load.toInt();
 		break;
 	case 122: //MarkAtrOut Выдать маркер текущей строки
-		if (LineUk != nullptr)
-			Load.Write(LineUk->atr);
+		if (LineUk.back() != nullptr)
+			Load.Write(LineUk.back()->atr);
 		break;
 	case 123: //MarkAtrOutMk Выдать МК с маркером текущей строки
-		if (LineUk != nullptr)
-			MkExec(Load, { Cint, &LineUk->atr });
+		if (LineUk.back() != nullptr)
+			MkExec(Load, { Cint, &LineUk.back()->atr });
 		break;
 	case 124: //LastMarkAtrOut Выдать маркер последней строки
 		if (ListHead.back() != nullptr && !ListHead.back()->size())
@@ -246,28 +265,28 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			MkExec(Load, { Cint, &(ListHead.back()->end() - 1)->atr });
 		break;
 	case 125: //  MarkAtrInc Инкремент атрибута текущей строки
-		if (LineUk != nullptr)
-			LineUk->atr++;
+		if (LineUk.back() != nullptr)
+			LineUk.back()->atr++;
 		break;
 	case 126: // LastMarkAtrInc Инкремент атрибута последней строки
 		if (ListHead.back() != nullptr)
 			(ListHead.back()->end() - 1)->atr++;
 		break;
 	case 127: //  MarkAtrDec Декримент атрибута текущей строки
-		if (LineUk != nullptr)
-			LineUk->atr--;
+		if (LineUk.back() != nullptr)
+			LineUk.back()->atr--;
 		break;
 	case 128: // LastMarkAtrDec Декримент атрибута последней строки
 		if (ListHead.back() != nullptr)
 			(ListHead.back()->end() - 1)->atr--;
 		break;
 	case 130: // MarkAtrEQExec Запуск программы при нуле/равенстве атрибута текущей строки или равестве c нагрузкой МК
-		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk == nullptr) break;
+		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk.back() == nullptr) break;
 		if (Load.isIC()) {
-			if (!LineUk->atr)
+			if (!LineUk.back()->atr)
 				ProgExec(Load);
 		}
-		else if (LineUk->atr == Load.toInt())
+		else if (LineUk.back()->atr == Load.toInt())
 			ProgExec(Prog);
 		else
 			ProgExec(ElseProg);
@@ -284,12 +303,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			ProgExec(ElseProg);
 		break;
 	case 133: // MarkAtrNEQExec Запуск программы при не нуле/неравенстве атрибута текущей строки
-		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk == nullptr) break;
+		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk.back() == nullptr) break;
 		if (Load.isIC()) {
-			if (LineUk->atr)
+			if (LineUk.back()->atr)
 				ProgExec(Load);
 		}
-		else if (LineUk->atr != Load.toInt())
+		else if (LineUk.back()->atr != Load.toInt())
 			ProgExec(Prog);
 		else
 			ProgExec(ElseProg);
@@ -306,12 +325,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			ProgExec(ElseProg);
 		break;
 	case 135: // MarkAtrBiggerExec Запуск программы при атрибуте текущей строки больше (больше 0)
-		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk == nullptr) break;
+		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk.back() == nullptr) break;
 		if (Load.isIC()) {
-			if (LineUk->atr > 0)
+			if (LineUk.back()->atr > 0)
 				ProgExec(Load);
 		}
-		else if (LineUk->atr > Load.toInt())
+		else if (LineUk.back()->atr > Load.toInt())
 			ProgExec(Prog);
 		else
 			ProgExec(ElseProg);
@@ -328,12 +347,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			ProgExec(ElseProg);
 		break;
 	case 137: // MarkAtrBiggerEQExec Запуск программы при атрибуте текущей строки больше или райным 0
-		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk == nullptr) break;
+		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk.back() == nullptr) break;
 		if (Load.isIC()) {
-			if (LineUk->atr >= 0)
+			if (LineUk.back()->atr >= 0)
 				ProgExec(Load);
 		}
-		else if (LineUk->atr >= Load.toInt())
+		else if (LineUk.back()->atr >= Load.toInt())
 			ProgExec(Prog);
 		else
 			ProgExec(ElseProg);
@@ -350,12 +369,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			ProgExec(ElseProg);
 		break;
 	case 139: // MarkAtrLessExec Запуск программы при атрибуте текущей строки меньше 0
-		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk == nullptr) break;
+		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk.back() == nullptr) break;
 		if (Load.isIC()) {
-			if (LineUk->atr < 0)
+			if (LineUk.back()->atr < 0)
 				ProgExec(Load);
 		}
-		else if (LineUk->atr < Load.toInt())
+		else if (LineUk.back()->atr < Load.toInt())
 			ProgExec(Prog);
 		else
 			ProgExec(ElseProg);
@@ -372,12 +391,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			ProgExec(ElseProg);
 		break;
 	case 141: // MarkAtrLessEQExec Запуск программы при атрибуте текущей строки меньше или равным 0
-		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk == nullptr) break;
+		if (ListHead.back() == nullptr || ListHead.back()->size() == 0 || LineUk.back() == nullptr) break;
 		if (Load.isIC()) {
-			if (LineUk->atr <= 0)
+			if (LineUk.back()->atr <= 0)
 				ProgExec(Load);
 		}
-		else if (LineUk->atr <= Load.toInt())
+		else if (LineUk.back()->atr <= Load.toInt())
 			ProgExec(Prog);
 		else
 			ProgExec(ElseProg);
@@ -398,7 +417,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 151: //LastPop Выдать ссылку на последнюю линию списка и удалить из списка
 	case 152: //LastDel Выдать ссылку на последнюю линию списка и удалить из ИК
 		//if (Load.Type == Tvoid)	//!!! Сделать функцию isVoid
-		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size()) break; // guard match 156/157; avoid back()/pop_back on empty (self-emit crash)
+		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size()) break;
 		Load.Write(ListHead.back()->back().Load);
 		if (MK == 152) ICDel((void*)ListHead.back()->back().Load.Point);
 		if (MK == 151 || MK == 152)
@@ -413,7 +432,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 155: //LastOutMK Выдать ссылку на последнюю линию списка
 	case 156: //LastPopMK Выдать ссылку на последнюю линию списка и удалить из списка
 	case 157: //LastDelMk Выдать ссылку на последнюю линию списка и удалить из ИК
-		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size()) break; // complete guard: ListHead.back() is UB when ListHead empty (self-emit crash)
+		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size()) break;
 		MkExec(Load, ListHead.back()->back().Load);
 		if (MK == 157) ICDel((void*)ListHead.back()->back().Load.Point);
 		if (MK == 156 || MK == 157)
@@ -426,7 +445,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 169: // LastLoadOutMk Выдать МК с нагрузкой последней ИП последней линии
 		MkExec(Load, ((IC_type)(ListHead.back()->back().Load.Point))->back().Load);
 		break;
-	case 256: // IndexVectPopMk -- forward this caps-manager FU to the Load MK
+	case 257: // IndexVectPopMk -- forward this caps-manager FU to the Load MK
 		// (CapsList.IndexVectPopMk=IndexFile.IndexVectWrite): dispatch the Load's
 		// global MK with this List as the argument, so IndexFile can serialize it.
 		MkExec(Load.toInt(), { TFU, this });
@@ -436,22 +455,22 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Load.Write(ListHead.back()->back().Load.IC()->back().atr);
 		break;
 	case 286: // LastAtrOutMk Выдать МК с атрибутом последней ИП последней линии
-		if (!ListHead.size() || ListHead.back()==nullptr || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.IC()->size()) break;
-		MkExec(Load, { Tint, &ListHead.back()->back().Load.IC()->back().atr });
+		if (!ListHead.size() || ListHead.back() == nullptr || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.IC()->size()) break;
+		MkExec(Load, { TAtr, &ListHead.back()->back().Load.IC()->back().atr });
 		break;
 	case 287: // LineAtrOut Выдать атрибут последней ИП текущей линии
-		if (LineUk == nullptr || LineUk->Load.Point == nullptr || LineUk->Load.IC()->size() < 2) break;
+		if (LineUk.back() == nullptr || LineUk.back()->Load.Point == nullptr || LineUk.back()->Load.IC()->size() < 2) break;
 		Load.Write(ListHead.back()->back().Load.IC()->back().atr);
 		break;
 	case 288: // LineAtrOutMk Выдать МК с атрибутом последней ИП текущей линии
-		if (LineUk == nullptr || LineUk->Load.Point == nullptr || LineUk->Load.IC()->size() < 2) break;
+		if (LineUk.back() == nullptr || LineUk.back()->Load.Point == nullptr || LineUk.back()->Load.IC()->size() < 2) break;
 		MkExec(Load, { Tint, &ListHead.back()->back().Load.IC()->back().atr });
 		break;
 
 	case 275: // LineIpTailToHead Переместить последнюю ИП в начало ИК в текущей линии
-		if (LineUk == nullptr || LineUk->Load.Point == nullptr || LineUk->Load.IC()->size() < 2) break;
-		LineUk->Load.IC()->insert(ListHead.back()->back().Load.IC()->begin(), ListHead.back()->back().Load.IC()->back());
-		LineUk->Load.IC()->erase(LineUk->Load.IC()->end() - 1);
+		if (LineUk.back() == nullptr || LineUk.back()->Load.Point == nullptr || LineUk.back()->Load.IC()->size() < 2) break;
+		LineUk.back()->Load.IC()->insert(ListHead.back()->back().Load.IC()->begin(), ListHead.back()->back().Load.IC()->back());
+		LineUk.back()->Load.IC()->erase(LineUk.back()->Load.IC()->end() - 1);
 		break;
 	case 276: // LastIpTailToHead Переместить последнюю ИП в начало ИК в последней линии
 		if (!ListHead.size() || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr || ListHead.back()->back().Load.IC()->size() < 2) break;
@@ -459,9 +478,9 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		ListHead.back()->back().Load.IC()->erase(ListHead.back()->back().Load.IC()->end()-1);
 		break;
 	case 277: // LineIpHeadToTail Переместить первую ИП в конец ИК в текущей линии
-		if (LineUk == nullptr || LineUk->Load.Point == nullptr || LineUk->Load.IC()->size() < 2) break;
-		LineUk->Load.IC()->push_back(LineUk->Load.IC()->front());
-		LineUk->Load.IC()->erase(LineUk->Load.IC()->begin());
+		if (LineUk.back() == nullptr || LineUk.back()->Load.Point == nullptr || LineUk.back()->Load.IC()->size() < 2) break;
+		LineUk.back()->Load.IC()->push_back(LineUk.back()->Load.IC()->front());
+		LineUk.back()->Load.IC()->erase(LineUk.back()->Load.IC()->begin());
 		break;
 	case 278: // LastIpHeadToTail Переместить Первую ИП в конец ИК в последней линии
 		if (!ListHead.size() || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr || ListHead.back()->back().Load.IC()->size() < 2) break;
@@ -473,15 +492,15 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		swap(*(ListHead.back()->back().Load.IC()->back().Load.IC()->end() - 1), *(ListHead.back()->back().Load.IC()->back().Load.IC()->end() - 2));
 		break;
 	case 279: // LineIpSwap Поменять местами две последние ИП текущей линии
-		if (LineUk == nullptr || LineUk->Load.Point==nullptr || LineUk->Load.IC()->size() < 2) break;
-		swap(*(LineUk->Load.IC()->end() - 1), *(LineUk->Load.IC()->end() - 2));
+		if (LineUk.back() == nullptr || LineUk.back()->Load.Point==nullptr || LineUk.back()->Load.IC()->size() < 2) break;
+		swap(*(LineUk.back()->Load.IC()->end() - 1), *(LineUk.back()->Load.IC()->end() - 2));
 		break;
 	case 280: // LineLoadAppend Добавить элемент в вектор в нагрузке последней ИП текущей строки
-		if (LineUk == nullptr || LineUk->Load.IC()->back().Load.Point == nullptr || LineUk->Load.IC()->back().Load.IC()->size()) break;
-		if (LineUk->Load.IC()->back().Load.Point == nullptr)
-			LineUk->Load.IC()->back().Load.Point = new vector<LoadPoint>;
-		if (!LineUk->Load.IC()->back().Load.isVect()) break;
-		LineUk->Load.IC()->back().Load.toVect()->push_back(Load);
+		if (LineUk.back() == nullptr || LineUk.back()->Load.IC()->back().Load.Point == nullptr || LineUk.back()->Load.IC()->back().Load.IC()->size()) break;
+		if (LineUk.back()->Load.IC()->back().Load.Point == nullptr)
+			LineUk.back()->Load.IC()->back().Load.Point = new vector<LoadPoint>;
+		if (!LineUk.back()->Load.IC()->back().Load.isVect()) break;
+		LineUk.back()->Load.IC()->back().Load.toVect()->push_back(Load);
 		break;
 	case 281: // LastLoadAppend Добавить элкскет в вектор в нагрузке последней ИП последней строки
 		if (!ListHead.size() || !ListHead.back()->size() || ListHead.back()->back().Load.Point == nullptr ||
@@ -492,11 +511,11 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		ListHead.back()->back().Load.IC()->back().Load.toVect()->push_back(Load);
 		break;
 	case 282: // LineToLoadVectWrite Записать нагрузку во все элементы вектора из нагрузки последней ИП текущей линии
-		if (LineUk == nullptr || LineUk->Load.IC()->back().Load.Point == nullptr || LineUk->Load.IC()->back().Load.IC()->size()) break;
-		if (LineUk->Load.IC()->back().Load.Point == nullptr)
-			LineUk->Load.IC()->back().Load.Point = new vector<LoadPoint>;
-		if (!LineUk->Load.IC()->back().Load.isVect()) break;
-		for (auto& i : *LineUk->Load.IC()->back().Load.toVect())
+		if (LineUk.back() == nullptr || LineUk.back()->Load.IC()->back().Load.Point == nullptr || LineUk.back()->Load.IC()->back().Load.IC()->size()) break;
+		if (LineUk.back()->Load.IC()->back().Load.Point == nullptr)
+			LineUk.back()->Load.IC()->back().Load.Point = new vector<LoadPoint>;
+		if (!LineUk.back()->Load.IC()->back().Load.isVect()) break;
+		for (auto& i : *LineUk.back()->Load.IC()->back().Load.toVect())
 			i.WriteFromLoad(Load);
 		break;
 	case 283: // LastToLoadVectWrite Записать нагрузку во все элементы вектора из нагрузки последней ИП последней линии
@@ -518,8 +537,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		break;
 	case 145: //LineIpOutMk Выдать ссылку на последнюю ИП текущей линии
 //		if (ListHead.back() == nullptr || !ListHead.back()->size() || LineUk == nullptr) break;
-		if (LineUk == nullptr || !((IC_type)LineUk->Load.Point)->size()) break;
-		MkExec(Load, { CIP,&((IC_type)LineUk->Load.Point)->back() });
+		if (LineUk.back() == nullptr || !((IC_type)LineUk.back()->Load.Point)->size()) break;
+		MkExec(Load, { CIP,&((IC_type)LineUk.back()->Load.Point)->back() });
 		break;
 	case 146: // LineIcCopyOutMk Выдать МК со ссылкой на последнюю ИП текущей линии
 		//		MkExec(Load, { CIC,((IC_type)ListHead.back()->back().Load.Point)->back().СloneToIC() });
@@ -544,7 +563,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		if (!ListHead.empty() && ListHead.back() != nullptr && ListHead.back()->size() && ListHead.back()->back().Load.isIC()
 		    && ListHead.back()->back().Load.Point != nullptr && !((IC_type)ListHead.back()->back().Load.Point)->empty())
 			t = ((IC_type)ListHead.back()->back().Load.Point)->back().Load;
-		if (ListHead.back() == nullptr) 
+		if (ListHead.back() == nullptr)
 			ListHead.back() = new vector<ip>;
 		if (Load.Point == nullptr)
 			ListHead.back()->push_back({ LineAtr, TIC, new vector<ip> });
@@ -608,10 +627,10 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		//			((IC_type)ListHead.back()->at(ListHead.back()->size() - 2).Load.Point)->back().Load = ListHead.back()->back().Load;
 		//		break;
 	case 181: // LineFirstLoadOutMk Выдать МК с нагрузкой последней ИП текущей линии
-		MkExec(Load, ((IC_type)(LineUk->Load.Point))->begin()->Load);
+		MkExec(Load, ((IC_type)(LineUk.back()->Load.Point))->begin()->Load);
 		break;
 	case 164: // LineLoadOutMk Выдать МК с нагрузкой первой ИП текущей линии
-		MkExec(Load, ((IC_type)(LineUk->Load.Point))->back().Load);
+		MkExec(Load, ((IC_type)(LineUk.back()->Load.Point))->back().Load);
 		break;
 	case 165: // LinePopMk Исключить линию списка
 		if (ListHead.back() == nullptr || ListHead.back()->size() == 0) break;
@@ -629,30 +648,30 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	}
 	case 167: // LineIpCut Удалить последние ИП из текущей линии (в нагрузке количество удаляемых ИП, по умолчанию 1)
 	case 168: // LineVarIpCut" Hint = "Удалить последние ИП c пемеменными из текущей линии (в нагрузке количество удаляемых ИП, по умолчанию 1)" }
-		if (LineUk != nullptr && LineUk->Load.isIC() && LineUk->Load.Point != nullptr)
+		if (LineUk.back() != nullptr && LineUk.back()->Load.isIC() && LineUk.back()->Load.Point != nullptr)
 		{
 			int n;
 			if (Load.Point == nullptr || !Load.isInt())
 				n = 1;
 			else
 				n = *(int*)Load.Point;
-			while (n-- && ((IC_type)LineUk->Load.Point)->size() != 0)
+			while (n-- && ((IC_type)LineUk.back()->Load.Point)->size() != 0)
 			{
-				((IC_type)LineUk->Load.Point)->resize(((IC_type)LineUk->Load.Point)->size() - 1);
+				((IC_type)LineUk.back()->Load.Point)->resize(((IC_type)LineUk.back()->Load.Point)->size() - 1);
 			}
 		}
 		break;
 	case 270: // LineUpDown Сместить указатель текущей строки (в нагрузке величина спещения, при отрицательно смещении движение вверх; по умолчанию движение вверх на одну позицию)
 		
 		break;
-	case 174: // LastConstVarTypeSet Установить тип константа/переменная для последней нагрузки (по умолчанию переменная)
-	if (ListHead.size() && ListHead.back() != nullptr)
-	{
-		((IC_type)ListHead.back()->back().Load.Point)->back().Load.Type |= 1;
-		if (!Load.toBool(false))
-			((IC_type)ListHead.back()->back().Load.Point)->back().Load.Type -= 1;
-	break;
-	}
+//	case 174: // LastLoadConstVarTypeSet Установить тип константа/переменная для последней нагрузки (по умолчанию переменная)
+//	if (ListHead.size() && ListHead.back() != nullptr)
+//	{
+//		((IC_type)ListHead.back()->back().Load.Point)->back().Load.Type |= 1;
+//		if (!Load.toBool(false))
+//			((IC_type)ListHead.back()->back().Load.Point)->back().Load.Type -= 1;
+//	break;
+//	}
 	case 170: // LastAttach Конкатенация ИК к последней линии списка
 	case 171: // LastTreeCopyAttach Конкатенация копии ИК к последней линии списка
 	case 172: // LastCopyAttachLoadMove Добавить ИК и переписать последнюю нагрузку
@@ -673,7 +692,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			if (Load.isIP())
 			{
 				((IC_type)ListHead.back()->back().Load.Point)->push_back(((ip*)Load.Point)->Copy());
-				if (MK == 170 && Load.Type == CIP) { delete (ip*)Load.Point; Load.Point = nullptr; Load.Type = 0; }
+				//if (MK == 170 && Load.Type == CIP) { delete (ip*)Load.Point; Load.Point = nullptr; Load.Type = 0; }
 			}
 			else if (Load.isIC())
 			{
@@ -706,27 +725,27 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		break;
 	case 175: // LineAttach Конкатенация ИК к текущей линии списка
 	case 176: // LineCopyAttach Конкатенация копии ИК к текущей линии списка
-		if (LineUk != nullptr && Load.Point != nullptr)
+		if (LineUk.back() != nullptr && Load.Point != nullptr)
 			if (Load.isIP())
 			{
-				((IC_type)LineUk->Load.Point)->push_back(*(ip*)Load.Point);
+				((IC_type)LineUk.back()->Load.Point)->push_back(*(ip*)Load.Point);
 				if (MK == 175 && Load.Type == CIP) { delete (ip*)Load.Point; Load.Point = nullptr; Load.Type = 0; }
 			}
 			else
 			{
 				if (Load.isIC())
 				{
-					copy(((IC_type)Load.Point)->begin(), ((IC_type)Load.Point)->end(), inserter(*((IC_type)LineUk->Load.Point), ((IC_type)LineUk->Load.Point)->end()));
+					copy(((IC_type)Load.Point)->begin(), ((IC_type)Load.Point)->end(), inserter(*((IC_type)LineUk.back()->Load.Point), ((IC_type)LineUk.back()->Load.Point)->end()));
 					if (MK == 175 && Load.Type == CIP) { ICDel(Load.Point); Load.Point = nullptr; Load.Type = 0; };
 				}
 			}
 		break;
 	case 178: // LineCopyToLast: append all ips of the FOUND row (LineUk) onto the LAST row ip-list (generic clone-found-fields). Shares each ip Load.Point like the legacy addUserFuMnemoRow peer-share.
-		if (LineUk != nullptr && LineUk->Load.Point != nullptr && LineUk->Load.isIC()
+		if (!LineUk.empty() && LineUk.back() != nullptr && LineUk.back()->Load.Point != nullptr && LineUk.back()->Load.isIC()
 			&& !ListHead.empty() && ListHead.back() != nullptr && !ListHead.back()->empty()
 			&& ListHead.back()->back().Load.Point != nullptr && ListHead.back()->back().Load.isIC())
 		{
-			IC_type src178 = (IC_type)LineUk->Load.Point;
+			IC_type src178 = (IC_type)LineUk.back()->Load.Point;
 			IC_type dst178 = (IC_type)ListHead.back()->back().Load.Point;
 			for (auto& f178 : *src178) {
 				dst178->push_back(f178);
@@ -773,22 +792,32 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 183: // LineIndSet Установить индекс нагрузки в последней ИП текушей строки
 		if (ListHead.back() == nullptr || ListHead.back()->back().Load.Point == nullptr || !ListHead.back()->back().Load.isIC()) break;
 		if (((IC_type)ListHead.back()->back().Load.Point)->size() == 0) break;
-		if (LineUk == nullptr) break;
-		if (!LineUk->Load.isIC()) break;
-		if (!((IC_type)LineUk->Load.Point)->size())break;
-		if (((IC_type)LineUk->Load.Point)->back().Load.isVect())
-			if (((LoadVect_type)LineUk->Load.Point)->size() > abs(Load.toInt()) or -Load.toInt() == ((LoadVect_type)LineUk->Load.Point)->size()){
-				if (((IC_type)(LineUk->Load.Point))->back().Load.Type == TLoadVect) ((IC_type)(LineUk->Load.Point))->back().Load.Type == TLoadVectInd;
-				else ((IC_type)(LineUk->Load.Point))->back().Load.Type == CLoadVectInd;
-				((IC_type)(LineUk->Load.Point))->back().Load.Ind = Load.toInt();
+		if (LineUk.back() == nullptr) break;
+		if (!LineUk.back()->Load.isIC()) break;
+		if (!((IC_type)LineUk.back()->Load.Point)->size())break;
+		if (((IC_type)LineUk.back()->Load.Point)->back().Load.isVect())
+			if (((LoadVect_type)LineUk.back()->Load.Point)->size() > abs(Load.toInt()) or -Load.toInt() == ((LoadVect_type)LineUk.back()->Load.Point)->size()){
+				if (((IC_type)(LineUk.back()->Load.Point))->back().Load.Type == TLoadVect) ((IC_type)(LineUk.back()->Load.Point))->back().Load.Type == TLoadVectInd;
+				else ((IC_type)(LineUk.back()->Load.Point))->back().Load.Type == CLoadVectInd;
+				((IC_type)(LineUk.back()->Load.Point))->back().Load.Ind = Load.toInt();
 			}
-		if (((IC_type)LineUk->Load.Point)->back().Load.isVect())
-			if (Load.toInt() >= 0 and Load.toInt() < ((IC_type)LineUk->Load.Point)->size() * 3) {
-			if (((IC_type)(LineUk->Load.Point))->back().Load.Type == TIC) ((IC_type)(LineUk->Load.Point))->back().Load.Type == TICInd;
-			else ListHead.back()->back().Load.Type == CICInd;
-			ListHead.back()->back().Load.Ind = Load.toInt();
+		if (((IC_type)LineUk.back()->Load.Point)->back().Load.isVect())
+			if (Load.toInt() >= 0 and Load.toInt() < ((IC_type)LineUk.back()->Load.Point)->size() * 3) {
+			if (((IC_type)(LineUk.back()->Load.Point))->back().Load.Type == TIC) ((IC_type)(LineUk.back()->Load.Point))->back().Load.Type == TICInd;
+			else ((IC_type)(LineUk.back()->Load.Point))->back().Load.Type == CICInd;
+			((IC_type)(LineUk.back()->Load.Point))->back().Load.Ind = Load.toInt();
 		}
 		break;
+	case 193: // LastLoadTypeSet Установить тип нагрузки последней ИП последней линии
+		//if(ListHead.back()!=nullptr && ListHead.back()->back().Load.isNil() && (IC_type)ListHead.back()->back().Load.isIC() && !(IC_type)ListHead.back()->back().Load.isEmptyIC())
+		if (ListHead.back() != nullptr)
+			((IC_type)ListHead.back()->back().Load.Point)->back().Load.Type = Load.toInt();
+		break;
+	case 194: // LineLoadTypeSet Установить тип нагрузки последней ИП последней линии
+		if (LineUk.back() != nullptr && !(IC_type)LineUk.back()->Load.isNil() && ((IC_type)LineUk.back()->Load.Point)->back().Load.isIC() && !((IC_type)LineUk.back()->Load.Point)->back().Load.isEmptyIC())
+			((IC_type)LineUk.back()->Load.Point)->back().Load.Type = Load.toInt();
+		break;
+
 	case 185: // LastLoadSet Записать адрес в нагрузку последней ИП последней строки
 	case 195: // LineLoadSet Записать адрес в нагрузку последней ИП последней строки
 	case 186: // LastLoadCopySet Записать адрес в нагрузку последней ИП последней строки
@@ -803,10 +832,10 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	if (((IC_type)ListHead.back()->back().Load.Point)->size() == 0) break;
 	if (MK < 190)
 		t = ((IC_type)ListHead.back()->back().Load.Point);
-	else if (LineUk != nullptr && LineUk->Load.Point != nullptr && LineUk->Load.isIC())
+	else if (LineUk.back() != nullptr && LineUk.back()->Load.Point != nullptr && LineUk.back()->Load.isIC())
 		break;
 	else
-		t = (IC_type)LineUk->Load.Point;
+		t = (IC_type)LineUk.back()->Load.Point;
 	switch (MK)
 	{
 	case 185:
@@ -818,7 +847,13 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		if (Load.isIC())
 			t->back().Load.Copy(Load);
 		else
-			t->back().Load = Load.Clone(); // non-IC payloads were ICCopy'd via a bogus cast, asserting in debug iterator code
+		{
+			t->back().Load.Type = Load.Type;
+			if(Load.isIC())
+				t->back().Load.Point = ICCopy(Load).Point;
+			else
+				t->back().Load.Copy(Load); // Заглушка!!!
+		}
 		break;
 	case 189:
 	case 199:
@@ -834,27 +869,27 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	}
 	case 180: // LineVarTypeSet // Установить тип 'переменная' в последней ИП текущей линии
 		if (ListHead.back() == nullptr || !ListHead.back()->size() || \
-			LineUk == nullptr || LineUk->Load.Point == nullptr || \
-			LineUk->Load.isIC() || !((IC_type)LineUk->Load.Point)->size())
+			LineUk.back() == nullptr || LineUk.back()->Load.Point == nullptr || \
+			LineUk.back()->Load.isIC() || !((IC_type)LineUk.back()->Load.Point)->size())
 			break;
-		((IC_type)LineUk->Load.Point)->back().Load.VarTypeSet(Load.toBool(true));
+		((IC_type)LineUk.back()->Load.Point)->back().Load.VarTypeSet(Load.toBool(true));
 		break;
 	case 182: // LastVarTypeSet // Установить тип 'переменная' в последней ИП последней линии
 		if (ListHead.back() == nullptr || !ListHead.back()->size() || \
-			ListHead.back()->back().Load.isIC() || !((IC_type)ListHead.back()->back().Load.Point)->size())
+			!ListHead.back()->back().Load.isIC() || !((IC_type)ListHead.back()->back().Load.Point)->size())
 			break;
 		((IC_type)ListHead.back()->back().Load.Point)->back().Load.VarTypeSet(Load.toBool(true));
 		break;
 
-	case 193: //LastClear Очистить последниюю строку списка
+	case 143: //LastClear Очистить последниюю строку списка
 		if (!ListHead.size() || ListHead.back() == nullptr || ListHead.back()->back().Load.Point == 0) break;
 		//ICDel(ListHead.back()->back().Load.Point);
 		ListHead.back()->back().Load.IC()->clear();
 		break;
-	case 194: //LineClear Очистить текущую строку списка
-		if (LineUk == nullptr || LineUk->Load.Point == nullptr) break;
-		//ICDel(LineUk->Load.Point);
-		LineUk->Load.IC()->clear();
+	case 144: //LineClear Очистить текущую строку списка
+		if (LineUk.back() == nullptr || LineUk.back()->Load.Point == nullptr) break;
+		//ICDel(LineUk.back()->Load.Point);
+		LineUk.back()->Load.IC()->clear();
 		break;
 
 	case 190: // LastLoadIcEmptySet Установить ссылку на пустую ИК в нагрузке последней ИП последней строки
@@ -862,12 +897,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			((IC_type)ListHead.back()->back().Load.Point)->back().Load = { TIC, new vector<ip> };
 		break;
 	case 191: // LineLoadIcEmptySet Установить ссылку на пустую ИК в нагрузке последней ИП текущей строки
-		if (LineUk != nullptr && ((IC_type)LineUk->Load.isIC()))
-			((IC_type)LineUk->Load.Point)->back().Load = {TIC, new vector<ip>};
+		if (LineUk.back() != nullptr && ((IC_type)LineUk.back()->Load.isIC()))
+			((IC_type)LineUk.back()->Load.Point)->back().Load = {TIC, new vector<ip>};
 		break;
 	case 200: // LineToLast Установить текущую строку на последнюю строку
 		if (ListHead.back() != nullptr && ListHead.back()->size() > 0 && ListHead.back()->back().Load.Point != nullptr && ListHead.back()->back().Load.isIC())
-			LineUk = &ListHead.back()->back();
+			LineUk.back() = &ListHead.back()->back();
 		break;
 	case 205: // LinePush Положить текущую линию в стек
 		if (LineNum >= 0 && LineNum < ListHead.back()->size() > 0)
@@ -881,7 +916,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		{
 			LineNum = LineStack.back();
 			LineStack.pop_back();
-			LineUk = ListHead.back()->begin()._Ptr + LineNum;
+			LineUk.back() = ListHead.back()->begin()._Ptr + LineNum;
 		}
 		break;
 
@@ -893,10 +928,10 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		((IC_type)ListHead.back()->back().Load.Point)->push_back({ Load.toInt() ,0, nullptr});
 		break;
 	case 211: // LineAtrAttach Прикрепить к текущей строке ИП с атрибутом из нагрзуки
-		if (LineUk == nullptr) break;
-		if (LineUk->Load.Point == 0)
-			LineUk->Load = { TIC, new vector<ip> };
-		((IC_type)LineUk->Load.Point)->push_back({ Load.toInt() ,0, nullptr });
+		if (LineUk.back() == nullptr) break;
+		if (LineUk.back()->Load.Point == 0)
+			LineUk.back()->Load = { TIC, new vector<ip> };
+		((IC_type)LineUk.back()->Load.Point)->push_back({ Load.toInt() ,0, nullptr });
 		break;
 	case 215: // LastLoadBackSet Записать нагрзуку последней ИП последний строки в предыдущие ИП (на входе количество обратных записей)
 	{
@@ -911,10 +946,10 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	}
 	case 216: // LineLoadBackSet Записать нагрзуку последней ИП некущей строки в предыдущие ИП (на входе количество обратных записей)
 	{
-		if (LineUk == nullptr || ((IC_type)LineUk->Load.Point)->size() < 2) break;
-		auto uk = ((IC_type)LineUk->Load.Point)->end() - 2;
-		for (int i = Load.toInt(); i > 0 && uk != ((IC_type)LineUk->Load.Point)->begin() - 1; i++, uk--)
-			uk->Load = ((IC_type)LineUk->Load.Point)->back().Load.Clone();
+		if (LineUk.back() == nullptr || ((IC_type)LineUk.back()->Load.Point)->size() < 2) break;
+		auto uk = ((IC_type)LineUk.back()->Load.Point)->end() - 2;
+		for (int i = Load.toInt(); i > 0 && uk != ((IC_type)LineUk.back()->Load.Point)->begin() - 1; i++, uk--)
+			uk->Load = ((IC_type)LineUk.back()->Load.Point)->back().Load.Clone();
 		break;
 	}
 	case 219: // Receive Установить входной объект без его поиска
@@ -929,8 +964,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Searcher.FindOr(Load);
 		break;
 	case 221: //FindOrLine
-		if (LineUk == nullptr) Searcher.Template = { 0,nullptr };
-		else Searcher.Template = LineUk->Load;
+		if (LineUk.back() == nullptr) Searcher.Template = { 0,nullptr };
+		else Searcher.Template = LineUk.back()->Load;
 		Searcher.FindOr(Load);
 		break;
 	case 222: //FindAndLast
@@ -940,8 +975,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Searcher.FindAnd(Load);
 		break;
 	case 223: //FindAndLine
-		if (LineUk == nullptr) Searcher.Template = { 0,nullptr };
-		else Searcher.Template = LineUk->Load;
+		if (LineUk.back() == nullptr) Searcher.Template = { 0,nullptr };
+		else Searcher.Template = LineUk.back()->Load;
 		Searcher.FindAnd(Load);
 		break;
 	case 224: //FindXorLast
@@ -951,8 +986,8 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Searcher.FindXor(Load);
 		break;
 	case 225: //FindXorLine
-		if (LineUk == nullptr) Searcher.Template = { 0,nullptr };
-		else Searcher.Template = LineUk->Load;
+		if (LineUk.back() == nullptr) Searcher.Template = { 0,nullptr };
+		else Searcher.Template = LineUk.back()->Load;
 		Searcher.FindXor(Load); // Заглушка !!!
 		break;
 	case 226: //FindAndSourceLast
@@ -962,7 +997,7 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Searcher.FindAndSource(Load);
 		break;
 	case 227: //FindAndSourceLine
-		Searcher.Template = LineUk->Load;
+		Searcher.Template = LineUk.back()->Load;
 		Searcher.FindAndSource(Load); // Заглушка !!!
 		break;
 
@@ -972,92 +1007,110 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 231: // FindAndSource Поиск И в источнике
 	{
 		if (!ListHead.size()) break;
-		
-		if (DeepStartSearch == 0)
+		//	if (DeepStartSearch == 0)
 		{
-			DeepStartSearch = ListHead.size();
-			LineCount = 0; // счетчик совпадений
-			LineNumOld = LineNum;
-			LineUk = nullptr; // Ссылка на найденную строку
-			LineNum = -1;
-		}
-		if (ListHead.back() == nullptr)
-		{
-			Searcher.Template = { 0,nullptr };
-			Searcher.FindOr({ 0,nullptr });
-			ProgExec(FailProg);
-			break;
-		}
-		auto i = ListHead.back()->begin();
-//		if (MK % 2 != 0)
-//			i = ListHead.back()->end() - 1;
-		for (int k = 1; i != ListHead.back()->end(); i++, k++)
-		{
-			if (i->atr != LineAtr)
-				continue;
-			if (MultyListMode && AtrSearch(i->Load.Point, LineAtr)) // Попытка перехода на другой уровень списка
 			{
-				ListHead.push_back((IC_type)i->Load.Point); // Добавить контекст в стек контекстов
-				ListHead.back() = (IC_type)i->Load.Point;
-				ProgFU(MK, Load); // Поиск на следующем уровне
-
-				ListHead.pop_back(); // Убрать из стека контекстов
-				if (LineCount && !MultiLineMode) // Если поиск до первого совпадения, то выход
-					break;
+				//DeepStartSearch = ListHead.size();
+				LineCount = 0; // счетчик совпадений
+				LineNumOld = LineNum;
+				LineUk.back() = nullptr; // Ссылка на найденную строку
+				LineNum = -1;
 			}
-
-			Searcher.Template = i->Load;
-			switch (MK)
+			if (ListHead.back() == nullptr)
 			{
-			case 228: // FindOr		
-				Searcher.FindOr(Load);
-				break;
-			case 229: // FindAnd 
-				Searcher.FindAnd(Load);
-				break;
-			case 230: // FindXor
-				Searcher.FindXor(Load);
-				break;
-			case 231: // FindAndSource
-				Searcher.FindAndSource(Load);
+				Searcher.Template = { 0,nullptr };
+				Searcher.FindOr({ 0,nullptr });
+				ProgExec(FailProg);
+				if (FailProgs.size())
+					ProgExec(FailProgs.back());
 				break;
 			}
-			if (Searcher.Rez)
+			vector<ip> templ;
+			if (Load.isAtr() || Load.isInt())
 			{
-				LineCount++;
-				if (LineCount == 1)
+				templ.push_back({ Load.toInt(),{0,nullptr} });
+				Load = { CIC, &templ};
+			}
+			vector<vector<ip>::iterator> i = { ListHead.back()->begin() };
+			vector<IC_type> IC = { ListHead.back() }; // Указатель на текущий уровень списка
+			long k = 0;
+			while (i.size())
+			{
+				while (i.back() != IC.back()->end())
 				{
-					if (MK % 231 == 1)
-						LineNum = ListHead.back()->size() - 1;
-					else
+					if (i.back()->atr != LineAtr || i.back()->Load.isNil() || !i.back()->Load.isIC())
+						continue;
+
+					Searcher.Template = i.back()->Load;
+					switch (MK)
 					{
-						LineNum = k;// Запомнить номер первой строки (k- счетчик номеров строк в том числе и в иерархическом списке)
-						LineUk = i._Ptr; // Запомнить найденную строку
+					case 228: // FindOr		
+						Searcher.FindOr(Load);
+						break;
+					case 229: // FindAnd 
+						Searcher.FindAnd(Load);
+						break;
+					case 230: // FindXor
+						Searcher.FindXor(Load);
+						break;
+					case 231: // FindAndSource
+						Searcher.FindAndSource(Load);
+						break;
 					}
+					if (Searcher.Rez)
+					{
+						LineCount++;
+						if (LineCount == 1)
+						{
+							//if (MK % 231 == 1)
+							//	LineNum = ListHead.back()->size() - 1;
+							//else
+							{
+								LineNum = k;// Запомнить номер первой строки (k- счетчик номеров строк в том числе и в иерархическом списке)
+								LineUk.back() = i.back()._Ptr; // Запомнить найденную строку
+							}
 
+						}
+						if (MultiLineMode == 0) break;
+					}
+					ip* t = AtrSearchIP(i.back()->Load.Point, LineAtr);
+					if (MultiListMode && t != nullptr) // Попытка перехода на другой уровень списка
+					{
+						i.back()++; // Сохранить позицию для продолжения поиска на текущем уровне после возвращения	
+						IC.push_back((IC_type)t->Load.Point); // Добавить контекст в стек контекстов
+						i.push_back(IC.back()->begin()); // Добавить итератор на новый уровень списка
+						continue;
+					}
+					i.back()++;
 				}
-				if (MultiLineMode == 0) break;
+				i.pop_back();
+				IC.pop_back();
+				if (Searcher.Rez && MultiListMode == 0) // Если поиск до первого совпадения и совпадение найдено, то выход
+					i.clear();
 			}
-		}
-		if (LineCount && ListHead.size() == DeepStartSearch)
-		{
-			//LineUk = &ListHead.back()->at(LineNumFirst);
-			ProgExec(SuссessProg);
-		}
-		else
-		{
-			//LineUk = nullptr;
-			ProgExec(FailProg);
-		}
+			if (LineCount /* && ListHead.size() == DeepStartSearch */)
+			{
+				//LineUk = &ListHead.back()->at(LineNumFirst);
+				ProgExec(SuссessProg);
+				if (SuссessProgs.size())
+					ProgExec(SuссessProgs[ListHead.size() - 1]);
+				//if (ListHead.size() == DeepStartSearch)
+				{ // Обработка превывания по разности строк (например, применяется для определения приоритета АЛВ)
+					if (LineNum > LineNumOld)  ProgExec(BibberProg);
+					if (LineNum < LineNumOld)  ProgExec(LessProg);
+					if (LineNum >= LineNumOld) ProgExec(BibberEQProg);
+					if (LineNum < LineNumOld)  ProgExec(LessEQProg);
+					if (LineNum == LineNumOld) ProgExec(EQProg);
+					//DeepStartSearch = 0;
+				}
+			}
+			else
+			{
+				ProgExec(FailProg);
+				if (FailProgs.size())
+					ProgExec(FailProgs[ListHead.size() - 1]);
+			}
 
-		if (ListHead.size() == DeepStartSearch)
-		{
-			if (LineNum > LineNumOld)  ProgExec(BibberProg);
-			if (LineNum < LineNumOld)  ProgExec(LessProg);
-			if (LineNum >= LineNumOld) ProgExec(BibberEQProg);
-			if (LineNum < LineNumOld)  ProgExec(LessEQProg);
-			if (LineNum == LineNumOld) ProgExec(EQProg);
-			DeepStartSearch = 0;
 		}
 	}
 	break;
@@ -1170,20 +1223,21 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		break;
 	case 268: //
 		break;
-	case 250: // SubUp Перейти на уровень выше (на входе количество уровней наверх, по умолчанию 1)
-		{
+	case 250: // SubUp Перейти на уровень выше (на входе количество уровней наверх, по умолчанию 1; если <0, то переместиься в начало списка)
+	case 251: // SubUpDel Перейти на уровень выше и уничтожить текущий уровень
+	case 252: // SubUpDelGraph Перейти на уровень выше и уничтожить текущий уровень с подсписками
+	{
 			long int t = Load.toInt(1);
-			for (; ListHead.size() > 1 && t > 0; ListHead.pop_back(), t--);
+			if (t < 0) { t = ListHead.size() - 1; } // Если <0, то переместиься в начало списка
+			for (; ListHead.size() > 1 && t > 0; t--)
+			{
+				if(MK==251) ICDel(ListHead.back()->back().Load.Point);
+				if (MK == 252); //GraphDel(ListHead.back()->back().Load.Point)
+				ListHead.pop_back();
+				LineUk.pop_back();
+			}
 			break;
 	}
-	case 251: // SubUpDel Перейти на уровень выше и уничтожить текущий уровень
-		ICDel(ListHead.back()->back().Load.Point);
-		ListHead.pop_back();
-		break;
-	case 252: // SubUpDelGraph Перейти на уровень выше и уничтожить текущий уровень с подсписками
-		//GraphDel(ListHead.back()->back().Load.Point);
-		ListHead.pop_back();
-		break;
 	case 253: // SubDeepOut Выдать номер текущего уровня
 		Load.Write(ListHead.size());
 		break;
@@ -1195,23 +1249,33 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	}
 	case 255: // SubDown Перейти на уровень ниже (переход осуществляется на текущей найденной строке) в нагрузке атрибут указателя на подсписок (по умолчанию атрибут строки)
 			  // Если в нагрузке IC, то переход текущего списка на этот указатель
-		if (Load.Point == nullptr)
-		{
-			if (LineUk == nullptr) break;
-			ip* t = AtrFind(LineUk->Load.Point, LineAtr);
-			if (t == nullptr || !t->Load.isIC()) break;
-			ListHead.push_back((IC_type)t->Load.Point);
-		}
-		else if (Load.isIC())
+		if (Load.isIC()) {
 			ListHead.push_back((IC_type)Load.Point);
-		else if (Load.isInt() || Load.isMk())
+			LineUk.push_back(nullptr);
+		}
+		else if (Load.Point == nullptr || Load.isInt() || Load.isAtrMk())
 		{
-			if (LineUk == nullptr) break;
-			ip* t = AtrFind(LineUk->Load.Point,Load.toInt());
+			if (LineUk.back() == nullptr) break;
+			ip* t;
+			long int tt = Load.toInt();
+			if (Load.Point == nullptr)
+				t = AtrSearchIP(LineUk.back()->Load.Point, LineAtr);
+			else
+				t = AtrSearchIP(LineUk.back()->Load.Point, tt);
+			//cout << Load.toInt() << endl;
 			if (t == nullptr || !t->Load.isIC()) break;
 			ListHead.push_back((IC_type)t->Load.Point);
+			LineUk.push_back(nullptr);
 		}
 		break;
+	case 256: // SubRoot Перейти к корневому уровную иератхии списка
+		while (ListHead.size() > 1)
+		{
+			ListHead.pop_back();
+			LineUk.pop_back();
+		}
+		break;
+
 	case 290: // CopyAdrCorrectOriginalSet Установить адрес оригинальной ИК для коррекции адресов скопированного ОА-графа
 		CopyAdrCorrectOriginal = Load;
 		break;
@@ -1234,34 +1298,40 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 397: // LineСopyAdrCorrectClear Очистить переменную для копирования
 		break;
 	case 400: // LineOutMk Выдать МК с найденной линией
-		if(LineUk==nullptr)
+		if(LineUk.back()==nullptr)
 			MkExec(Load, {0,nullptr});
 		else
-			MkExec(Load, LineUk->Load);
+			MkExec(Load, LineUk.back()->Load);
 		break;
 	case 401: // LineOut Выдать найденную линиию
-		if (LineUk == nullptr)
+		if (LineUk.back() == nullptr)
 			Load.Write((void*)nullptr);
 		else
-			Load.Write(LineUk->Load.Point);
+			Load.Write(LineUk.back()->Load.Point);
 		break;
-	case 415: // IpOut Выдать найденную ИП
-		Load.Write(Searcher.IPRezPoint);
+	case 415: // IpReceaverdOut Выдать найденную ИП
+		if (Searcher.IPRezPoint != nullptr)
+			Load.Write(Searcher.IPRezPoint);
 		break;
-	case 416: // IpOutMk Выдать МК с найденной ИП
-		if (Searcher.IPRezPoint != nullptr) MkExec(Load,{CIP, Searcher.IPRezPoint});
+	case 416: // IpReceaverdOutMk Выдать МК с найденной ИП
+		if (Searcher.IPRezPoint != nullptr)
+			MkExec(Load,{CIP, Searcher.IPRezPoint});
 		break;
-	case 417: // LoadOut Выдать нагрузку найденной ИП
-		if (Searcher.IPRezPoint != nullptr) Load.Write(Searcher.IPRezPoint->Load);
+	case 417: // LoadReceavedOut Выдать нагрузку найденной ИП
+		if(Searcher.IPRezPoint!=nullptr)
+			Load.Write(Searcher.IPRezPoint->Load);
 		break;
-	case 418: // LoadOutMk Выдать МК с нагрузкой найденной ИП
-		if (Searcher.IPRezPoint != nullptr) MkExec(Load, Searcher.IPRezPoint->Load);
+	case 418: // LoadReceavedOutMk Выдать МК с нагрузкой найденной ИП
+		if (Searcher.IPRezPoint != nullptr)
+			MkExec(Load, Searcher.IPRezPoint->Load);
 		break;
-	case 419: // AtrOut Выдать атрибут наденной ИП
-		if (Searcher.IPRezPoint != nullptr) Load.Write(Searcher.IPRezPoint->atr);
+	case 419: // AtrReceivedOut Выдать атрибут наденной ИП
+		if (Searcher.IPTemplRezPoint != nullptr)
+			Load.Write(Searcher.IPRezPoint->atr);
 		break;
-	case 420: // AtrOutMk Выдать МК с атрибутом найденной ИП
-		if (Searcher.IPRezPoint != nullptr) MkExec(Load, { Cint, &Searcher.IPRezPoint->atr });
+	case 420: // AtrReceivedOutMk Выдать МК с атрибутом найденной ИП
+		if (Searcher.IPTemplRezPoint != nullptr)
+			MkExec(Load, { Cint, &Searcher.IPRezPoint->atr });
 		break;
 	case 425: // LastIpPopMk
 		if (ListHead.back() != nullptr && ListHead.back()->size() > 0)
@@ -1271,27 +1341,54 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			((IC_type)ListHead.back()->back().Load.Point)->pop_back();
 			MkExec(Load, { TIP, &t });
 		}
-
-	case 405: // IpReceivedOut Выдать найденную в источнике ИП
-		Load.Write(Searcher.IPTemplRezPoint);
 		break;
-	case 406: // IpReceivedOutMk Выдать МК с найденной в источнике ИП
-		if (Searcher.IPTemplRezPoint != nullptr) MkExec(Load, { CIP, Searcher.IPTemplRezPoint });
+	case 405: // IpOut Выдать найденную в источнике ИП
+		if (Searcher.IPTemplRezPoint != nullptr)
+			Load.Write(Searcher.IPTemplRezPoint);
 		break;
-	case 407: // LoadReceivedOut Выдать нагрузку найденной в источнике ИП
-		if (Searcher.IPTemplRezPoint != nullptr) Load.Write(Searcher.IPTemplRezPoint->Load);
+	case 406: // IpOutMk Выдать МК с найденной в источнике ИП
+		if(Searcher.IPTemplRezPoint!=nullptr)
+			MkExec(Load, { CIP, Searcher.IPTemplRezPoint });
 		break;
-	case 408: // LoadReceivedOutMk Выдать МК с нагрузкой найденной в источнике ИП
-		if (Searcher.IPTemplRezPoint != nullptr) MkExec(Load, Searcher.IPTemplRezPoint->Load);
+	case 407: // LoadOut Выдать нагрузку найденной в источнике ИП
+		if(Searcher.IPTemplRezPoint!=nullptr)
+			Load.Write(Searcher.IPTemplRezPoint->Load);
 		break;
-	case 409: // AtrReceivedOut Выдать атрибут наденной в источнике ИП
-		if (Searcher.IPTemplRezPoint != nullptr) Load.Write(Searcher.IPTemplRezPoint->atr);
+	case 408: // LoadOutMk Выдать МК с нагрузкой найденной в источнике ИП
+		if (Searcher.IPTemplRezPoint != nullptr)
+			MkExec(Load, Searcher.IPTemplRezPoint->Load);
 		break;
-	case 410: // AtrReceivedOutMk Выдать МК с атрибутом найденной в источнике ИП
-		if (Searcher.IPTemplRezPoint != nullptr) MkExec(Load, { Cint, &Searcher.IPTemplRezPoint->atr });
+	case 409: // AtrOut Выдать атрибут наденной в источнике ИП
+		if (Searcher.IPTemplRezPoint != nullptr)
+			Load.Write(Searcher.IPTemplRezPoint->atr);
 		break;
-
+	case 410: // AtrOutMk Выдать МК с атрибутом найденной в источнике ИП
+		MkExec(Load, { Cint, &Searcher.IPTemplRezPoint->atr });
+		break;
 		// Программы по срезультатам сравнения номеров строк
+	case 430: // IpLastOut Выдать последнюю ИП из найденной строки
+		if (Searcher.IPTemplRezPoint != nullptr)
+			Load.Write(&IC_type(LineUk.back()->Load.Point)->back());
+		break;
+	case 431: // IpLastOutMk Выдать МК с последней ИП из найденной строки
+		if (Searcher.IPTemplRezPoint != nullptr && IC_type(LineUk.back()->Load.Point)->size() > 0)
+			MkExec(Load, { CIP, &IC_type(LineUk.back()->Load.Point)->back()});
+	case 432: // IpFurstrOut Выдать последнюю ИП из найденной строки
+		if (Searcher.IPTemplRezPoint != nullptr && IC_type(LineUk.back()->Load.Point)->size() > 0)
+			Load.Write(&IC_type(LineUk.back()->Load.Point)[0]);
+		break;
+	case 433: // IpFirstOutMk Выдать МК с последней ИП из найденной строки
+		if (Searcher.IPTemplRezPoint != nullptr && IC_type(LineUk.back()->Load.Point)->size() > 1)
+			MkExec(Load, { CIP, &(*IC_type(LineUk.back()->Load.Point))[0] });
+		break;
+	case 434: // IpSecondOut Выдать последнюю ИП из найденной строки
+		if (Searcher.IPTemplRezPoint != nullptr && IC_type(LineUk.back()->Load.Point)->size()>1)
+			Load.Write(&IC_type(LineUk.back()->Load.Point)[1]);
+		break;
+	case 435: // IpSecondOutMk Выдать МК с последней ИП из найденной строки
+		if (Searcher.IPTemplRezPoint != nullptr && IC_type(LineUk.back()->Load.Point)->size() > 1)
+			MkExec(Load, { CIP, &(*IC_type(LineUk.back()->Load.Point))[1] });
+		break;
 	case 450: // EqProgExec
 		if(Load.Point==nullptr)
 			if (LineNumOld == LineNum) ProgExec(Load.Point);
@@ -1359,11 +1456,11 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		break;
 	// Программы по анализу строк
 	case 500: // LineEmptyExec Выполнить подпрограмму, если текущая строка пустая
-		if (ListHead.back() != nullptr && LineUk != nullptr && ((IC_type)LineUk->Load.Point)->size()==0)
+		if (ListHead.back() != nullptr && LineUk.back() != nullptr && ((IC_type)LineUk.back()->Load.Point)->size()==0)
 			ProgExec(Load);
 		break;
 	case 501: //LineFullExec  Выполнить подпрограмму, если текущая строка не пустая
-		if (ListHead.back() != nullptr && LineUk != nullptr && ((IC_type)LineUk->Load.Point)->size() != 0)
+		if (ListHead.back() != nullptr && LineUk.back() != nullptr && ((IC_type)LineUk.back()->Load.Point)->size() != 0)
 			ProgExec(Load);
 		break;
 	case 505: // LastEmptyExec  Выполнить подпрограмму, если последняя строка пустая

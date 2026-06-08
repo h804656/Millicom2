@@ -43,7 +43,7 @@ long int LoadPoint::DataSize() // Выдать размер данных в на
 	{
 	case Dbool: return 1;
 	case Dchar: return 2;
-	case Tmk:
+	case TMk:
 	case Dint:
 	case Dfloat: return 4;
 	case Ddouble: return 8;
@@ -302,6 +302,43 @@ bool LoadPoint::isMk() {
 	return Point != nullptr && t >> 1 == DMk;
 }; // Милликоманда?
 
+bool LoadPoint::isAtr() { // Атрибут или милликоманда?
+	if (Point == nullptr) return false;
+	register unsigned int t = Type;
+	if (Type >> 1 == DLoadVectInd) {
+		register int N = ((LoadVect_type)Point)->size();
+		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return false;
+		t = ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Type;
+	}
+	else if (Type >> 1 == DICInd)
+		if (Ind < 0 || Ind / 3 >= ((IC_type)Point)->size()) return false;
+		else switch (Ind % 3) {
+		case 0: return false;
+		case 1: return (Ind / 3 >= ((IC_type)Point)->at(Ind / 3).atr >= 0) ? true : false; // Если атрибут неотрицательный, то он считается милликомандой
+		case 2: if (((IC_type)Point)->at(Ind / 3).Load.Point == nullptr) return false; t = ((IC_type)Point)->at(Ind / 3).Load.Type;
+		}
+	return Point != nullptr && (t >> 1 == DAtr);
+}; // Милликоманда?
+
+bool LoadPoint::isAtrMk() { // Атрибут или милликоманда?
+	if (Point == nullptr) return false;
+	register unsigned int t = Type;
+	if (Type >> 1 == DLoadVectInd) {
+		register int N = ((LoadVect_type)Point)->size();
+		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return false;
+		t = ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Type;
+	}
+	else if (Type >> 1 == DICInd)
+		if (Ind < 0 || Ind / 3 >= ((IC_type)Point)->size()) return false;
+		else switch (Ind % 3) {
+		case 0: return false;
+		case 1: return (Ind / 3 >= ((IC_type)Point)->at(Ind / 3).atr >= 0) ? true : false; // Если атрибут неотрицательный, то он считается милликомандой
+		case 2: if (((IC_type)Point)->at(Ind / 3).Load.Point == nullptr) return false; t = ((IC_type)Point)->at(Ind / 3).Load.Type;
+		}
+	return Point != nullptr && (t >> 1 == DMk || t >> 1 == DAtr);
+}; // Милликоманда?
+
+
 bool LoadPoint::isVect() {
 	if (Point == nullptr) return false;
 	register unsigned int t = Type;
@@ -337,6 +374,12 @@ bool LoadPoint::isVectIndVectInd()  // Индексированный элеме
 		case 2: if (((IC_type)Point)->at(Ind / 3).Load.Point == nullptr) return false; t = ((IC_type)Point)->at(Ind / 3).Load.Type;
 		}
 	return (t >> 1) == DLoadVectInd;
+}
+
+bool LoadPoint::isEmptyIC() // Определить указывает ли ссылка на пустую ИК
+{
+	if (!isIC()) return false;
+	return ((IC_type)Point)->size() == 0;
 }
 
 bool LoadPoint::isIC() // Определить указывает ли ссылка на ИК
@@ -529,6 +572,7 @@ long int LoadPoint::toInt(long int define) { // Перевод в integer
 	case Ddouble: return (long int)*(double*)LP.Point; break;
 	case Dfloat: return (long int)*(float*)LP.Point; break;
 	case DMk:
+	case DAtr:
 	case Dint: return *(long int*)LP.Point; break;
 	case Dbool: return *(bool*)LP.Point; break;
 	case Dstring: return atoi((*(string*)LP.Point).c_str());
@@ -1127,7 +1171,9 @@ int LoadPoint::Write(LoadPoint x) // Записать величину из на
 			return 0;
 		}
 	}
-	LP = x.Clone();
+	//LP = x.Clone();
+	if(LP.Type==TLoad)
+		*(LoadPoint*)LP.Point = x;
 	return 0;
 }
 template <typename T>
@@ -1339,18 +1385,18 @@ void LoadPoint::Copy(LoadPoint LP)
 		Point = LP.Point;
 		return;
 	}
-	switch (Type)
+	switch (Type>>1)
 	{
-	case Cstring: Point = new string(*(string*)LP.Point); break;
-	case Cint: Point = new int(*(int*)LP.Point); break;
-	case Cfloat: Point = new float(*(float*)LP.Point); break;
-	case Cdouble: Point = new double(*(double*)LP.Point); break;
-	case Cchar: Point = new char(*(char*)LP.Point); break;
-	case Cbool: Point = new bool(*(bool*)LP.Point); break;
-	case CPPoint: Point = new (void*)(*(void**)LP.Point); break;
-	case CIP: // ???
+	case Dstring: Point = new string(*(string*)LP.Point); break;
+	case Dint: Point = new int(*(int*)LP.Point); break;
+	case Dfloat: Point = new float(*(float*)LP.Point); break;
+	case Ddouble: Point = new double(*(double*)LP.Point); break;
+	case Dchar: Point = new char(*(char*)LP.Point); break;
+	case Dbool: Point = new bool(*(bool*)LP.Point); break;
+	case DPPoint: Point = new (void*)(*(void**)LP.Point); break;
+	case DIP: // ???
 		break;
-	case CIC:
+	case DIC:
 		Point = ICCopy(LP).Point;
 		break;
 	}
@@ -1661,6 +1707,9 @@ void FU::CommonMk(long int Mk, LoadPoint Load, FU* Sender)
 	}
 	switch (Mk)
 	{
+	case 937: // MkRedirectSet Установть МК для переадресации на другое ФУ (устанавливается начало диапазона МК для другого ФУ
+		MkRedirect = Load.toInt();
+		break;
 	case 936: //ExecCouterSet Установить количество повторений программы
 		ExecRepeat = Load.toInt(1);
 		break;
@@ -1881,14 +1930,19 @@ void FU::CommonMk(long int Mk, LoadPoint Load, FU* Sender)
 	case 917: // EventserSet Установить указатель на контроллер событий
 		if (Modeling == nullptr) Modeling = new FUModeling();
 		Modeling->eventser = (FU*)Load.Point;
-		break;	}
+		break;	
+	case 938: // Заблокировать выполнение всех программ для ФУ
+		ProgsBlock = Load.toBool();
+		break;
+}
+
 }
 
 // Запуск программы
 // CycleType тип цикла: 0 - без цикла, 1 - цикл, 2 - цикл с постусловием
 void FU::ProgExec(void* UK, unsigned int CycleMode, FU* ProgBus, vector<ip>::iterator* Start) // Исполнение программы из ИК
 {
-
+	if (ProgsBlock) return;
 	if (UK == nullptr)
 		if (Prog != nullptr)
 			UK = Prog;
@@ -1910,7 +1964,7 @@ void FU::ProgExec(void* UK, unsigned int CycleMode, FU* ProgBus, vector<ip>::ite
 			CycleStop = 0; // Счетчик выходов из циклов (если отрицательная величина, то Продолжение цикла)
 			for (auto i = Start == nullptr ? Uk->begin() : *Start; i != Uk->end(); i++)
 			{
-				if (i->atr == GotoAtr) // Переход на другую ИК
+				if (i->atr == SubIC) // Переход на другую ИК
 				{
 					ProgExec(i->Load, CycleMode, ProgBus, Start);
 					return;
@@ -2018,7 +2072,7 @@ void FU::MkExec(LoadPoint Mk, LoadPoint Load, void* Receiver, bool Ext) // Вы�
 	if (Mk.Point!=nullptr && Mk.isInt() && Mk.Point != nullptr)
 	{
 		register long MK = Mk.toInt();
-		if (MK < FUMkRange && !Ext) // Если МК адресована сомому ФУ
+		if (MK < FUMkRange && !Ext) // Если МК адресована самому ФУ
 			ProgFU(MK, Load, this);
 		else
 			if (Receiver != nullptr)
@@ -2421,7 +2475,7 @@ bool AtrProgExec(vector<ip>* Prog, long int Atr, FU* Bus, bool AfterContinue)
 	return false;
 }
 
-ip* AtrFind(void* IC, long int Atr) // Поиск в ИК ИП с заданным атрутом
+ip* AtrSearchIP(void* IC, long int Atr) // Поиск в ИК ИП с заданным атрутом
 {
 	if (IC == nullptr) return nullptr;
 	auto uk = (*(IC_type)IC).begin();
@@ -2575,3 +2629,102 @@ LoadPoint CopyAdrCorrect(LoadPoint OriginalIC, LoadPoint CopyIC, LoadPoint Adr, 
 	}
 	return {};
 }
+
+string LoadMnemoToStr::LoadConv(LoadPoint Load) // Перевод в текст нагрузки
+{
+	if(Load.isNil()) return "";
+	if (Load.isAtrMk()) return AtrConv(Load.toInt());
+	//if (Load.isInt())return AtrConv(Load.toInt()); // !!! Заглушка
+	return Load.toStr(); // Фесли не распознано
+}
+
+string LoadMnemoToStr::AtrConv(long Atr)           //  Перевод в текст Атрибута
+{
+	if ((void*)MnemoList == nullptr) return to_string(Atr);
+	bool ProgsBlock = MnemoList->ProgsBlock;
+	MnemoList->ProgsBlock = true; // Заблокировать выполнение всех программа для ФУ поиска лексем
+	if (Atr < 0) { // Атрибут
+		LoadPoint LP = {0,nullptr};
+		void* UK=nullptr;
+		vector<ip> IP = { { _AtrAtr, {Cint, &Atr} } };
+		vector<ip> IP2 = { { _MnemoAtr, {0, nullptr} }};
+		MnemoList->ProgFU(_ListFindAndMk, { CIC, (void*)&IP });
+		MnemoList->ProgFU(_ListFindAndLineMk, { CIC, (void*)&IP2 });
+//		MnemoList->ProgFU(415, { TIP, &UK });
+		MnemoList->ProgFU(_ListLoadOutMk, { TLoad, &LP });
+		if (LP.isNil()) return to_string(Atr);
+		MnemoList->ProgsBlock = ProgsBlock;
+		return LP.toStr();
+	}
+	else // Милликоманда
+	{
+		long Mk = Atr;
+		long ShortMk = Mk % MkRange;
+		long MkRangeStart = Mk - ShortMk;
+		MnemoList->ProgsBlock = true;
+		vector<ip> IP = { { _FUMkBegRangeAtr, {Cint, &MkRangeStart} } };
+		vector<ip> IPMkList = { { _MkListAtr, {0, nullptr} } };
+		vector<ip> IPMk = { { _MkAtr, {Cint, &ShortMk} } };
+		vector<ip> IPMnemo = { { _MnemoAtr, {0, nullptr} } };
+		string FuName, MkName;
+		// Поиск Атрибута Диапазона МК
+		LoadPoint Uk = { 0, nullptr };
+		MnemoList->ProgFU(_ListFindAndMk, { CIC, &IP });
+		MnemoList->ProgFU(_ListLoadOutMk, { TLoad, &Uk });
+		if (Uk.Point == nullptr) return to_string(Atr);
+		// Поиск имени ФУ
+		Uk = { 0, nullptr };
+		MnemoList->ProgFU(_ListFindAndLineMk, { CIC, &IPMnemo });
+		MnemoList->ProgFU(_ListLoadOutMk, { TLoad, &Uk });
+		if (Uk.Point == nullptr) return to_string(Atr);
+		FuName=Uk.toStr(); // Запомнить название ФУ
+
+		// Поиск списка списка МК
+		Uk = { 0, nullptr };
+		MnemoList->ProgFU(_ListFindAndLineMk, { CIC, &IPMkList });
+		MnemoList->ProgFU(_ListLoadOutMk, { TLoad, &Uk });
+		if (Uk.Point == nullptr) return to_string(Atr);
+
+		MnemoList->ProgFU(_ListSubDownMk, { CAtr, &_MkListAtr }); // Переход в список МК
+		  
+		//Поиск МК
+		Uk = { 0, nullptr };
+		MnemoList->ProgFU(_ListFindAndMk, { CIC, &IPMk });
+		MnemoList->ProgFU(_ListLoadOutMk, { TLoad, &Uk });
+		if (Uk.Point == nullptr)
+		{
+			MnemoList->ProgFU(_ListSubUpMk, { 0, nullptr }); // Возвращение к корневому списку
+			return to_string(Atr);
+		}
+		// Поиск мнемоники МК
+		Uk = { 0, nullptr };
+		MnemoList->ProgFU(_ListFindAndLineMk, { CIC, &IPMnemo });
+		MnemoList->ProgFU(_ListLoadOutMk, { TLoad, &Uk });
+		if (Uk.Point == nullptr) return to_string(Atr);
+		MkName=Uk.toStr(); // Запомнить название Mk
+
+		MnemoList->ProgFU(_ListSubUpMk, { 0, nullptr }); // Возвращение к корневому списку
+
+		MnemoList->ProgsBlock = ProgsBlock;
+		return FuName + "." + MkName;
+	}
+}
+	void LoadMnemoToStr::ListSet(LoadPoint Load) // Установить ссылку на список или ФУ списка
+	{
+		if (Load.isNil()) // Обнуление указателя на ФУ список
+		{
+			//if (MnemoList != nullptr && !MnemoListExt) delete (List*)MnemoList;
+			MnemoList = nullptr;
+		}
+		else if (Load.isFU()) {
+			//if (MnemoList != nullptr && !MnemoListExt) delete (List*)MnemoList;
+			MnemoList = (FU*)Load.Point;
+		}
+//		else if (Load.isIC())
+//		{
+//			if (MnemoList == nullptr)
+//				MnemoList = new List(Bus, nullptr);
+//			MnemoList->ProgFU(1, Load, nullptr); // Установка списка лексем в ФУ списка
+//		}
+	}
+

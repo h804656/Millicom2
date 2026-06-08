@@ -193,39 +193,19 @@ bool Search::FindXor(LoadPoint obj)
 		}
 
 	if (null_check()) return false;
-
-	vector<vector<ip>::iterator > i_st; // Стек для рекурсии
-	vector<IC_type> i_ICstack; // Стек для рекурсии
-	auto i_IC = ((IC_type)Template.Point);
-	auto i = ((IC_type)Template.Point)->begin();
-	while (1) {
-		for (; Count < 2 && i != ((IC_type)Template.Point)->end() && (Prog_atr < 0 || i->atr != Prog_atr); i++)
+	for (auto i = ((IC_type)Template.Point)->begin();
+	Count<2 && i != ((IC_type)Template.Point)->end() && (Prog_atr < 0 || i->atr != Prog_atr); i++)
+	{
+		if (MkAtr.count(i->atr)) continue;
+		for (auto j = ((vector<ip>*)(Obj.Point))->begin();
+		Count<2 && j != ((vector<ip>*)(Obj.Point))->end() && (Prog_atr < 0 || j->atr != Prog_atr); j++)
 		{
-			if (MkAtr.count(i->atr)) continue;
-			vector<vector<ip>::iterator > j_st; // Стек для рекурсии
-			vector<IC_type> j_ICstack; // Стек для рекурсии
-			auto j_IC = (vector<ip>*)(Obj.Point); // ИК, в которой производится поиск
-			auto j = ((vector<ip>*)(Obj.Point))->begin();
-			while (1) {
-				for (; Count < 2 && j != j_IC->end() && (Prog_atr < 0 || j->atr != Prog_atr); j++)
-				{
-					if (MkAtr.count(j->atr)) continue;
-					if (IPCmp(i._Ptr, j._Ptr))
-					{
-						Count++;
-						IPTemplRezPoint = i._Ptr;
-						IPRezPoint = j._Ptr;
-					}
-				}
-				if (!j_st.size())
-					break;
-				else
-				{
-					j_IC = j_ICstack.back();
-					j = j_st.back();
-					j_ICstack.pop_back();
-					j_st.pop_back();
-				}
+			if (MkAtr.count(j->atr)) continue;
+			if (IPCmp(i._Ptr, j._Ptr))
+			{
+				Count++;
+				IPTemplRezPoint = i._Ptr;
+				IPRezPoint = j._Ptr;
 			}
 		}
 	}
@@ -277,9 +257,9 @@ bool Search::FindAnd(LoadPoint obj) // Поиск
 		//	IP_Num = ;
 			return true;
 		}
+	auto IC = (vector<ip>*)(Obj.Point); // ИК, в которой производится поиск
 	vector<vector<ip>::iterator > i_st; // Стек для рекурсии
 	vector<IC_type> i_ICstack; // Стек для рекурсии
-	auto IC = (vector<ip>*)(Obj.Point); // ИК, в которой производится поиск
 	auto i = ((vector<ip>*)(Obj.Point))->begin();
 	while(1) {
 		for (; i != IC->end(); i++)
@@ -293,31 +273,8 @@ bool Search::FindAnd(LoadPoint obj) // Поиск
 				continue;
 			}
 			if (MkAtr.count(i->atr)) continue;
-
-			vector<vector<ip>::iterator > j_st; // Стек для рекурсии
-			vector<IC_type> j_ICstack; // Стек для рекурсии
-			auto j_IC = ((IC_type)Template.Point);
 			auto j = ((IC_type)Template.Point)->begin();
-			while (1) {
-				for (; j != j_IC->end() && (!IPCmp(i._Ptr, j._Ptr) || (MkAtr.count(j->atr))); j++)
-					if (j->atr == SubIC)
-					{
-						j_ICstack.push_back(j_IC);
-						j_st.push_back(j + 1);
-						j_IC = ((IC_type)j->Load.Point);
-						j = ((IC_type)j->Load.Point)->begin();
-						continue;
-					}
-				if (!j_st.size())
-					break;
-				else
-				{
-					j_IC = j_ICstack.back();
-					j = j_st.back();
-					j_ICstack.pop_back();
-					j_st.pop_back();
-				}
-			}
+			for (; j != ((IC_type)Template.Point)->end() && (!IPCmp(i._Ptr, j._Ptr) || (MkAtr.count(j->atr))); j++);
 			if (j == ((IC_type)Template.Point)->end()) break;
 			if (IPTemplRezPoint == nullptr)
 			{

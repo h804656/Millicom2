@@ -1,0 +1,180 @@
+// - обозначение переведенных в комментарии=true  старых ФУ
+\* date *\ //- последняя дата изменения или добавления строк и ФУ
+
+NewFU={Mnemo="Main_Bus" MkBegRange=1000 FUType=FUBusNew} // Описание Bus
+
+\\ Для создания индексного файла сначала надо запустить программу !!!!
+ CapsManager.IndexVectCreate=20000
+ CapsManager.IpIcIdOutMk=MainBus.IpIcIdSet
+ CapsManager.IpIcIdOutMk=VariableManager.IpIcIdSet
+ CapsManager.IpIcIdOutMk=ListSyntez.IpIcIdSet
+ MainBus.ModeSet=1
+\\ -------------------------------------- \\
+MainBus.FUTypeCorrectSet=-96 // Корректировка номера типа ФУ для переноса на новую ОА-платформу
+
+NewFU={Mnemo="Console" FUType=FUConsNew Hint="Консоль для вывода логов"}
+NewFU={Mnemo="Str_Gen" FUType=FUStrGenNew Hint="Генератор строк"}
+NewFU={Mnemo="Stack" FUType=FUListNew Hint="Программный стек для генераци ОА-графа"}
+NewFU={Mnemo="Synthes" FUType=FUListNew Hint="ФУ Список для генерации выходного ОА графа"}
+NewFU={Mnemo="MnemoTable" FUType=FUListNew Hint="Таблица мнемоник"}
+NewFU={Mnemo="Lex" FUType=FULexNew Hint="Устройство лексического разбора"}
+NewFU={Mnemo="AtrCounter" FUType=FUIntAluNew Hint="Счетчик атрибутов"}
+NewFU={Mnemo="MkCalc" FUType=FUIntAluNew Hint="Калькулятор для вычисления индекса МК"}
+NewFU={Mnemo="Root" FUType=FUListNew Hint="Корневой узел графа состояний"}
+NewFU={Mnemo="RootRoot" FUType=FUListNew Hint="Самый корневой узел графа состояний"}
+NewFU={Mnemo="MnemoAnalysis" FUType=FUListNew}
+NewFU={Mnemo="ConstWait2" FUType=FUListNew}
+NewFU={Mnemo="VarIniWait" FUType=FUListNew}
+NewFU={Mnemo="AtrAtr" FUType=FUListNew}
+NewFU={Mnemo="AtrAtr" FUType=FUListNew}
+NewFU={Mnemo="AtrAtr3" FUType=FUListNew}
+NewFU={Mnemo="MkWait" FUType=FUListNew}
+NewFU={Mnemo="EqualWait" FUType=FUListNew}
+NewFU={Mnemo="ListAfter" FUType=FUListNew}
+NewFU={Mnemo="ListAfterMnemo" FUType=FUListNew}
+NewFU={Mnemo="MkWait2" FUType=FUListNew}
+NewFU={Mnemo="FUAfter" FUType=FUListNew}
+NewFU={Mnemo="FUAfter2" FUType=FUListNew}
+NewFU={Mnemo="EqualAfter" FUType=FUListNew}
+NewFU={Mnemo="EqVar" FUType=FUListNew}
+NewFU={Mnemo="MnemoLoad" FUType=FUListNew}
+NewFU={Mnemo="LoadVar" FUType=FUListNew}
+NewFU={Mnemo="BrackLoadVar" FUType=FUListNew}
+NewFU={Mnemo="LoadAfterLoadAfter" FUType=FUListNew}
+NewFU={Mnemo="VectNext5" FUType=FUListNew}
+NewFU={Mnemo="VectNext4" FUType=FUListNew}
+NewFU={Mnemo="VectWait" FUType=FUListNew}
+NewFU={Mnemo="ConstWait" FUType=FUListNew}
+NewFU={Mnemo="ALEStart" FUType=FUListNew Hint="Начальное состояние распознания АЛВ"}
+
+MainBus.PartialResetSet \\ Запомнить число созданных ФУ
+MainBus.ModeSet=2
+
+\\Console.OutLn="CompileCC"
+
+Sep*-4
+Var*-14
+MkExec*-304 // МК для последующего выполнения
+MkExtend*-25 // Расширенная МК
+End*-27 \\ Конец чего-либо
+FU
+
+Lex.UnicAtrSet=Mnemo
+Lex.UnicMkSet=MnemoTable.FindAnd
+Lex.StopProgSet={Str_Gen.Stop}
+
+CommonMkTable \\ Общие МК
+	>{Mnemo="ContextOut" Mk=995 Hint="Выдать указатель на контекст ФУ"}
+	>{Mnemo="ContextOutMk" Mk=999 Hint="Выдать милликоманду с указателем на контекст ФУ"}
+
+ConsMkList
+	>{Mnemo="Out" Mk=1 Hint="Печать"}
+	>{Mnemo="OutLn" Mk=2 Hint="Печатьс переводом строки"}
+	>{Mnemo="LnOut" Mk=3 Hint="Перевод строки и печать"}
+	>{Mnemo="LnOutLn" Mk=4 Hint="Перевод строки, печать и перевод строки"}
+	>{Mnemo="Ln" Mk=10 Hint="Перевод строки"}
+	>{Comment="Input" Hint="Запуск миллипрограмм" ListSub=
+		>{Mnemo="Input" Hint="Ввод данных"}
+		>{Mnemo="InputMk" Hint="Ввод данных и выдача МК с ними"}
+	}
+	>{Comment="ComonMk" Hint="Запуск миллипрограмм" ListSub=CommonMkTable}
+
+BusMkList
+	>{MkExtend=1 Mnemo="MakeFU" Hint="Создать ФУ (в нагрузке передаётся тип ФУ)"}
+	>{Mk=5 Mnemo="ProgExec" Hint="Выполнить последовательность МК из ИК"}
+	>{Mk=10 Mnemo="FileOldProgExec" Hint="Выполнить последовательность МК из индексного файла старого формата"}
+	>{Mk=20 Mnemo="NFUOut" Hint="Выдать количество ФУ, подключенных к шине"}
+	>{Mk=20 Mnemo="NFUOutMk" Hint="Выдать МК с количеством ФУ, подключенных к шине"}
+
+ListMkList
+	>{Mnemo="Set" Mk=1 Hint="Установить ссылку на список"}
+	>{Comment="ComonMk" Hint="Запуск миллипрограмм" ListSub=CommonMkTable}
+
+MnemoTable.Set=
+>{Mnemo="Mnemo" Atr=-2 Hint="Атрибут объекта"}
+>{Mnemo="Atr" Atr=-8 Hint="Атрибут"}
+>{Mnemo="End" Atr=End Hint="Атрибут конца чего-то"}
+>{Mnemo="ListLine" Atr=-80 Hint="Атриут линии списка"}
+>{Mnemo="Obj" Atr=-6 Hint="Атрибут объекта"}
+>{Mnemo="ListSub" Atr=ListSub Hint="Подсписок"}
+>{Mnemo="Mk" Atr=Mk Hint="Атрибут МК"}
+>{Mnemo="FUType" Atr=FUType Hint="Тип ФУ"}
+>{Mnemo="FUTypeDef" Atr=FUTypeDef Hint="Определитель типа ФУ (применяется при описании типа ФУ в таблице мнемоник)"}
+>{Mnemo="pi" Const=3.14159}
+>{Mnemo="MkBegRange" Atr=MkBegRange Hint="Начало диапазона адресов Мк для ФУ"}
+>{Mnemo="Hint" Atr=Hint Hint="Всплывающая подсказка"}
+>{Mnemo="Comment" Atr=Comment Hint="Всплывающая подсказка"}
+>{Mnemo="FUBus" FUTypeDef=0 MkList=BusMkList Hint="Типы ФУ Шина"}
+>{Mnemo="FUCons" FUTypeDef=1 MkList=ConsMkList Hint="Типы ФУ Консоль"}
+>{Mnemo="FUList" FUTypeDef=5 MkList=ListMkList Hint="Типы ФУ Консоль"}
+>{Mnemo="Cons" MkBegRange=10000 FUType=1 MkList=ConsMkList} \\!!!
+>{Mnemo="List" MkBegRange=11000 FUType=5 MkList=ListMkList} \\!!!
+>{Mnemo="Bus" MkBegRange=1000 MkList=BusMkList Hint="Главная коммуникационная шина"}
+>{Mnemo="NewFU" MkExtend=Main_Bus.MakeFU Hint="МК создания нового ФУ (на входе ссылкна и ИК с описанием ФУ)"}
+ConsMkList!
+ListMkList!
+BusMkList!
+
+//MnemoTable.ContextOutMk=Console.MnemoTableSet \\ Настроить таблицу мнемоник для ФУ консоли
+\\MnemoTable.OutMk=Console.OutLn
+MnemoTable.SuccessProgSet={FUListNew.IpSecondOutMk=Lex.SendToReceiver} \\Передать описание лексемы лексеру
+MnemoTable.FailProgSet={Console.OutLn="Mnemo is not faund"
+   FUListNew.ReceivedOutMk=Console.OutLn
+   FUListNew.ReceivedOutMk=Lex.SendToReceiver}
+Synthes.LineCopyAdd \\ Начальная ИК для синтезируемого ОА графа
+\\Synthes.OutMk=Console.OutLn
+
+\**\RootRoot.Set=
+>{End Console.OutLn="End of compiling"}
+>RootMk{MkExtend Atr Lex.ReceiverMkSet=EqualWait.FindAnd Console.OutLn="RootMk"
+	Synthes.LastAttach
+	FUListNew.ReceivedLoadOutMk=Synthes.LastAtrSet	
+}
+>RootSep{Sep="." Lex.ReceiverMkSet=MkWait.FindAnd Console.OutLn="RootDot"}
+>RootFU{MkBegRange Lex.ReceiverMkSet=FUAfter.FindAnd Console.OutLn="RootFU"}
+>{Mnemo Lex.ReceiverMkSet=MnemoAnalysis.FindAnd Console.OutLn="RootMnemo"}
+>{0 Console.OutLn="Error" Lex.Stop}
+
+\**\Root.Set=
+>RootMk
+>RootSep
+>RootFU
+RootMk! RootSep! RootFU!
+
+
+\**\FUAfter.Set=
+>{Sep="." MnemoTable.SubDown=MkList Lex.ReceiverMkSet=MkWait.FindAnd Console.OutLn="FUAfter ."}
+>{Sep="(" Lex.ReceiverMkSet=Root.FindAnd Console.OutLn="FUAfter ."}
+>{0 Console.OutLn="'.' or '(' is expected" Lex.Stop}
+
+\**\MkWait.Set=
+>{Mk Lex.ReceiverMkSet=EqualWait.FindAnd Console.OutLn="MkWait Mk"
+	Synthes.LastAttach
+	Root.ReceivedLoadOutMk=MkCalc.Set
+	FUListNew.ReceivedLoadOutMk=MkCalc.Add
+	MkCalc.OutMk=Synthes.LastAtrSet
+	MnemoTable.SubRoot
+	//MnemoTable.OutMk=Console.OutLn
+	}
+>{0 Lex.ReceiverMkSet=Root.FindAnd}
+Root.PrefixProgSet={Stack.EmptyExec={FUListNew.MkRedirectSet=RootRoot.Reset}} \\ Переадресацая на главный корень, если стек пуст
+
+\**\EqualWait.Set=
+>{Sep="=" Lex.ReceiverMkSet=EqualAfter.FindAnd Console.OutLn="EqualWait ="}
+>{0 Lex.ReceiverMkSet=Root.FindAnd Lex.PrevOutMk}
+
+\**\EqualAfter.Set=
+>{Const ConstInt Var Mk MkExtend Atr Mnemo Lex.ReceiverMkSet=EqVar.FindAnd  Console.OutLn="EqualAfter Const"}
+>{0 Console.OutLn="Ip load is expected" Lex.Stop EqualAfter.ReceivedOutMk=Console.OutLn}
+
+\**\EqVar.Set=
+>{Sep="+" Sep="-" Sep="*" Sep="/" Sep="//" Lex.ReceiverPush=ALEStart.FindAnd Lex.PrevOutMk}
+>{0 Console.OutLn="EqVar else" Lex.ReceiverMkSet=Root.FindAnd EqualAfter.ReceivedLoadOutMk=Synthes.LastLoadSet}
+
+//Lex.ReceiverMkSet=Console.OutLn
+Lex.ReceiverMkSet=Root.FindAnd \\ Настроить начальное состояние распознающего автомата
+Lex.Lexing="Cons.LnOut=Atr"
+//Lex.Lexing="Atr=Atr"
+Lex.SendToReceiver={End} \\ Посылка лексемы-маркера конца файла
+Console.OutLn="------"
+Synthes.OutMk=Console.OutLn

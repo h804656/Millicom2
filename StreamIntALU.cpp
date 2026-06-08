@@ -541,7 +541,7 @@ void StreamIntALU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Load.Write(IpForMkAdrOut.atr);
 		break;
 	case 342: // RoutedAtrOutMk Выдать МК с атрибутом маршрутизируемой ИП
-		MkExec(Load, { Cmk, &IpForMkAdrOut.atr });
+		MkExec(Load, {CMk, &IpForMkAdrOut.atr });
 		break;
 
 	case 345: // RoadsAdd Добавить адрес в буфер адресов

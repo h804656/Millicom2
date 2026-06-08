@@ -12,7 +12,7 @@ public:
 	FU* TypeCopy() override; // Создать ФУ такого же типа (не копируя контекст
 	vector<IC_type> ListHead; // Ссылка на голову списка (вектор, т.к. список может быть многоуровневым)
 
-	ip* LineUk = nullptr; // Указатель на найленную строку списка
+	vector <ip*> LineUk = { nullptr }; // Указатель на найденную строку списка
 	long int LineNum = -1, LineNumOld = -1; // Номер первой совпадающей линии, номер предыдущей совпадающей линии
 	long int LineCount = 0; // Количество найденных строк
 	bool StopSearch = false; // Флаг прекращения поиска в текущей иерархии
@@ -32,7 +32,8 @@ public:
 	int *ReceiverMkUk = &ReceiverMk; // Указатель на Мк для выдаваемой лексемы
 	int LineCount = 0; // Количество найденных строк
 */	// -----
-	bool MultyLineMode = false, MultyListMode = false, BackSearchMode = false; //  Режимы поиска нескольки линий, иерархического списка и поиска в обратном направлении
+//	bool MultiLineMode = false,  
+    bool MultiListMode = false, BackSearchMode = false; //  Режимы поиска нескольки линий, иерархического списка и поиска в обратном направлении
 	bool BackListSerch = false; // Поиск вверх по списку (по иерархии)
 	long int LineAtr = SubObj; // Атрибут линии списка
 	set<int> SubListAtrs = { LineAtr };
@@ -40,8 +41,11 @@ public:
 	vector<int> LineStack; // Стек номеров линий
 	Search Searcher; // Устройство поиска
 	void *FailLineProg = nullptr; // Программа, выполняемая в случае неудачного поиска в текущей линии списка
-	void *FailProg = nullptr; // Программа, выполняемаЯ в случае неудачного поиска во всем  списке
-	void* SuссessLineProg = nullptr, * SuссessProg = nullptr;
+	void* FailProg = nullptr; // Программа
+	vector<void*> FailProgs; // Вектор подпрограмм, запускаемых при неудачном поиска на определенном уровне списка
+	void* SuссessLineProg = nullptr;
+	void* SuссessProg = nullptr; // подпрограмма, запускаемая при удачном поиске по списку
+	vector <void*> SuссessProgs; // Вектор подпрограмм, запускаемых при удачном поиска на определенном уровне списка
 	vector<ip> *DefProg = nullptr;
 	long int Mode = 0; // Режима работы списка 0 - список на основе ИК, 1 - список на основе хеш-таблицы
 

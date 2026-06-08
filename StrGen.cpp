@@ -26,7 +26,7 @@ void StrGen::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Receiver = Load.Point;
 		break;
 	case 21: //ReceiverMkSet Установить МК для приемника строк
-		if (Load.Type >> 1 == Dint) ReceiverMK = *(int*)Load.Point; break;
+		if (Load.Type >> 1 == Dint) ReceiverMK = Load.toInt(); break;
 	case 1: // SourceSet
 		break;
 	case 2: // SourceSetStart
@@ -66,11 +66,10 @@ void StrGen::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			str_buf[str_bufCount] = str;
 
 			LoadPoint Point;
-			Point.Type = 2;
+			Point.Type = Cstring;
 			Point.Point = &str;
 
 			((FU*)Receiver)->ProgFU(ReceiverMK, Point, this);
-			system("pause");
 		}
 		if (work) // выдача завершающей лексемы
 		{
@@ -157,7 +156,7 @@ FU* StrGen::Copy() // Программа копирования ФУ
 	return new StrGen(Bus, this);
 }
 
-FU* StrGen::TypeCopy() // Создать ФУ такого же типа (не копируя контекст
+FU* StrGen::TypeCopy() // Создать ФУ такого же типа (не копируя контекст)
 {
 	return new StrGen(Bus, nullptr);
 }

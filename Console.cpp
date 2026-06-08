@@ -6,8 +6,126 @@
 #include <sstream>
 #include <fstream>
 #include <cstdio>
+#include <io.h>      // _isatty/_fileno: gate ANSI colors on a TTY
 #include <regex>
 #include <iomanip>
+
+using namespace std;
+/* Коды цветов для ANSI-совместимых терминалов:
+Black: 30
+Red: 31
+Green: 32
+Yellow: 33
+Blue: 34
+Magenta: 35
+Cyan: 36
+White: 37
+Reset: 0
+*/
+static const char* Clr(const char* code) { static bool tty = _isatty(_fileno(stdout)) != 0; return tty ? code : ""; }
+
+void Console::LoadPrint(LoadPoint Load, string offset) // Печать нагрузки
+{
+	map<void*, int>* AdrMap=nullptr;
+	LoadPoint LP = Load.IndLoadReturn();
+	if (LP.Point == nullptr)
+	{
+		cout << "null";
+		return;
+	}
+	switch (LP.Type>>1)
+	{
+	case DAtr:	  cout << Clr("\033[1;35m") << MnemoToStr.AtrConv(Load.toInt()) << Clr("\033[0m"); break;
+	case DMk:     cout << Clr("\033[1;32m") << MnemoToStr.AtrConv(Load.toInt()) << Clr("\033[0m"); break;
+	case Dstring: cout << Clr("\033[1;33m") << quote << LP.toStr() << quote << Clr("\033[0m"); break;
+	case Dint:	  cout << LP.toInt(); break;
+	case Dfloat:  cout << LP.toFloat(); break;
+	case Ddouble: cout << LP.toDouble(); break;
+	case Dchar:   cout << LP.toChar(); break;
+	case Dbool:   cout << LP.toBool(); break;
+	case DIP:
+	case DIC:
+	{
+		if (LP.Type >> 1 == DIP){
+		
+			cout << MnemoToStr.AtrConv(((ip*)LP.Point)->atr) << ((((ip*)LP.Point)->Load.Type % 2 == 0) ? " = " : " # ");
+			cout << MnemoToStr.LoadConv(((ip*)LP.Point)->Load);
+			break;
+		}
+		bool FMap = false; // Флаг создания списка пройденных адресов ОА-графа
+		if (AdrMap == nullptr)
+		{
+			AdrMap = new map<void*, int>;
+			FMap = true;
+		}
+		if (AdrMap->count(LP.Point)) // Обнаружение зацикливания ОА-графа
+		{
+			cout << offset << "IC id: " << (*AdrMap)[LP.Point] << endl;
+			break;
+		}
+		(*AdrMap)[LP.Point] = AdrMap->size(); // Запомнить пройденную ИК для избежания зацикливания
+
+		if (!((IC_type)LP.Point)->size()) {
+			cout << offset << "Empry IC";
+			return;
+		}
+		for (auto i = ((IC_type)LP.Point)->begin(); i != ((IC_type)LP.Point)->end(); i++)
+		{
+			if (i->Load.Type >> 1 == DIP || i->Load.isIC())
+				cout << offset <<MnemoToStr.AtrConv(i->atr)<< " ->\n";
+			else
+				if (AtrMnemo.count(i->atr))
+					cout << offset << MnemoToStr.AtrConv(i->atr) << ((i->Load.Type % 2) ? " # " : " = ");
+				else
+					cout << offset << MnemoToStr.AtrConv(i->atr) << ((i->Load.Type % 2) ? " # " : " = ");
+			LoadPrint(i->Load, offset + "  "); // i->Load.print(AtrMnemo, offset + "  ", Sep, End, quote, ArrayBracketStart, ArrayBracketFin, VectCol, AdrMap);
+			if (i != ((IC_type)LP.Point)->end() - 1)
+				cout << endl;
+		}
+		if (FMap)  // Удачить таблицу пройденных адресов
+		{
+			AdrMap->clear();
+			delete AdrMap;
+		}
+		break;
+	}
+	case TLoadVect:
+	case CLoadVect: // Вектор нагрузок
+	{
+		cout << ArrayBracketStart;
+		register int c = 1;
+		for (auto i : *(vector<LoadPoint>*)LP.Point)
+		{
+			if (VectCol > 0 && c > 1 && (c - 1) % VectCol == 0)
+				cout << End;
+			//i.print(AtrMnemo, offset, Sep, End, quote, ArrayBracketStart, ArrayBracketFin);
+			LoadPrint(LP,offset);
+			if (c < ((vector<LoadPoint>*)
+				LP.Point)->size()) cout << Sep;
+			c++;
+		}
+		cout << ArrayBracketFin << endl;
+		break;
+	}
+	case TLoadVectInd:
+	case CLoadVectInd: // Вектор нагрузок
+	{
+		register int i = LP.Ind;
+		cout << "Vect Ind[" << LP.Ind << "] ";
+		if (((LoadVect_type)LP.Point)->size() > abs(i) or -i == ((LoadVect_type)LP.Point)->size())
+			((LoadVect_type)LP.Point)->at(i).print(AtrMnemo, offset, Sep, End, quote, ArrayBracketStart, ArrayBracketFin);
+		break;
+	}
+	default:
+		if (LP.Type >= 2000) // Печать матрицы и вектора
+		{
+			LP.MatrixPrint(LP.Type, LP.Point, AtrMnemo, offset, Sep, End, ArrayBracketStart, ArrayBracketFin);
+		}
+		else if (LP.Type >= 1000)
+			LP.VectorPrint(LP.Type, LP.Point, AtrMnemo, offset, Sep, End, ArrayBracketStart, ArrayBracketFin);
+		break;
+	}
+}
 
 void Console::ReportError(const string& where, const string& msg) {
 	cerr << "[Console::" << where << "] " << msg << endl;
@@ -197,7 +315,8 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		cout << prefix;
 		if (MK == 3 || MK == 4) cout << endl;
 		if (Load.Point != nullptr)
-			Load.print(AtrMnemo,"",Sep,End, quote, ArrayBracketStart,ArrayBracketFin, VectCol);
+			LoadPrint(Load);
+		//Load.print(AtrMnemo,"",Sep,End, quote, ArrayBracketStart,ArrayBracketFin, VectCol);
 		if (MK == 2 || MK == 4) cout << endl;
 		break;
 	case 5: // LoadInfoOut Вывести сведения о нагрузке
@@ -234,8 +353,8 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 25: // FileNameSet
 		filename = Load.toStr();
 		break;
-	case 30: // OutFileSet Установить файл для вывода
-		if(Load.Point==nullptr)
+	case 30: // OutFileSet Установить файл для вывода (при пустой нагрузке вывод на консоль)
+		if (Load.Point == nullptr)
 			ostream& out = cout;
 		else
 			freopen_s(&streamOut, Load.toStr().c_str(), "w", stdout);
@@ -250,7 +369,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 
 	case 35: // StdInFileSet Установить файл для ввода
 		if (Load.Point == nullptr)
-//			std::istream& in == cin;
+			//			std::istream& in == cin;
 			;
 		else
 			freopen_s(&streamIn, Load.toStr().c_str(), "r", stdin);
@@ -268,7 +387,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 
 	case 44: // TrueValSet
 		TrueVar.clear();
-		if(Load.Point!=nullptr)
+		if (Load.Point != nullptr)
 			TrueVar.push_back(Load.toStr());
 		break;
 	case 45: // TrueValAdd
@@ -297,7 +416,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		VarOutBuf.push_back({ -1, Load });
 		break;
 	case 62: //VarAdd Добавить адрес переменной для записи результата ввода
-		VarOutBuf.push_back({-1, Load});
+		VarOutBuf.push_back({ -1, Load });
 		break;
 	case 70: //TemplSet Установить шаблон для вывода
 		Template = Load.toStr();
@@ -312,7 +431,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		Load.Write(inStr);
 		break;
 	case 87: // InStrOutMk  Выдать МК с последней введенной строкой
-		MkExec(Load, {Cstring, &inStr});
+		MkExec(Load, { Cstring, &inStr });
 		break;
 	case 90: // TrueFalseClear Очистить буфер наименований true и false
 		False.clear();
@@ -338,13 +457,9 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		regex regular_matrix("^\\[(\\d+[,;]?\\s?)+\\]$"); //интовая матрица
 		regex regular_char("\\w{1}");
 
-
-
-
-
 		getline(cin, inStr);
 		Var.Clear(); // Очистить предыдущее значение
-	//	if (MK == 101 && Load.Point != nullptr) // Выдать МК
+		//	if (MK == 101 && Load.Point != nullptr) // Выдать МК
 		{
 			if (std::regex_match(inStr.c_str(), regular_float)) {
 
@@ -452,8 +567,8 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	}
 	case 105: //InputBool Ввод буленова значения
 	case 106: //InputBoolMk Ввод буленова значения и выдача МК с ним
-	//	if(неправильный формат)
-		if(false)
+		//	if(неправильный формат)
+		if (false)
 			ProgExec(InputFormatErrProg);
 		else
 			if (MK == 106) // Выдать МК
@@ -464,7 +579,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 110: //InputInt
 	case 111: //InputIntMk
 		break;
-// ......
+		// ......
 
 
 	case 200: // NoVarToOutProgSet Установить подрограмму реакции на ошибку "Нет переменной для ввода"
@@ -840,6 +955,18 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		}
 		break;
 	}
+
+	case 400: // MnemoTableSet Установить ссылку на ФУ мнемоник или список мнемоник
+		if (Load.isFU()){
+			MnemoToStr.MnemoList = (FU*)Load.Point;
+		MnemoToStr.MnemoListExt = true; // Установить флаг внешнего ФУ списка лексем
+	}
+		else {
+			MnemoToStr.MnemoList = new List(Bus, nullptr);
+			MnemoToStr.MnemoList->ProgFU(1, Load, Sender); // Установка списка лексем в ФУ списка
+			MnemoToStr.MnemoListExt = false; // Установить флаг внешнего ФУ списка лексем
+		}
+		break;
 	default:
 		CommonMk(MK, Load);
 		break;

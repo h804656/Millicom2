@@ -815,7 +815,7 @@ Console.OutLn="MnemoAnalysis ="
 >{Const Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Var}
   FUListNew.ReceivedLoadOutMk=MnemoTable.LastLoadSet
-  MnemoTable.LastLoadConstVarTypeSet=0
+  MnemoTable.LastVarTypeSet=0
   MnemoTable.LastPopMk
   Console.OutLn="VarIniWait Const"
   //MnemoTable.OutMk=Console.OutLn
@@ -1028,7 +1028,7 @@ Console.OutLn="FUAfter3 fin"
 }
 >{Const Lex.ReceiverMkSet=ALECheck2.FindAnd \* 10.03.2023 *\
   FUListNew.ReceivedOutMk=MnemoTable.LastAttach
- MnemoTable.LastLoadConstVarTypeSet
+ MnemoTable.LastVarTypeSet
 }
 >{Var Lex.ReceiverMkSet=ALECheck2.FindAnd} \* 10.03.2023 *\
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -27,7 +27,8 @@ void IndexFile::flattenCapsLevel(void* levelIC, vector<CapsEntry>& out)
 				ip.isMarker = false; ip.isNewFuParent = false; ip.newFuType = 0;
 				ip.isIcPtr = true; ip.sharedSrcIdx = seen->second;
 				out.push_back(ip);
-			} else {
+			}
+			else {
 				if (seen == _firstSeenIC.end()) _firstSeenIC[e.Load.Point] = (int)out.size();
 				CapsEntry pe; pe.atr = e.atr; pe.load = { 0, nullptr };
 				pe.isMarker = false; pe.isNewFuParent = false; pe.newFuType = 0;
@@ -121,10 +122,12 @@ void IndexFile::buildIndexVector()
 				while (p >= 0 && (skip[p] || CapsEntries[p].isMarker || capId[p] != parentCap)) p--;
 				parentSrc.push_back(p);
 				stack.push_back(nextCapId);
-			} else if (CapsEntries[i].atr == SubCapCloseAtr) {
+			}
+			else if (CapsEntries[i].atr == SubCapCloseAtr) {
 				if (stack.size() > 1) stack.pop_back();
 			}
-		} else {
+		}
+		else {
 			capId[i] = stack.back();
 		}
 	}
@@ -138,20 +141,17 @@ void IndexFile::buildIndexVector()
 	std::vector<int> capStart(nCaps, 0);
 	for (int c = 0; c < nCaps; c++)
 		if (!groups[c].empty()) capStart[c] = outIdx[groups[c][0]]; // sub-IC head slot (owner's f1 target)
-	// childCapOf[parentEntryIdx] = the capId owned by that parent line. Lets a shared-IC
-	// reference (isIcPtr) resolve to the FIRST occurrence's sub-IC head slot for its f1.
 	std::vector<int> childCapOf(M, -1);
 	for (int k = 1; k <= nextCapId; k++)
 		if ((size_t)(k - 1) < parentSrc.size() && parentSrc[k - 1] >= 0 && parentSrc[k - 1] < M)
 			childCapOf[parentSrc[k - 1]] = k;
-	// Format each row, placing it at its slot; emit in slot order afterwards.
 	std::vector<std::string> rowBySlot(N);
 	for (int c = 0; c < nCaps; c++) {
 		auto& g = groups[c];
 		int n = (int)g.size();
 		for (int j = 0; j < n; j++) {
 			int src = g[j];
-			int gi  = outIdx[src];
+			int gi = outIdx[src];
 			int f1 = (gi << 2) + 2; // default: load is the entry's own inline value (offset 2)
 			int f2 = 11;            // ConstPointType (loader ignores f2; kept for fidelity)
 			for (size_t k = 1; k < parentSrc.size() + 1 && k < (size_t)nCaps; k++) {
@@ -168,39 +168,38 @@ void IndexFile::buildIndexVector()
 				if (fk >= 1 && fk < nCaps && !groups[fk].empty()) { f1 = (capStart[fk] << 2) + 0; f2 = 1; }
 			}
 			int f3 = (j == n - 1) ? -1 : ((outIdx[g[j + 1]]) << 2); // next sibling in this IC
-			int f4 = (j == 0)     ? -1 : ((outIdx[g[j - 1]]) << 2); // prev sibling in this IC
+			int f4 = (j == 0) ? -1 : ((outIdx[g[j - 1]]) << 2); // prev sibling in this IC
 			if (!CapsEntries[src].isNewFuParent && !CapsEntries[src].isIcPtr && CapsEntries[src].atr < 0 && f1 == ((gi << 2) + 2)) {
 				auto& kld = CapsEntries[src].load;
 				unsigned int kdt = kld.Type >> 1;
 				if (kdt != Dstring && kdt != Dchar && kdt != Dbool && kdt != Dfloat && kdt != Ddouble && kld.toInt() == 0)
 					f1 = -1;
 			}
-			// Genuinely-NULL loads (argless action dispatches like MnemoTable.LastPopMk /
-			// Lex.SendToReceiver -- grammar ops with no `=arg`) must serialize f1=-1 so the loader
-			// rebuilds a NULL load. The reference has these NULL; leaving them inline makes the
-			// op's MkExec(Load) run MkExec(int-0)=MK-0, corrupting MnemoTable's ListHead -> the
-			// LastPopMk pop_back AV (var-init `A=1` crash). Precise: only when load.Point==null
-			// (does NOT touch genuine `=0` int args, whose Point is non-null).
 			if (!CapsEntries[src].isNewFuParent && !CapsEntries[src].isIcPtr
 				&& CapsEntries[src].load.Point == nullptr && f1 == ((gi << 2) + 2))
 				f1 = -1;
 			std::ostringstream row;
 			if (CapsEntries[src].isNewFuParent) {
 				row << 1001 << " I:" << CapsEntries[src].newFuType;
-			} else {
+			}
+			else {
 				long int outAtr = bus->rebaseAtr(CapsEntries[src].atr);
 				auto& ld = CapsEntries[src].load;
 				unsigned int dt = ld.Type >> 1;
 				row << outAtr << " ";
 				if (dt == Dchar) {
 					row << "C:" << ld.toStr() << "\"";
-				} else if (dt == Dstring) {
+				}
+				else if (dt == Dstring) {
 					row << "S:" << ld.toStr() << "\"";
-				} else if (dt == Dbool) {
+				}
+				else if (dt == Dbool) {
 					row << "B:" << (ld.toBool() ? "T" : "F");
-				} else if (dt == Dfloat || dt == Ddouble) {
+				}
+				else if (dt == Dfloat || dt == Ddouble) {
 					row << "D:" << ld.toDouble();
-				} else {
+				}
+				else {
 					row << "I:" << bus->rebaseAtr(ld.toInt());
 				}
 			}
@@ -211,7 +210,6 @@ void IndexFile::buildIndexVector()
 	for (auto& r : rowBySlot) builtRows.push_back(r);
 }
 
-// GatewayFile role: pure byte writer -- dump the pre-built rows (count + one line each) to disk.
 void IndexFile::IndexVectWrite(const string& path)
 {
 	ofstream out(path);

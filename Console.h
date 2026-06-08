@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include "List.h"
 
 struct FormatSpec
 {
@@ -34,6 +35,8 @@ public:
 class Console : public FU
 {
 private:
+	void LoadPrint(LoadPoint Load, string offcet = ""); // ѕечать нагрузки
+	LoadMnemoToStr MnemoToStr; // ѕреобразователь нагрузки в мнемонику и использованием таблицы лексем 
 	map<long int, string> AtrMnemo; // јтрибуты мнемоник
 	string prefix="";
 	string filename = "";

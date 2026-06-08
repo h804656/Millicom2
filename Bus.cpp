@@ -39,7 +39,7 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				delete FUs[i];
 			FUs.clear();
 			FUs.push_back(this);
-			FUs.push_back(this); // ������ �� - ��� ��� Bus
+			FUs.push_back(this); // Первый ФУ - это сам Bus
 			break;
 		case 1: // MakeFU ������� ��
 			{
@@ -82,8 +82,7 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			if(ipVect->size()>0) ProgExec( (*ipVect)[0], 0, this,nullptr);
 			break;
 		case 20: // NFUOut
-
-			Load.Write((int)FUs.size());
+			Load.Write((long int)FUs.size());
 			break;
 		case 21: // NFUOutMk
 		{
@@ -171,8 +170,37 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		case 155:// FUTypeCorrectSet ���������� ��������� ������ ���� �� (��� �������� ��-��������� �� ������ ��-���������)
 			FUTypeCorrect = Load.toInt();
 			break;
-
-		case 200: // ArgcSet ���������� ���������� ���������� ��������� ������
+		case 160: // FuNextSwap Поменять местами указанный и следующий ФУ (на входе начало диапазона МК для первого ФУ)
+			if (FUs.size() < 2) break;
+				if(Load.isNil())
+					swap(FUs[Ind], FUs[Ind + 1]);
+				else
+				{
+					int N = Load.toInt() / FUMkRange;
+					if(N+1<FUs.size())
+						swap(FUs[N], FUs[N + 1]);
+				}
+			break;
+		case 161: // FuSwapSet Установить первой ФУ для обмена (на входе начало диапазона МК для второго ФУ)
+			if (FUs.size() < 2) break;
+			if (Load.isNil())
+				SwapInd = Ind;
+			else
+			{
+				SwapInd = Load.toInt() / FUMkRange;
+				swap(FUs[Ind], FUs[Ind - 1]);
+			}
+			break;
+		case 162: // FuSwap Поменять местами два ФУ
+		{
+			if (FUs.size() < 2 || SwapInd < 0 || SwapInd >= FUs.size()) break;
+			int N = Load.toInt() / FUMkRange;
+			if (N / FUMkRange < 2 || N >= FUs.size()) break;
+			swap(FUs[N], FUs[SwapInd]);
+			SwapInd = -1;
+			break;
+		}
+		case 200: // ArgcSet Установить количество аргументов командной строки
 			argc = Load.toInt();
 			break;
 		case 201: // ArgcOut ������ ���������� ���������� ��������� ������
@@ -191,12 +219,12 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 				}
 			}
 			break;
-		case 204: // ArgvOut ������ ���������� ���������� ��������� ������
+		case 204: // ArgvOut Выдать аргумент командной строки
 			if (argc >= 0 && argc < argv.size())
 				Load.Write(argv[argInd]);
 			break;
-		case 207: // ArgvOutMk ������ �� � ����������� ���������� ��������� ������
-			if (argc >= 0 && argc < argv.size())
+		case 205: // ArgvOutMk Выдать МК с аргументом командной строки
+			if (argc >= 0 && argc <= argv.size())
 				MkExec(Load, { Cstring, &argv[argInd] });
 			break;
 		case 206: // ArgByIndOut ������ �������� ��������� ������ �� �������
@@ -217,6 +245,18 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		case 216: // ArgcBiggerEq ���������, ���� ���������� ���������� ������ ��� ����� �������� � ��������
 			if (Load.toInt() && Load.toInt() <= argc)
 				ProgExec(Prog);
+			break;
+			// Различные служебные МК для общих нужд
+		case 250: // Del Удаление еременной или константы
+			Load.VarDel();
+			break;
+		case 251: // DelIc Удаление ИК
+			if (Load.isIC())
+				ICDel(Load);
+			break;
+		case 252: // DelGraph Удаление ОА дерева/графа
+		//	if (Load.isIC())
+		//		GraphDel(Load);
 			break;
 
 		case 287: // CapsListRegister -- thin hook: capture the active CapsList FU pointer
