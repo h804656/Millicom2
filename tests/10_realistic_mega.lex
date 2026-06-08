@@ -1,7 +1,3 @@
-// Long real-OAP-shaped program touching every major construct:
-//   NewFU declaration, Var setup, Atr offset, Vector with Var elements,
-//   Brace subgraph, Mnemo(Atr) paren chain, ALE expressions,
-//   FU.MK with string and ALE arg, EqualAfter FU full chain.
 NewFU={Mnemo="L" FUType=FUListNew}
 A=1
 B=2
