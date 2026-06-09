@@ -170,6 +170,8 @@ ListMkTable
 >{Mk=263 Mnemo="MarkLastCopyOutMk"      Hint="Mark last copy, dispatch via Load MK"}
 >{Mk=451 Mnemo="BiggerExec"             Hint="Exec Load if LineNum increased"}
 >{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
+>{Mk=600 Mnemo="JsonSave" Hint="Dump the table to a JSON file"}
+>{Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
 
 // MnemoListMkTable: an exact duplicate of ListMkTable, used ONLY by the
 // "MnemoTable" self-row below. The .ind serializer (MakeIndexVect in
@@ -233,6 +235,8 @@ MnemoListMkTable
 >{Mk=263 Mnemo="MarkLastCopyOutMk"      Hint="Mark last copy, dispatch via Load MK"}
 >{Mk=451 Mnemo="BiggerExec"             Hint="Exec Load if LineNum increased"}
 >{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
+>{Mk=600 Mnemo="JsonSave" Hint="Dump the table to a JSON file"}
+>{Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
 
 LexMkTable
 >{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}
@@ -281,8 +285,6 @@ BusMkTable
 >{Mk=40 Mnemo="LastFUMkRangeOut" Hint="Write the most-recent FU's MK range to Load"}
 >{Mk=41 Mnemo="LastFUMkRangeOutMk" Hint="Dispatch the most-recent FU's MK range via Load MK"}
 >{Mk=155 Mnemo="FUTypeCorrectSet" Hint="Set FU type correction offset"}
->{Mk=253 Mnemo="IpBufWrite"      Hint="Сериализовать буфер в .ind"}
->{Mk=287 Mnemo="CapsListRegister" Hint="Capture the CapsList FU pointer on the Bus (dispatch with Sender=CapsList)"}
 
 
 // SelfMkTable: the generic receiver methods, indexed by bare Mk (range 0). FUListNew points the
@@ -304,12 +306,6 @@ AluSelfMkTable
 StrGenMkTable
 >{Mk=4 Mnemo="Stop" Hint="Halt the string generator"}
 
-// IndexFile FU method table (.ind emission FU, mirrors Delphi GatewayFile).
-IndexFileMkList
->{Mk=287 Mnemo="CapsListRegister" Hint="Capture the active CapsList accumulator FU"}
->{Mk=21  Mnemo="IndexVectWrite"   Hint="Write the built index vector to a .ind file"}
->{Mk=22  Mnemo="IndexVectFromList" Hint="Build the index vector from the caps tree"}
->{Mk=25  Mnemo="FileNameSet"      Hint="Set the output .ind path"}
 
 // Unknown mnemo: first try FUNameTable (the survivor copy of user-FU rows). On the self-host second
 // pass the MnemoTable.Set= rebuild has wiped the freshly re-registered FU-name rows, but their
@@ -384,7 +380,6 @@ MnemoTable.Set= //         mnemonic translation table
 >{Mnemo="FUGraphDisplayNew"  Lex.SendToReceiver={Const=25}}
 >{Mnemo="FUCons" 	 Lex.SendToReceiver={Const=1} Console.OutLn="FUCons !"}
 >{Mnemo="Bus" Hint="Главная шина" MkTable.Set=BusMkTable! Lex.SendToReceiver={FU=1000}}
->{Mnemo="IndexFile" MkTable.Set=IndexFileMkList! Lex.SendToReceiver={FU=58000}}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
 >{Mnemo="StrGenPeer" Hint="Template row for StrGen FUs" MkTable.Set=StrGenMkTable! Lex.SendToReceiver={FU=3000}}
 >{Mnemo="IntAluPeer" Hint="Шаблон для пользовательских IntAlu ФУ" MkTable.Set=IntAluMkTable! Lex.SendToReceiver={FU=7000}}
@@ -416,43 +411,43 @@ Root.Set=
 >{Mnemo Lex.ReceiverMkSet=MnemoAnalysis.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root Mnemo"
 }
 >{Mk Atr ConstInt Lex.ReceiverMkSet=EqualWait.FindAnd
   OAList.LastAttach
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
   OAList.LastAtrOutMk=MkCalc.Set
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root Mk/Atr"
 }
 >{Var Lex.ReceiverMkSet=Root.FindAnd
   Lex.ReceiverPush=ALE.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root Var->ALE"
 }
 >{FU FUType Lex.ReceiverMkSet=FUAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root FU/FUType"
 }
 >{Sep="." Lex.ReceiverMkSet=MkWait.FindOr
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MkTable.FindOr
   MkTable.SuccessProgSet={FUListNew.LineOutMk=Lex.SendToReceiver}
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root ."
 }
 >{HLPLOperator Lex.ReceiverMkSet=Root.FindAnd
   Lex.ReceiverPush=HLPL.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root HLPLOperator->HLPL"
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTied
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root > list (self-loop)"
 }
 >{Sep="}" Lex.ReceiverMkSet=Root.FindAnd
@@ -470,7 +465,7 @@ Root.Set=
   Stack.SuccessExec={Lex.ReceiverMkSet=ListAfterClose.FindAnd}
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Main_Bus.MkExec}
-  CapsList.OutMk=Main_Bus.CapsListRegister
+  CapsList.CapsListRegister
   Console.OutLn="Root }"
 }
 >{Sep="" Console.OutLn="End of program"
@@ -1100,5 +1095,6 @@ AleNegWait.Set=
 
 ////////////////////////////////////////////////////////////////////////////////
 Lex.ReceiverMkSet=Root.FindAnd
+MnemoTable.JsonSave="MnemoTable.json"
 
 //Lex.Lexing="x=1 y=2 Cons.OutLn=x"

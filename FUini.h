@@ -33,9 +33,8 @@ FU* StreamIntALUIni(FU* BusContext, FU* TEmpl);
 FU* StreamIntALUManagerIni(FU* BusContext, FU* TEmpl);
 FU* MatPlotIni(FU* BusContext, FU* TEmpl);
 FU* GraphDisplayIni(FU* BusContext, FU* TEmpl);
-FU* IndexFileIni(FU* BusContext, FU* TEmpl);
 
-const int NFUTypes = 27;
+const int NFUTypes = 26;
 
 typedef FU* (*FUiniProg)(FU*, FU*);
 
@@ -46,7 +45,7 @@ private:
 		ListIni, GraphTrasfIni, IntAluIni, InOutIni, AutomatManagerIni, NeuroIni,
 		NetManagerIni,SchedulerIni,EventserIni, MeanShiftIni, StreamFloatALUIni, GaussIni, ALUIni,
 		CellularAutomatIni, CellularAutomatManagerIni, RouterIni, GatewayIni, StreamFloatALUManagerIni,
-		StreamIntALUIni, MatPlotIni, GraphDisplayIni, IndexFileIni };
+		StreamIntALUIni, MatPlotIni, GraphDisplayIni };
 	 bool FErr = false; // ���� ������ ������� ��
 public:
 	int GetFuTypeCount() // ������ ���������� ����� ��

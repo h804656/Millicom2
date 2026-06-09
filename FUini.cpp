@@ -8,7 +8,6 @@
 #include "Lex.h"
 #include "Find.h"
 #include "List.h"
-#include "IndexFile.h"
 #include "GraphTransf.h"
 #include "ALU.h"
 #include "InOut.h"
@@ -62,7 +61,6 @@ int SizeOfFUType(unsigned int Type) // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿
 	case 25: return sizeof(StreamIntALU);
 	case 26: return sizeof(MatPlot);
 	case 27: return sizeof(GraphDisplay);
-	case 28: return sizeof(IndexFile);
 	}
 }
 
@@ -197,7 +195,3 @@ FU* GraphDisplayIni(FU* BusContext, FU* TEmpl)
 	return (FU*) new GraphDisplay(BusContext, TEmpl);
 }
 
-FU* IndexFileIni(FU* BusContext, FU* TEmpl)
-{
-	return (FU*) new IndexFile(BusContext, TEmpl);
-}

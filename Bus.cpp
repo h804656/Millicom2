@@ -259,9 +259,6 @@ void BusFU::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		//		GraphDel(Load);
 			break;
 
-		case 287: // CapsListRegister -- thin hook: capture the active CapsList FU pointer
-			if (capsListFu == nullptr && Sender != nullptr) capsListFu = Sender;
-			break;
 		default:
 			CommonMk(MK, Load);
 			break;

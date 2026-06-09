@@ -3,6 +3,7 @@
 #include "List.h"
 
 using namespace std;
+FU* List::sCapsList = nullptr;
 
 void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 {
@@ -1486,6 +1487,19 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		JsonConv.MnemoTableSet(Load);
 		break;
 	case 607: //MillirangeSet Установить диапазон милликоманд для ФУ
+		break;
+	case 608: // CapsListRegister -- capture this CapsList accumulator
+		sCapsList = this;
+		break;
+	case 609: // IndFileNameSet -- set the .ind output path
+		JsonConv.IndFileName = Load.toStr();
+		break;
+	case 612: // IndVectFromList -- build the .ind index vector from this List's caps
+		JsonConv.CapsListFu = this;
+		JsonConv.buildIndexVector((void*)Bus);
+		break;
+	case 613: // IndVectWrite -- write the built index vector to the .ind file
+		JsonConv.IndexVectWrite(JsonConv.IndFileName);
 		break;
 	default:
 		CommonMk(MK, Load, Sender);

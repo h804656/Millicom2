@@ -8,6 +8,7 @@ class List : public FU
 {
 public:
 	void ProgFU(long int MK, LoadPoint Load, FU* Sender=nullptr) override;
+	static FU* sCapsList; // captured CapsList accumulator (emitter reads this)
 	FU* Copy() override; // Программа копирования ФУ
 	FU* TypeCopy() override; // Создать ФУ такого же типа (не копируя контекст
 	vector<IC_type> ListHead; // Ссылка на голову списка (вектор, т.к. список может быть многоуровневым)

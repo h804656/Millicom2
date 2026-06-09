@@ -46,7 +46,6 @@ public:
 		}
 		return atr;
 	}
-	FU* capsListFu = nullptr;
 private:
 	void FUTypesIni();
 };

@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Consts.h"
 #include "Bus.h"
+#include "List.h"
 #include "Console.h"
 #include "StrGen.h"
 #include "Lex.h"
@@ -14,7 +15,6 @@
 #include "MeanShift.h"
 #include "ALU.h"
 #include "StreamFloatALU.h"
-#include "IndexFile.h"
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -32,6 +32,8 @@ static void Usage()
 	cerr << "  --lex <text>       Same, but the program text is given inline." << endl;
 	cerr << "  --run <path>       Compile & run <path>, printing only the program's output" << endl;
 	cerr << "                     (the compiler's own state-trace is suppressed)." << endl;
+	cerr << "  --out-dir <dir>    Directory prepended to both emitted files: the .ind" << endl;
+	cerr << "                     (IndVectWrite) and MnemoTable.json (JsonSave)." << endl;
 }
 
 int main(int argc, char* argv[])
@@ -111,6 +113,12 @@ int main(int argc, char* argv[])
 			outFile = argv[++i];
 			haveOutFile = true;
 		}
+		else if (a == "--out-dir" && i + 1 < argc)
+		{
+			string d = argv[++i];
+			if (!d.empty() && d.back() != '\\' && d.back() != '/') d += '\\';
+			JSON_OAConeverter::OutDir = d;
+		}
 		else if (a == "--help" || a == "-h")
 		{
 			Usage();
@@ -142,16 +150,6 @@ int main(int argc, char* argv[])
 	STR = indPath;
 	Bus.ProgFU(10, { Cstring, &STR });
 
-	IndexFile* idx = nullptr;
-	long idxAddr = 0;
-	if (!lexInputs.empty())
-	{
-		idx = new IndexFile(&Bus, nullptr);
-		Bus.FUs.push_back(idx);
-		idxAddr = Bus.FUMkRange * (long)(Bus.FUs.size() - 1);
-		idx->FUMkGlobalAdr = idxAddr;
-	}
-
 	string runTempOut;
 	if (runMode)
 	{
@@ -160,7 +158,10 @@ int main(int argc, char* argv[])
 				static_cast<Console*>(Bus.FUs[i])->Quiet = true;
 		if (!haveOutFile)
 		{
-			runTempOut = indPath + ".run.tmp.ind";
+			if (!JSON_OAConeverter::OutDir.empty())
+				runTempOut = "run.tmp.ind";
+			else
+				runTempOut = indPath + ".run.tmp.ind";
 			outFile = runTempOut;
 			haveOutFile = true;
 		}
@@ -190,14 +191,12 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if (haveOutFile && idx != nullptr)
+	if (haveOutFile && List::sCapsList != nullptr)
 	{
-		idx->FileName = outFile;                                   // == GatewayFile.FileNameSet
-		if (idx->CapsListFu == nullptr && Bus.capsListFu != nullptr)
-			idx->CapsListFu = Bus.capsListFu;
-		if (idx->CapsListFu != nullptr)
-			idx->ProgFU(idxAddr + 22, { Cint, nullptr }, nullptr); // phase 1: IndexVectFromList (build)
-		idx->ProgFU(idxAddr + 21, { Cint, nullptr }, nullptr);     // phase 2: IndexVectWrite
+		List* cl = (List*)List::sCapsList;
+		cl->ProgFU(609, { Cstring, &outFile }); // IndFileNameSet
+		cl->ProgFU(612, { Cint, nullptr });     // build (IndVectFromList)
+		cl->ProgFU(613, { Cint, nullptr });     // write (IndVectWrite)
 	}
 
 	if (runMode && !runTempOut.empty())
@@ -205,9 +204,9 @@ int main(int argc, char* argv[])
 		BusFU RunBus;
 		RunBus.ProgFU(200, { Cint, &argc });
 		RunBus.ProgFU(203, { Cchar, argv });
-		string rp = runTempOut;
+		string rp = JSON_OAConeverter::OutDir + runTempOut;
 		RunBus.ProgFU(10, { Cstring, &rp });
-		std::remove(runTempOut.c_str());
+		std::remove(rp.c_str());
 	}
 
 	return 0;

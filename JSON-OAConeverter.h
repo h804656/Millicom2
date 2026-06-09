@@ -5,8 +5,11 @@
 #include "Search.h"
 #include <string>
 #include <fstream>
+#include <vector>
+#include <map>
 
 using namespace std;
+class List;
 class JSON_OAConeverter : public FU {
 private:
 	IC_type MnemoCaps = nullptr;  // ”казатель на капсулу с мнемониками
@@ -27,4 +30,22 @@ public:
 	void MnemoCapsSet(LoadPoint LP) 
 	{ MnemoCaps = (IC_type) LP.Point; };
 	void MnemoTableSet(LoadPoint LP) { MnemoTable = (IC_type)LP.Point; };
+	// --- .ind serializer (merged from the former IndexFile FU) ---
+	struct CapsEntry {
+		long int atr; LoadPoint load; bool isMarker;
+		bool isNewFuParent = false; long int newFuType = 0; std::string newFuName;
+		bool isIcPtr = false; int sharedSrcIdx = -1;
+	};
+	std::vector<CapsEntry> CapsEntries;
+	std::map<void*,int> _firstSeenIC;
+	std::string IndFileName;
+	std::vector<std::string> builtRows;
+	FU* CapsListFu = nullptr;
+	static constexpr long int SubCapOpenAtr = -1000;
+	static constexpr long int SubCapCloseAtr = -1001;
+	void flattenCapsLevel(void* levelIC, std::vector<CapsEntry>& out);
+	void rebuildCapsFromList(class List* cl);
+	void buildIndexVector(void* busPtr);
+	void IndexVectWrite(const std::string& path);
+	static std::string OutDir; // --out-dir: prepended to .ind + .json output paths
 };
