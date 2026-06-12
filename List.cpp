@@ -1494,12 +1494,10 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 609: // IndFileNameSet -- set the .ind output path
 		JsonConv.IndFileName = Load.toStr();
 		break;
-	case 612: // IndVectFromList -- build the .ind index vector from this List's caps
-		JsonConv.CapsListFu = this;
+	case 614: // IndVectWrite -- build the .ind index vector from the registered CapsList
+		JsonConv.CapsListFu = (sCapsList != nullptr) ? sCapsList : this;
 		JsonConv.buildIndexVector((void*)Bus);
-		break;
-	case 613: // IndVectWrite -- write the built index vector to the .ind file
-		JsonConv.IndexVectWrite(JsonConv.IndFileName);
+		JsonConv.IndexVectWrite(Load.toStr());
 		break;
 	default:
 		CommonMk(MK, Load, Sender);

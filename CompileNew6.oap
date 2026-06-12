@@ -4813,6 +4813,9 @@ Bus={FuTypeIndexes.RowSet=0 FuTypeMkTrees.RowSet=0 FuTypeMkTrees.IndexModeSet=2
   Obj={Mk=206 Mnemo="LineLastPush" Hint="Положить последнюю линию в стек"}
   Obj={Mk=207 Mnemo="LinePop" Hint="Взять текущую линию из стека"}
   Obj={Mk=600 Mnemo="JsonSave" Hint="Записать ОА-граф в формате JSON"}
+  Obj={Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
+  Obj={Mk=609 Mnemo="IndFileNameSet" Hint="Set the .ind output path"}
+  Obj={Mk=614 Mnemo="IndVectWrite" Hint="Write the built index vector to the .ind file"}
   Obj={Mk=601 Mnemo="JsonLoad" Hint="Считать файл в формате JSON"}
   Obj={Mk=605 Mnemo="MnemoCapsSet" Hint="Установить ссылку на капсулу с мнемониками"}
   Obj={Mk=605 Mnemo="MnemoTableSet" Hint="Установить ссылку на таблицу мнемоник"}

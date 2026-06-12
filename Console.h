@@ -1,4 +1,4 @@
-// ФУ Консоль
+// пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 #pragma once
 #include "Consts.h"
 #include <fstream>
@@ -26,7 +26,7 @@ struct FormatToken
 	FormatSpec spec;
 };
 
-class MkRef { // Парочка Мк и ссылка для записи результата
+class MkRef { // РџР°СЂРѕС‡РєР° РњРє Рё СЃСЃС‹Р»РєР° РґР»СЏ Р·Р°РїРёСЃРё СЂРµР·СѓР»СЊС‚Р°С‚Р°
 public:
 	long int Mk = -1;
 	LoadPoint Ref = {0,nullptr};
@@ -35,47 +35,48 @@ public:
 class Console : public FU
 {
 private:
-	void LoadPrint(LoadPoint Load, string offcet = ""); // Печать нагрузки
-	LoadMnemoToStr MnemoToStr; // Преобразователь нагрузки в мнемонику и использованием таблицы лексем 
-	map<long int, string> AtrMnemo; // Атрибуты мнемоник
+	void LoadPrint(LoadPoint Load, string offcet = ""); // РџРµС‡Р°С‚СЊ РЅР°РіСЂСѓР·РєРё
+	LoadMnemoToStr MnemoToStr; // РџСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЊ РЅР°РіСЂСѓР·РєРё РІ РјРЅРµРјРѕРЅРёРєСѓ Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј С‚Р°Р±Р»РёС†С‹ Р»РµРєСЃРµРј 
+	map<long int, string> AtrMnemo; // РђС‚СЂРёР±СѓС‚С‹ РјРЅРµРјРѕРЅРёРє
 	string prefix="";
 	string filename = "";
 	ofstream fout; // ??
 	ofstream fin; // ??
-	FILE* streamOut=nullptr, *streamIn=nullptr; // Входной/выходной файлы
-	string Sep = " ", VectSep=",", End = "\n"; // Строка-разделитель и строка в конце вывода
-	string quote = ""; // Символ кавычек при выводе строки
-	string FloatPoint = "."; // Разделитель дробной части
-	string ArrayBracketStart = "[", ArrayBracketFin = "]"; // Начальная и конечная скобки для вывода вектора
-	vector<string> TrueVar = { "true","True" }; // Вектор значений "правда"
-	vector<string> FalseVar = { "false","False" }; // Вектор значений "ложь"
-//	vector<LoadPoint> *NewVect; // Указатель на вектор
-	void* NoVarToOutProg = nullptr; // Подрограммы реакции на ошибку "Нет переменной для вывода"
-	void* WrongFormatProg = nullptr; // Подрограммы реакции на ошибку "Неправильный формат"
-	void* WrongVectFormatProg = nullptr; // Подрограммы реакции на ошибку "Неправильный формат"
+	FILE* streamOut=nullptr, *streamIn=nullptr; // Р’С…РѕРґРЅРѕР№/РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»С‹
+	string Sep = " ", VectSep=",", End = "\n"; // РЎС‚СЂРѕРєР°-СЂР°Р·РґРµР»РёС‚РµР»СЊ Рё СЃС‚СЂРѕРєР° РІ РєРѕРЅС†Рµ РІС‹РІРѕРґР°
+	string quote = ""; // РЎРёРјРІРѕР» РєР°РІС‹С‡РµРє РїСЂРё РІС‹РІРѕРґРµ СЃС‚СЂРѕРєРё
+	string FloatPoint = "."; // Р Р°Р·РґРµР»РёС‚РµР»СЊ РґСЂРѕР±РЅРѕР№ С‡Р°СЃС‚Рё
+	string ArrayBracketStart = "[", ArrayBracketFin = "]"; // РќР°С‡Р°Р»СЊРЅР°СЏ Рё РєРѕРЅРµС‡РЅР°СЏ СЃРєРѕР±РєРё РґР»СЏ РІС‹РІРѕРґР° РІРµРєС‚РѕСЂР°
+	vector<string> TrueVar = { "true","True" }; // Р’РµРєС‚РѕСЂ Р·РЅР°С‡РµРЅРёР№ "РїСЂР°РІРґР°"
+	vector<string> FalseVar = { "false","False" }; // Р’РµРєС‚РѕСЂ Р·РЅР°С‡РµРЅРёР№ "Р»РѕР¶СЊ"
+//	vector<LoadPoint> *NewVect; // РЈРєР°Р·Р°С‚РµР»СЊ РЅР° РІРµРєС‚РѕСЂ
+	void* NoVarToOutProg = nullptr; // РџРѕРґСЂРѕРіСЂР°РјРјС‹ СЂРµР°РєС†РёРё РЅР° РѕС€РёР±РєСѓ "РќРµС‚ РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РІС‹РІРѕРґР°"
+	void* WrongFormatProg = nullptr; // РџРѕРґСЂРѕРіСЂР°РјРјС‹ СЂРµР°РєС†РёРё РЅР° РѕС€РёР±РєСѓ "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚"
+	void* WrongVectFormatProg = nullptr; // РџРѕРґСЂРѕРіСЂР°РјРјС‹ СЂРµР°РєС†РёРё РЅР° РѕС€РёР±РєСѓ "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚"
 	LoadPoint Var = {0,nullptr};
-	void* WrongInterFormat = nullptr; // Подпрограмма обработки ошибки 'Неправильный формат введенных данных'
-	vector<MkRef> VarOutBuf; // Вектора Мк и указателей для вывода результата
-	set<string> True = { "true", "True" }, False = {"false", "False"}; // Множество значений true false
-	string inStr; // Последняя введенная строка
-	void* InputFormatErrProg = nullptr; // Программа ошибки формата входных данных
-	int VectCol = 0; // Количество колонок при выводе вектора
+	void* WrongInterFormat = nullptr; // РџРѕРґРїСЂРѕРіСЂР°РјРјР° РѕР±СЂР°Р±РѕС‚РєРё РѕС€РёР±РєРё 'РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РІРІРµРґРµРЅРЅС‹С… РґР°РЅРЅС‹С…'
+	vector<MkRef> VarOutBuf; // Р’РµРєС‚РѕСЂР° РњРє Рё СѓРєР°Р·Р°С‚РµР»РµР№ РґР»СЏ РІС‹РІРѕРґР° СЂРµР·СѓР»СЊС‚Р°С‚Р°
+	set<string> True = { "true", "True" }, False = {"false", "False"}; // РњРЅРѕР¶РµСЃС‚РІРѕ Р·РЅР°С‡РµРЅРёР№ true false
+	string inStr; // РџРѕСЃР»РµРґРЅСЏСЏ РІРІРµРґРµРЅРЅР°СЏ СЃС‚СЂРѕРєР°
+	void* InputFormatErrProg = nullptr; // РџСЂРѕРіСЂР°РјРјР° РѕС€РёР±РєРё С„РѕСЂРјР°С‚Р° РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
+	int VectCol = 0; // РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕР»РѕРЅРѕРє РїСЂРё РІС‹РІРѕРґРµ РІРµРєС‚РѕСЂР°
 
-	string Template = ""; // Строка шаблона для вывода
-	vector<FormatToken> Tokens; // Вектор токенов шаблона
-	vector<LoadPoint> Operands; // Вектор указателей на операнды
-	int NOp = 0; // Идекс текущего операнда
-	int OpCount = 0; // Счетчик пришедших операндов
-	string Buffer; // Буффер для вывода
-	void ParseTemplate(); // Функция парсинга строки
-	string FormatValue(LoadPoint& lp, FormatSpec& spec); // Функция форматирования операнда
-	void ExecuteTemplate(); // Функция сборки строки
+	string Template = ""; // РЎС‚СЂРѕРєР° С€Р°Р±Р»РѕРЅР° РґР»СЏ РІС‹РІРѕРґР°
+	vector<FormatToken> Tokens; // Р’РµРєС‚РѕСЂ С‚РѕРєРµРЅРѕРІ С€Р°Р±Р»РѕРЅР°
+	vector<LoadPoint> Operands; // Р’РµРєС‚РѕСЂ СѓРєР°Р·Р°С‚РµР»РµР№ РЅР° РѕРїРµСЂР°РЅРґС‹
+	int NOp = 0; // РРґРµРєСЃ С‚РµРєСѓС‰РµРіРѕ РѕРїРµСЂР°РЅРґР°
+	int OpCount = 0; // РЎС‡РµС‚С‡РёРє РїСЂРёС€РµРґС€РёС… РѕРїРµСЂР°РЅРґРѕРІ
+	string Buffer; // Р‘СѓС„С„РµСЂ РґР»СЏ РІС‹РІРѕРґР°
+	void ParseTemplate(); // Р¤СѓРЅРєС†РёСЏ РїР°СЂСЃРёРЅРіР° СЃС‚СЂРѕРєРё
+	string FormatValue(LoadPoint& lp, FormatSpec& spec); // Р¤СѓРЅРєС†РёСЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РѕРїРµСЂР°РЅРґР°
+	void ExecuteTemplate(); // Р¤СѓРЅРєС†РёСЏ СЃР±РѕСЂРєРё СЃС‚СЂРѕРєРё
 	void ReportError(const string& where, const string& msg);
+	std::ostream& out(); // per-FU output sink: this FU's redirect file if open, else cout
 public:
 	bool Quiet = false; // --run: suppress this (compiler-trace) Console's output
 	void ProgFU(long int MK, LoadPoint Load, FU* Sender = nullptr) override;
-	FU* Copy() override; // Программа копирования ФУ
-	FU* TypeCopy() override; // Создать ФУ такого же типа (не копируя контекст
+	FU* Copy() override; // РџСЂРѕРіСЂР°РјРјР° РєРѕРїРёСЂРѕРІР°РЅРёСЏ Р¤РЈ
+	FU* TypeCopy() override; // РЎРѕР·РґР°С‚СЊ Р¤РЈ С‚Р°РєРѕРіРѕ Р¶Рµ С‚РёРїР° (РЅРµ РєРѕРїРёСЂСѓСЏ РєРѕРЅС‚РµРєСЃС‚
 	Console(FU* BusContext, FU* Templ) : FU(BusContext) { Bus = BusContext; FUtype = 1; };
 	Console() : FU() { Console(nullptr, nullptr); };
 private:

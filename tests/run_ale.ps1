@@ -50,14 +50,19 @@ foreach ($oap in $testFiles) {
         continue
     }
 
-    $compiledInd = "tests\.last_ale.ind"
-
-    # 1. Compile the .oap to a .ind (the loaded .ind self-contains the compiler).
-    $compileStdout = "tests\.last_ale_compile.txt"
+    # These tests verify .ind SERIALIZATION (rebased FU ranges, type markers), so
+    # they need the two-stage compile->.ind->run. Each ale_*.oap self-emits via its
+    # own MnemoTable.IndVectWrite="run.tmp.ind" tail (emission in the source);
+    # --out-dir places it. The compiler's traces are muted to trace.log, so stage-1
+    # stdout is the live run (ignored) -- we compare the SERIALIZED .ind in stage 2.
+    $emitDir = "tests\.aletmp"
+    New-Item -ItemType Directory -Path $emitDir -Force | Out-Null
+    $compiledInd = Join-Path $emitDir "run.tmp.ind"
+    if (Test-Path $compiledInd) { Remove-Item $compiledInd -Force }
     $proc = Start-Process -FilePath $Exe `
-        -ArgumentList @($Ind, "--lex-file", $oap.FullName, "--out-file", $compiledInd) `
+        -ArgumentList @($Ind, $oap.FullName, "--out-dir", $emitDir) `
         -NoNewWindow -PassThru `
-        -RedirectStandardOutput $compileStdout `
+        -RedirectStandardOutput "tests\.last_ale_compile.txt" `
         -RedirectStandardError "tests\.last_ale_compile_err.txt"
     if (-not $proc.WaitForExit($TimeoutSec * 1000)) {
         $proc.Kill()
@@ -70,8 +75,6 @@ foreach ($oap in $testFiles) {
         $failed++; $failures += $name
         continue
     }
-
-    # 2. Run the compiled .ind
     $runStdout = "tests\.last_ale_run.txt"
     $proc = Start-Process -FilePath $Exe `
         -ArgumentList @($compiledInd) `
@@ -120,8 +123,8 @@ foreach ($oap in $testFiles) {
     }
 
     if ($ShowOutput) {
-        Write-Host "  ---- compile stdout ----" -ForegroundColor DarkGray
-        Get-Content $compileStdout | ForEach-Object { Write-Host "    $_" -ForegroundColor DarkGray }
+        Write-Host "  ---- run stdout ----" -ForegroundColor DarkGray
+        Get-Content $runStdout | ForEach-Object { Write-Host "    $_" -ForegroundColor DarkGray }
     }
 }
 

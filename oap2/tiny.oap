@@ -1,2 +1,6 @@
 NewFU={Mnemo="Cons" FUType=FUConsNew}
 Cons.OutLn="hello-from-tiny"
+
+x=1
+y=2
+Cons.OutLn=x+y-(x+y)*(x+y)

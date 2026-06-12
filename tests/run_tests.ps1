@@ -69,7 +69,7 @@ foreach ($lexFile in $testFiles) {
     $stdinFile = Join-Path $lexFile.DirectoryName "$name.stdin"
     # The loaded .ind self-contains the compiler (MnemoTable + Lex mnemonics +
     # atr-name rows are baked in), so the test input is fed directly.
-    $argList = @($Ind, "--lex-file", $stripped)
+    $argList = @($Ind, $stripped)
     $procArgs = @{
         FilePath = $Exe
         ArgumentList = $argList
@@ -92,6 +92,14 @@ foreach ($lexFile in $testFiles) {
 
     $stdout = Get-Content "tests\.last_stdout.txt" -Raw -ErrorAction SilentlyContinue
     if ($null -eq $stdout) { $stdout = "" }
+
+    # The compiler's parser traces are muted off stdout (TraceCon.OutFileSet baked
+    # into the .ind redirects the trace console to trace.log), leaving stdout = the
+    # program's own output. Fold the trace log back in so expectations can match
+    # either parser traces OR program output.
+    $trace = Get-Content "trace.log" -Raw -ErrorAction SilentlyContinue
+    if ($null -eq $trace) { $trace = "" }
+    $stdout = $stdout + "`n" + $trace
 
     # $proc.ExitCode may not be populated reliably for -NoNewWindow processes;
     # treat null as 0. Non-zero exit (typically 5, AV) indicates a lexer crash.

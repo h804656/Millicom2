@@ -1,0 +1,115 @@
+// ===========================================================================
+//  sample.txt  -  a small stack machine (Forth-style RPN calculator) in OAP
+//
+//  A complete little virtual machine that shows the DATAFLOW core of OAP -
+//  the same architecture the compiler itself is built from:
+//
+//    * Ops  : a List FU used as a data-driven INSTRUCTION TABLE. With
+//             MkModeSet=1, `Ops.FindAnd={Mnemo="add"}` finds the matching row
+//             and RUNS its body. This is exactly how the compiler's parser
+//             states (Root, MnemoAnalysis, ...) fire on an incoming token.
+//
+//    * Stk  : a List FU used as the operand STACK. `Stk.LineAdd=v` pushes;
+//             `Stk.LastPopMk=<MK>` pops the top and hands its value to another
+//             FU's method.
+//
+//    * Acc, Tmp : IntAlu FUs used as ALU REGISTERS that hold and combine values.
+//
+//  The `X.OutMk=Y.Method` idiom is the dataflow WIRE: it takes the value
+//  living in FU X and feeds it into FU Y's method. Computation here is values
+//  flowing between functional units - there is no `result = expr` assignment.
+//
+//  Notation below: a word's stack effect is written Forth-style ( before -- after ),
+//  where the rightmost item is the top of the stack.
+// ===========================================================================
+
+// --- The machine's functional units ----------------------------------------
+NewFU={Mnemo="Cons" FUType=FUConsNew}    // output channel
+NewFU={Mnemo="Stk"  FUType=FUListNew}    // operand stack
+NewFU={Mnemo="Acc"  FUType=FUIntAluNew}  // ALU register: operand 'a' / result
+NewFU={Mnemo="Tmp"  FUType=FUIntAluNew}  // ALU register: operand 'b'
+NewFU={Mnemo="Ops"  FUType=FUListNew}    // the instruction table (dispatcher)
+
+// --- The instruction set ----------------------------------------------------
+// MkModeSet=1 makes Ops a dispatcher: a successful FindAnd runs the rest of the
+// matched row as a program. Each row below is one VM instruction ("word").
+// Binary ops pop the top into Tmp (b) and the next into Acc (a) - popping b
+// first keeps `sub`/`div`/`mod` in the right order (a-b, a/b, a%b, not b-a).
+Ops.MkModeSet=1
+Ops.Set=
+// arithmetic ( a b -- a op b )
+>{Mnemo="add"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Add Acc.OutMk=Stk.LineAdd}
+>{Mnemo="sub"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Sub Acc.OutMk=Stk.LineAdd}
+>{Mnemo="mul"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Mul Acc.OutMk=Stk.LineAdd}
+>{Mnemo="div"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Div Acc.OutMk=Stk.LineAdd}
+>{Mnemo="mod"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Mod Acc.OutMk=Stk.LineAdd}
+// unary ( a -- -a )
+>{Mnemo="neg"  Stk.LastPopMk=Acc.Set Acc.Mul=-1 Acc.OutMk=Stk.LineAdd}
+// stack words
+>{Mnemo="dup"  Stk.LastPopMk=Acc.Set Acc.OutMk=Stk.LineAdd Acc.OutMk=Stk.LineAdd}                 // ( a -- a a )
+>{Mnemo="drop" Stk.LastPopMk=Acc.Set}                                                             // ( a -- )
+>{Mnemo="swap" Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Stk.LineAdd Acc.OutMk=Stk.LineAdd}   // ( a b -- b a )
+>{Mnemo="over" Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Acc.OutMk=Stk.LineAdd Tmp.OutMk=Stk.LineAdd Acc.OutMk=Stk.LineAdd}  // ( a b -- a b a )
+// i/o ( a -- a )  print the top, leaving it on the stack
+>{Mnemo="dot"  Stk.LastPopMk=Acc.Set Acc.OutMk=Cons.OutLn Acc.OutMk=Stk.LineAdd}
+
+// ===========================================================================
+//  Program 1:  triangular number  n*(n+1)/2  for n = 7   ->  28
+//  postfix:  7 dup 1 + * 2 /
+// ===========================================================================
+Cons.OutLn="triangular(7) = 7 dup 1 + * 2 /"
+Stk.LineAdd=7
+Ops.FindAnd={Mnemo="dup"}       // 7 7
+Stk.LineAdd=1
+Ops.FindAnd={Mnemo="add"}       // 7 8
+Ops.FindAnd={Mnemo="mul"}       // 56
+Stk.LineAdd=2
+Ops.FindAnd={Mnemo="div"}       // 28
+Ops.FindAnd={Mnemo="dot"}       // => 28
+Ops.FindAnd={Mnemo="drop"}      // clear the stack for the next program
+
+// ===========================================================================
+//  Program 2:  difference of squares  a*a - b*b  for a=9, b=4   ->  65
+//  postfix:  9 dup * 4 dup * -
+// ===========================================================================
+Cons.OutLn="9*9 - 4*4 = 9 dup * 4 dup * -"
+Stk.LineAdd=9
+Ops.FindAnd={Mnemo="dup"}
+Ops.FindAnd={Mnemo="mul"}       // 81
+Stk.LineAdd=4
+Ops.FindAnd={Mnemo="dup"}
+Ops.FindAnd={Mnemo="mul"}       // 81 16
+Ops.FindAnd={Mnemo="sub"}       // 65
+Ops.FindAnd={Mnemo="dot"}       // => 65
+Ops.FindAnd={Mnemo="drop"}
+
+// ===========================================================================
+//  Program 3:  operand order with swap   10 3 swap sub   ->  3 - 10 = -7
+//  (without swap this would be 10 - 3 = 7; swap reverses the top two)
+// ===========================================================================
+Cons.OutLn="10 3 swap sub"
+Stk.LineAdd=10
+Stk.LineAdd=3
+Ops.FindAnd={Mnemo="swap"}      // 3 10
+Ops.FindAnd={Mnemo="sub"}       // 3 - 10
+Ops.FindAnd={Mnemo="dot"}       // => -7
+Ops.FindAnd={Mnemo="drop"}
+
+// ===========================================================================
+//  Program 4:  a longer trace, using over and a running fold.
+//  Compute  ((4 + 5) * 6) % 7   step by step, printing the stack top (dot)
+//  after each operation so you can watch the value flow through the machine.
+//  postfix:  4 5 + 6 * 7 %     -> (9 * 6) % 7 = 54 % 7 = 5
+// ===========================================================================
+Cons.OutLn="trace of ((4+5)*6) mod 7:"
+Stk.LineAdd=4
+Stk.LineAdd=5
+Ops.FindAnd={Mnemo="add"}
+Ops.FindAnd={Mnemo="dot"}       // 9
+Stk.LineAdd=6
+Ops.FindAnd={Mnemo="mul"}
+Ops.FindAnd={Mnemo="dot"}       // 54
+Stk.LineAdd=7
+Ops.FindAnd={Mnemo="mod"}
+Ops.FindAnd={Mnemo="dot"}       // 5
+Ops.FindAnd={Mnemo="drop"}

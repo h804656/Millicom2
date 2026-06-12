@@ -9,3 +9,6 @@ Cons.OutLn="between"
 Cons.OutLn={Cons.OutLn="another"}
 Cons.OutLn="trail"
 Cons.OutLn={Cons.OutLn="A" Cons.OutLn="B" Cons.OutLn="C"}
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

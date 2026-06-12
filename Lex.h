@@ -60,6 +60,7 @@ public:
 	vector<long int> ReceiverMK = { 0 }; // ���� �� ��� ����������
 	long int S = 0; // ����� ��������� ������������� ��������
 	bool Work = true; // ���� �������� ������ �������
+	bool lexFileActive = false; // re-entrancy guard for LexFile (mk101): skip if a LexFile lex is already running
 //	int MnemoAtr = -2, SeperatAtr = -4, IntAtr = -10, DoubleAtr = -3, BoolAtr = -5, StrAtr = -6, ConstAtr = -13;
 	long int MnemoAtr = -2, SeperatAtr = -4, IntAtr = -10, DoubleAtr = -13, BoolAtr = -13, StrAtr = -13, ConstAtr = -13;
 	long int ib = 0, SizeBuf = 5; // ������� ������� �������� �� �������� ������� � ������ ������

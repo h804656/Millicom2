@@ -1,6 +1,9 @@
 	#include "stdafx.h"
 	#include "Lex.h"
 	#include <string.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 	using namespace std;
 
@@ -328,6 +331,20 @@
 			LexBuf[0].atr = SeperatAtr;
 			ProgLevel = 0; // ������� ���������
 			break;
+		case 101: // LexFile -- read the file at the path Load and lex it (re-entrant guard:
+		// no-op if a LexFile lex is already running, so the self-host compile of the
+		// compiler's own source -- which re-issues this MK -- does not recurse).
+		{
+			if (lexFileActive) break;
+			std::ifstream _lf(Load.toStr(), std::ios::binary);
+			if (!_lf) { std::cout << "LexFile: cannot open '" << Load.toStr() << "'" << std::endl; break; }
+			std::stringstream _ss; _ss << _lf.rdbuf();
+			std::string _content = _ss.str();
+			lexFileActive = true;
+			ProgFU(100, { Cstring, &_content }); // reuse the Lexing path on the file content
+			lexFileActive = false;
+			break;
+		}
 		case 100: // Lexing
 		{	string str = Load.toStr()+" ";
 			str += EOL; // �������� ������� ����� ������

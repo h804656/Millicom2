@@ -9,3 +9,6 @@ Cons.OutLn={Cons.OutLn={Cons.OutLn={Cons.OutLn="depth4"}}}
 A=10
 B=20
 Cons.OutLn={Cons.OutLn=A*B+2}
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

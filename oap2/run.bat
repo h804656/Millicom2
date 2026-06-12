@@ -47,7 +47,7 @@ if "%INPUT%"=="" (
   echo Usage: %~nx0 [--fast^|-f] ^<input.txt^>
   echo.
   echo   Without --fast:  recompile CompileCC.oap -^> CompileCC.ind, then run
-  echo                    the .ind with --lex-file ^<input^> and print stdout/stderr.
+  echo                    the .ind with ^<input^> as argv[2] and print stdout/stderr.
   echo   With --fast:     skip the recompile and reuse the existing .ind.
   exit /b 1
 )
@@ -99,31 +99,16 @@ if defined FAST (
   )
 )
 
-rem ---- 2. Compile the input through CompileCC.ind to a fresh .ind, showing
-rem        the parser trace, the emitted millicommands, and the runtime stdout.
-set "OUTIND=%TEMP%\millicom_%RANDOM%_%~n1.ind"
-if exist "%OUTIND%" del /q "%OUTIND%"
-
+rem ---- 2. Run the input through CompileCC.ind -- ONE stage. The .ind mutes the
+rem        compiler's trace console off stdout (TraceCon.OutFileSet -> trace.log),
+rem        so stdout is just the program's own output. No intermediate .ind.
 if defined FAST (
-  echo [compile] %INPUT% -^> %OUTIND%
+  echo [run] %INPUT%
 ) else (
-  echo [2/2] Compiling %INPUT% -^> %OUTIND%
+  echo [2/2] Running %INPUT%
 )
-echo ---- parser trace ----
-rem CompileCC.oap's handlers print "Root Mnemo" / "ALEAfter op" / etc. as
-rem they see each token -- the live view of the new compiler at work.
-"%EXE%" "%IND%" --lex-file "%INPUT%" --out-file "%OUTIND%"
-set "CRC=!ERRORLEVEL!"
-if not exist "%OUTIND%" (
-  echo Error: compile produced no .ind ^(exit=!CRC!^).
-  exit /b !CRC!
-)
-echo ---- millicommands ----
-type "%OUTIND%"
-echo.
 echo ---- stdout ----
-"%EXE%" "%OUTIND%"
+"%EXE%" "%IND%" "%INPUT%"
 set "RC=!ERRORLEVEL!"
 echo ---- end (exit=!RC!) ----
-del /q "%OUTIND%" 2>NUL
 exit /b !RC!

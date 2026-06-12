@@ -376,6 +376,9 @@ FodyWeavers.xsd
 /tests/.last_ale_run.txt
 /tests/.last_ale_compile_err.txt
 /tests/.last_ale_run_err.txt
+/trace.log
+/tests/trace.log
+/tests/.aletmp/
 /tests/.sample.ind
 /tests/.subic_err.txt
 /tests/.subic.ind

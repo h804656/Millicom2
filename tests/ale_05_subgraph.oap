@@ -9,3 +9,6 @@ Atr={Big=100 Small=8}
 Cons.OutLn=Big-Small
 Cons.OutLn=Big/Small
 Cons.OutLn=X*Z
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

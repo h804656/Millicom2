@@ -9,3 +9,6 @@ U1.OutLn={U1.OutLn="u1 boxed"}
 NewFU={Mnemo="U2" FUType=FUConsNew}
 U2.OutLn={U2.OutLn="u2 first-call boxed"}
 Cons.OutLn="end"
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

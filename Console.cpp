@@ -30,26 +30,26 @@ void Console::LoadPrint(LoadPoint Load, string offset) // Печать нагрузки
 	LoadPoint LP = Load.IndLoadReturn();
 	if (LP.Point == nullptr)
 	{
-		cout << "null";
+		out() << "null";
 		return;
 	}
 	switch (LP.Type>>1)
 	{
-	case DAtr:	  cout << Clr("\033[1;35m") << MnemoToStr.AtrConv(Load.toInt()) << Clr("\033[0m"); break;
-	case DMk:     cout << Clr("\033[1;32m") << MnemoToStr.AtrConv(Load.toInt()) << Clr("\033[0m"); break;
-	case Dstring: cout << Clr("\033[1;33m") << quote << LP.toStr() << quote << Clr("\033[0m"); break;
-	case Dint:	  cout << LP.toInt(); break;
-	case Dfloat:  cout << LP.toFloat(); break;
-	case Ddouble: cout << LP.toDouble(); break;
-	case Dchar:   cout << LP.toChar(); break;
-	case Dbool:   cout << LP.toBool(); break;
+	case DAtr:	  out() << Clr("\033[1;35m") << MnemoToStr.AtrConv(Load.toInt()) << Clr("\033[0m"); break;
+	case DMk:     out() << Clr("\033[1;32m") << MnemoToStr.AtrConv(Load.toInt()) << Clr("\033[0m"); break;
+	case Dstring: out() << Clr("\033[1;33m") << quote << LP.toStr() << quote << Clr("\033[0m"); break;
+	case Dint:	  out() << LP.toInt(); break;
+	case Dfloat:  out() << LP.toFloat(); break;
+	case Ddouble: out() << LP.toDouble(); break;
+	case Dchar:   out() << LP.toChar(); break;
+	case Dbool:   out() << LP.toBool(); break;
 	case DIP:
 	case DIC:
 	{
 		if (LP.Type >> 1 == DIP){
 		
-			cout << MnemoToStr.AtrConv(((ip*)LP.Point)->atr) << ((((ip*)LP.Point)->Load.Type % 2 == 0) ? " = " : " # ");
-			cout << MnemoToStr.LoadConv(((ip*)LP.Point)->Load);
+			out() << MnemoToStr.AtrConv(((ip*)LP.Point)->atr) << ((((ip*)LP.Point)->Load.Type % 2 == 0) ? " = " : " # ");
+			out() << MnemoToStr.LoadConv(((ip*)LP.Point)->Load);
 			break;
 		}
 		bool FMap = false; // Флаг создания списка пройденных адресов ОА-графа
@@ -60,27 +60,27 @@ void Console::LoadPrint(LoadPoint Load, string offset) // Печать нагрузки
 		}
 		if (AdrMap->count(LP.Point)) // Обнаружение зацикливания ОА-графа
 		{
-			cout << offset << "IC id: " << (*AdrMap)[LP.Point] << endl;
+			out() << offset << "IC id: " << (*AdrMap)[LP.Point] << endl;
 			break;
 		}
 		(*AdrMap)[LP.Point] = AdrMap->size(); // Запомнить пройденную ИК для избежания зацикливания
 
 		if (!((IC_type)LP.Point)->size()) {
-			cout << offset << "Empry IC";
+			out() << offset << "Empry IC";
 			return;
 		}
 		for (auto i = ((IC_type)LP.Point)->begin(); i != ((IC_type)LP.Point)->end(); i++)
 		{
 			if (i->Load.Type >> 1 == DIP || i->Load.isIC())
-				cout << offset <<MnemoToStr.AtrConv(i->atr)<< " ->\n";
+				out() << offset <<MnemoToStr.AtrConv(i->atr)<< " ->\n";
 			else
 				if (AtrMnemo.count(i->atr))
-					cout << offset << MnemoToStr.AtrConv(i->atr) << ((i->Load.Type % 2) ? " # " : " = ");
+					out() << offset << MnemoToStr.AtrConv(i->atr) << ((i->Load.Type % 2) ? " # " : " = ");
 				else
-					cout << offset << MnemoToStr.AtrConv(i->atr) << ((i->Load.Type % 2) ? " # " : " = ");
+					out() << offset << MnemoToStr.AtrConv(i->atr) << ((i->Load.Type % 2) ? " # " : " = ");
 			LoadPrint(i->Load, offset + "  "); // i->Load.print(AtrMnemo, offset + "  ", Sep, End, quote, ArrayBracketStart, ArrayBracketFin, VectCol, AdrMap);
 			if (i != ((IC_type)LP.Point)->end() - 1)
-				cout << endl;
+				out() << endl;
 		}
 		if (FMap)  // Удачить таблицу пройденных адресов
 		{
@@ -92,26 +92,26 @@ void Console::LoadPrint(LoadPoint Load, string offset) // Печать нагрузки
 	case TLoadVect:
 	case CLoadVect: // Вектор нагрузок
 	{
-		cout << ArrayBracketStart;
+		out() << ArrayBracketStart;
 		register int c = 1;
 		for (auto i : *(vector<LoadPoint>*)LP.Point)
 		{
 			if (VectCol > 0 && c > 1 && (c - 1) % VectCol == 0)
-				cout << End;
+				out() << End;
 			//i.print(AtrMnemo, offset, Sep, End, quote, ArrayBracketStart, ArrayBracketFin);
 			LoadPrint(LP,offset);
 			if (c < ((vector<LoadPoint>*)
-				LP.Point)->size()) cout << Sep;
+				LP.Point)->size()) out() << Sep;
 			c++;
 		}
-		cout << ArrayBracketFin << endl;
+		out() << ArrayBracketFin << endl;
 		break;
 	}
 	case TLoadVectInd:
 	case CLoadVectInd: // Вектор нагрузок
 	{
 		register int i = LP.Ind;
-		cout << "Vect Ind[" << LP.Ind << "] ";
+		out() << "Vect Ind[" << LP.Ind << "] ";
 		if (((LoadVect_type)LP.Point)->size() > abs(i) or -i == ((LoadVect_type)LP.Point)->size())
 			((LoadVect_type)LP.Point)->at(i).print(AtrMnemo, offset, Sep, End, quote, ArrayBracketStart, ArrayBracketFin);
 		break;
@@ -296,8 +296,10 @@ void Console::ExecuteTemplate() {
 		Buffer += FormatValue(Operands[t.index], t.spec);
 	}
 
-	if (!Quiet) cout << Buffer;;
+	if (!Quiet) out() << Buffer;;
 }
+
+std::ostream& Console::out() { return fout.is_open() ? static_cast<std::ostream&>(fout) : std::cout; }
 
 void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 {
@@ -312,21 +314,21 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 3: // LnOut Перевод строки и вывод
 	case 4: // LnOutLn Перевод строки, вывод и снова перевод строки
 		if (Quiet) break;
-		cout << prefix;
-		if (MK == 3 || MK == 4) cout << endl;
+		out() << prefix;
+		if (MK == 3 || MK == 4) out() << endl;
 		if (Load.Point != nullptr)
 			LoadPrint(Load);
 		//Load.print(AtrMnemo,"",Sep,End, quote, ArrayBracketStart,ArrayBracketFin, VectCol);
-		if (MK == 2 || MK == 4) cout << endl;
+		if (MK == 2 || MK == 4) out() << endl;
 		break;
 	case 5: // LoadInfoOut Вывести сведения о нагрузке
-		cout << "LoadInfo : Type " << Load.Type << " Ind " << Load.Ind;
-		if (Load.Point == nullptr) cout << " Point=null";
-		else cout << Load.Type % 2 ? " Const" : "Var";
-		cout << endl;
+		out() << "LoadInfo : Type " << Load.Type << " Ind " << Load.Ind;
+		if (Load.Point == nullptr) out() << " Point=null";
+		else out() << Load.Type % 2 ? " Const" : "Var";
+		out() << endl;
 		break;
 	case 10: // Ln Перевод строки
-		cout << endl;
+		out() << endl;
 		break;
 	case 15: //SepSet Установить строку-разделитель
 		Sep = Load.toStr();
@@ -355,16 +357,16 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		break;
 	case 30: // OutFileSet Установить файл для вывода (при пустой нагрузке вывод на консоль)
 		if (Load.Point == nullptr)
-			ostream& out = cout;
+			{ if (fout.is_open()) fout.close(); }
 		else
-			freopen_s(&streamOut, Load.toStr().c_str(), "w", stdout);
+			{ if (fout.is_open()) fout.close(); fout.open(Load.toStr()); }
 		break;
 
 	case 31: // StdOutFileAppend Установить файл для дополнения
 		if (Load.Point == nullptr)
-			ostream& out = cout;
+			{ if (fout.is_open()) fout.close(); }
 		else
-			freopen_s(&streamOut, Load.toStr().c_str(), "a", stdout);
+			{ if (fout.is_open()) fout.close(); fout.open(Load.toStr(), ios::app); }
 		break;
 
 	case 35: // StdInFileSet Установить файл для ввода
@@ -464,13 +466,13 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			if (std::regex_match(inStr.c_str(), regular_float)) {
 
 
-				//cout << "its float";
+				//out() << "its float";
 				double res = stof(inStr);
 				Var = { Cdouble,new double(res) };
 			}
 			else  if (std::regex_match(inStr.c_str(), regular_int)) {
 
-				//cout << "its int";
+				//out() << "its int";
 				long int res = stoi(inStr);
 				Var = { Cint,new long int(res) };
 			}
@@ -486,14 +488,14 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			}
 			else if (std::regex_match(inStr.c_str(), regular_char)) {
 
-				//cout << "its char";
+				//out() << "its char";
 				char res;
 				res = inStr[0];
 				Var = { Cchar,new char(res) };
 			}
 			else if (std::regex_match(inStr.c_str(), regular_str)) {
 
-				///cout << "its string";
+				///out() << "its string";
 				Var = { Cstring,new string(inStr) };
 			}
 			else if (std::regex_match(inStr.c_str(), regular_vector)) {
@@ -544,7 +546,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			*/
 			else if (std::regex_match(inStr.c_str(), regular_matrix)) {
 
-				cout << "its matrix";
+				out() << "its matrix";
 
 			}
 

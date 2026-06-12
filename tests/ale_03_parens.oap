@@ -17,3 +17,6 @@ Cons.OutLn=A-B-C
 Cons.OutLn=((A+B)*(C+D))-E
 Cons.OutLn=(A+(B+(C+D+E)))
 Cons.OutLn=(D-A)*(C-E)
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

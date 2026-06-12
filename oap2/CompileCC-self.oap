@@ -56,6 +56,7 @@ NewFU={Mnemo="VarStore" FUType=FUListNew Hint="Именованные перем
 NewFU={Mnemo="VarFlag" FUType=FUIntAluNew Hint="Флаг: =1 пока разбирается определение переменной (Mnemo >{...}); по закрытию списка caps уходят в VarStore."}
 NewFU={Mnemo="VarKey" FUType=FUListNew Hint="Чистый ключ {Mnemo=name} последней мнемоники-значения, для поиска в VarStore по '!' (полная строка MnemoTable содержит Lex.SendToReceiver и ломает FindAnd)."}
 NewFU={Mnemo="FUNameTable" FUType=FUListNew Hint="Parallel copy of every user-FU MnemoTable row"}
+NewFU={Mnemo="TraceCon" FUType=FUConsNew Hint="Compiler trace console -- a SEPARATE FU from the program's Cons (range 2000), so it can be muted (TraceCon.OutFileSet) without swallowing program output"}
 
 
 Sep*-4
@@ -99,6 +100,7 @@ CommonMkTable // generic FU Mks (Mks available on every FU)
 ConsMkTable
 >{Mk=1   Mnemo="Out"     Hint="Вывод"}
 >{Mk=2   Mnemo="OutLn"   Hint="Вывод с переводом строки"}
+>{Mk=30  Mnemo="OutFileSet" Hint="Redirect THIS Console's output to a file (per-FU); empty Load = back to stdout"}
 >{Mk=10  Mnemo="Ln"      Hint="Перевод строки"}
 >{Mk=100 Mnemo="Input"   Hint="Read stdin, write to Load"}
 >{Mk=101 Mnemo="InputMk" Hint="Read stdin, dispatch via Load as MK"}
@@ -161,6 +163,8 @@ ListMkTable
 >{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 >{Mk=600 Mnemo="JsonSave" Hint="Dump the table to a JSON file"}
 >{Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
+>{Mk=609 Mnemo="IndFileNameSet"  Hint="Set the .ind output path"}
+>{Mk=614 Mnemo="IndVectWrite"    Hint="Write the built index vector to the .ind file"}
 
 // MnemoListMkTable: an exact duplicate of ListMkTable, used ONLY by the
 // "MnemoTable" self-row below. KEEP IN SYNC WITH ListMkTable.
@@ -222,6 +226,8 @@ MnemoListMkTable
 >{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 >{Mk=600 Mnemo="JsonSave" Hint="Dump the table to a JSON file"}
 >{Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
+>{Mk=609 Mnemo="IndFileNameSet"  Hint="Set the .ind output path"}
+>{Mk=614 Mnemo="IndVectWrite"    Hint="Write the built index vector to the .ind file"}
 
 LexMkTable
 >{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}
@@ -237,6 +243,7 @@ LexMkTable
 >{Mk=22  Mnemo="SepErase"       Hint="Remove a Sep token literal"}
 >{Mk=70  Mnemo="SendToReceiver" Hint="Dispatch current LexBuf entry to Receiver"}
 >{Mk=100 Mnemo="Lexing"         Hint="Feed string into Lex for tokenization"}
+>{Mk=101 Mnemo="LexFile"        Hint="Read the file at the path Load and lex it; re-entrant (no-op if already lexing)"}
 >{Mk=99  Mnemo="Stop"           Hint="Stop lexing (Lex.Stop)"}
 
 IntAluMkTable
@@ -264,6 +271,8 @@ BusMkTable
 >{Mk=100 Mnemo="MkExec"  Hint="dispatch an IC via its global MK"}
 >{Mk=5 Mnemo="ProgExec" Hint="Выполнить последовательность ФУ на шине"}
 >{Mk=10 Mnemo="FileOldProgExec" Hint="Выполнить последовательность ФУ из ранее сохранённого файла индекса"}
+>{Mk=208 Mnemo="ArgByIndOutMk" Hint="Dispatch the Load MK with argv[argInd] (a command-line arg string) as its Load"}
+>{Mk=210 Mnemo="ArgIndSet"     Hint="Set the current command-line argument index"}
 >{Mk=20 Mnemo="NFUOut" Hint="Вывод количества ФУ, зарегистрированных на шине"}
 >{Mk=21 Mnemo="NFUOutMk" Hint="Вывод ФУ с количеством МК, зарегистрированных на шине"}
 >{Mk=25 Mnemo="LastFUNameSet" Hint="Set the name of the most-recently-created FU"}
@@ -295,12 +304,12 @@ MnemoTable.FailProgSet={FUListNew.ReceivedOutMk=FUNameTable.FindAnd}
 // mnemonic translation table
 MnemoTable.DelFind={Mnemo="MnemoTable"}
 MnemoTable.Set=
-//>{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=Console.OutLn}}
+//>{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=TraceCon.OutLn}}
 >{Mnemo="NewFU" Stack.LineCopyAdd={MkExec} Lex.SendToReceiver={Mk=CreateNewFU.FindOr}
-	Console.Out="NewFU " Console.OutLn=CreateNewFU.FindOr
+	TraceCon.Out="NewFU " TraceCon.OutLn=CreateNewFU.FindOr
   }
 
->{Mnemo="ConsOut"   Lex.SendToReceiver={Mk=Console.OutLn}}
+>{Mnemo="ConsOut"   Lex.SendToReceiver={Mk=TraceCon.OutLn}}
 >{Mnemo="Obj" 		 Lex.SendToReceiver={Atr=-6} }
 >{Mnemo="Atr"    	 Lex.SendToReceiver={Atr=-8}}
 >{Mnemo="Mnemo"  	 Lex.SendToReceiver={Atr=-2}}
@@ -353,7 +362,7 @@ MnemoTable.Set=
 >{Mnemo="FUStreamIntALUNew"  Lex.SendToReceiver={Const=23}}
 >{Mnemo="FUMatPlotNew"       Lex.SendToReceiver={Const=24}}
 >{Mnemo="FUGraphDisplayNew"  Lex.SendToReceiver={Const=25}}
->{Mnemo="FUCons" 	 Lex.SendToReceiver={Const=1} Console.OutLn="FUCons !"}
+>{Mnemo="FUCons" 	 Lex.SendToReceiver={Const=1} TraceCon.OutLn="FUCons !"}
 >{Mnemo="Bus" Hint="Главная шина" MkTable.Set=BusMkTable! Lex.SendToReceiver={FU=1000}}
 >{Mnemo="Cons" Hint="Главная консоль" MkTable.Set=ConsMkTable! Lex.SendToReceiver={FU=2000}}
 >{Mnemo="StrGenPeer" Hint="Template row for StrGen FUs" MkTable.Set=StrGenMkTable! Lex.SendToReceiver={FU=3000}}
@@ -368,7 +377,7 @@ CreateNewFU.Set=
 >{FUType FUListNew.LoadReceivedOutMk=Bus.Create}
 >{NameAtr  FUListNew.IpReceivedOutMk=MnemoTable.LineCopyAdd MnemoTable.LineCopyAdd={FU} Bus.LastFUMkRangeOutMk=MnemoTable.LastLoadSet
  FUListNew.LoadReceivedOutMk=Bus.LastFUNameSet}
->{Hint Console.OutLn="Hint" FUListNew.IpReceivedOutMk=MnemoTable.LineCopyAdd}
+>{Hint TraceCon.OutLn="Hint" FUListNew.IpReceivedOutMk=MnemoTable.LineCopyAdd}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,43 +396,43 @@ Root.Set=
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
   CapsList.CapsListRegister
-  Console.OutLn="Root Mnemo"
+  TraceCon.OutLn="Root Mnemo"
 }
 >{Mk Atr ConstInt Lex.ReceiverMkSet=EqualWait.FindAnd
   OAList.LastAttach
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
   OAList.LastAtrOutMk=MkCalc.Set
   CapsList.CapsListRegister
-  Console.OutLn="Root Mk/Atr"
+  TraceCon.OutLn="Root Mk/Atr"
 }
 >{Var Lex.ReceiverMkSet=Root.FindAnd
   Lex.ReceiverPush=ALE.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
   CapsList.CapsListRegister
-  Console.OutLn="Root Var->ALE"
+  TraceCon.OutLn="Root Var->ALE"
 }
 >{FU FUType Lex.ReceiverMkSet=FUAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
   CapsList.CapsListRegister
-  Console.OutLn="Root FU/FUType"
+  TraceCon.OutLn="Root FU/FUType"
 }
 >{Sep="." Lex.ReceiverMkSet=MkWait.FindOr
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MkTable.FindOr
   MkTable.SuccessProgSet={FUListNew.LineOutMk=Lex.SendToReceiver}
   CapsList.CapsListRegister
-  Console.OutLn="Root ."
+  TraceCon.OutLn="Root ."
 }
 >{HLPLOperator Lex.ReceiverMkSet=Root.FindAnd
   Lex.ReceiverPush=HLPL.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
   CapsList.CapsListRegister
-  Console.OutLn="Root HLPLOperator->HLPL"
+  TraceCon.OutLn="Root HLPLOperator->HLPL"
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTied
   CapsList.CapsListRegister
-  Console.OutLn="Root > list (self-loop)"
+  TraceCon.OutLn="Root > list (self-loop)"
 }
 >{Sep="}" Lex.ReceiverMkSet=Root.FindAnd
   Stack.FindAndLast={SubCapMark}
@@ -434,28 +443,28 @@ Root.Set=
                                           CapsList.LastOutMk=RegPeer.FindOr
                                            RegPeer.FailExec={CapsList.MarkLastCopyOutMk=Bus.MkExec}}}
   Stack.FindAndLast={Sep="{"}
-  Stack.FailExec={Lex.Stop Console.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
+  Stack.FailExec={Lex.Stop Cons.OutLn="SYNTAX ERROR Root: '}' without matching '{'" ProgStopAll}
   Stack.LastDelMk
   Stack.FindAndLast={ListOuterMark}
   Stack.SuccessExec={Lex.ReceiverMkSet=ListAfterClose.FindAnd}
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Bus.MkExec}
   CapsList.CapsListRegister
-  Console.OutLn="Root }"
+  TraceCon.OutLn="Root }"
 }
->{Sep="" Console.OutLn="End of program"
+>{Sep="" TraceCon.OutLn="End of program"
   Stack.FindAndLast={MkExec}
   Stack.SuccessExec={Stack.LastDelMk OAList.LastIpPopMk=Bus.MkExec}
 }
 >{Const ConstInt Lex.ReceiverMkSet=Root.FindAnd}
->{0 Console.OutLn="SYNTAX ERROR Root: unexpected token"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Cons.OutLn="SYNTAX ERROR Root: unexpected token"
+  FUListNew.ReceivedOutMk=Cons.OutLn
 }
 
 
 MnemoAnalysis.Set=
 >{Sep="=" Lex.ReceiverMkSet=VarIniWait.FindAnd
-  Console.OutLn="MnemoAnalysis ="
+  TraceCon.OutLn="MnemoAnalysis ="
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
   Stack.LineCopyAdd={ListOuterMark}
@@ -465,29 +474,29 @@ MnemoAnalysis.Set=
   CapsList.Push
   MnemoTable.LastOutMk=VarStore.LineCopyAdd
   VarFlag.Set=1
-  Console.OutLn="MnemoAnalysis > <"
+  TraceCon.OutLn="MnemoAnalysis > <"
 }
 >{Sep="#" Lex.ReceiverMkSet=ConstWait.FindAnd
-  Console.OutLn="MnemoAnalysis #"
+  TraceCon.OutLn="MnemoAnalysis #"
 }
 >{Sep="*" Lex.ReceiverMkSet=ConstWait2.FindAnd
-  Console.OutLn="MnemoAnalysis *"
+  TraceCon.OutLn="MnemoAnalysis *"
 }
 >{Sep="(" Lex.ReceiverMkSet=AtrAtr.FindAnd
-  Console.OutLn="MnemoAnalysis ("
+  TraceCon.OutLn="MnemoAnalysis ("
 }
 >{Sep="{" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineCopyAddPrevLoadSet
-  Console.OutLn="MnemoAnalysis {"
+  TraceCon.OutLn="MnemoAnalysis {"
 }
->{Sep="." Lex.Stop Console.OutLn="SYNTAX ERROR: method call (dot) on an unresolved FU -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row" ProgStopAll}
+>{Sep="." Lex.Stop Cons.OutLn="SYNTAX ERROR: method call (dot) on an unresolved FU -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row" ProgStopAll}
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Atr}
   MnemoTable.LastAttach={Lex.SendToReceiver}
   AtrCounter.OutMk=MnemoTable.LastLoadCopySet
   MnemoTable.LastPopMk
-  Console.OutLn="MnemoAnalysis else (Atr)"
+  TraceCon.OutLn="MnemoAnalysis else (Atr)"
 }
 
 
@@ -496,32 +505,32 @@ VarIniWait.Set=
   MnemoTable.LineCopyAddPrevLoadSet={Var}
   Stack.LineCopyAdd={Sep="["}
   AleResult.Set=0
-  Console.OutLn="VarIniWait [ -> ALE"
+  TraceCon.OutLn="VarIniWait [ -> ALE"
 }
 >{Const ConstInt Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Var}
   FUListNew.ReceivedLoadOutMk=MnemoTable.LastLoadSet
   MnemoTable.LastLoadConstVarTypeSet=0
   MnemoTable.LastPopMk
-  Console.OutLn="VarIniWait Const"
+  TraceCon.OutLn="VarIniWait Const"
 }
 >{Atr Lex.ReceiverMkSet=Root.FindAnd
   MnemoTable.LineCopyAddPrevLoadSet={Var}
   FUListNew.ReceivedLoadOutMk=MnemoTable.LastLoadSet
   MnemoTable.LastLoadConstVarTypeSet=0
   MnemoTable.LastPopMk
-  Console.OutLn="VarIniWait Atr"
+  TraceCon.OutLn="VarIniWait Atr"
 }
 >{Var Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LastAttach
-  Console.OutLn="VarIniWait Var"
+  TraceCon.OutLn="VarIniWait Var"
 }
 >{Vect Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LastAttach
-  Console.OutLn="VarIniWait Vect"
+  TraceCon.OutLn="VarIniWait Vect"
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR VarIniWait: value (Const, Var, Vect or '[') expected after '='"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR VarIniWait: value (Const, Var, Vect or '[') expected after '='"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
@@ -531,13 +540,13 @@ ConstWait.Set=
   FUALUNew.VectNew
   MnemoTable.LineCopyAddPrevLoadSet={Vect}
   FUListNew.ReceivedLoadOutMk=FUALUNew.Append
-  Console.OutLn="ConstWait -> VectWait"
+  TraceCon.OutLn="ConstWait -> VectWait"
 }
 >{Sep="[" Lex.ReceiverMkSet=ALE.FindAnd
-  Console.OutLn="ConstWait ["
+  TraceCon.OutLn="ConstWait ["
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR ConstWait: Const, Var, Vect or '[' expected after '#'"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR ConstWait: Const, Var, Vect or '[' expected after '#'"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
@@ -548,43 +557,43 @@ ConstWait2.Set=
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
   MkCalc.OutMk=MnemoTable.LastLoadSet
   MnemoTable.LastPopMk
-  Console.OutLn="ConstWait2 Const"
+  TraceCon.OutLn="ConstWait2 Const"
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR ConstWait2: integer constant expected after '*'"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR ConstWait2: integer constant expected after '*'"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
 
 VectWait.Set=
 >{Sep="," Lex.ReceiverMkSet=VectNext4.FindAnd
-  Console.OutLn="VectWait ,"
+  TraceCon.OutLn="VectWait ,"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUALUNew.PopMk
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="VectWait else->Root"
+  TraceCon.OutLn="VectWait else->Root"
 }
 
 
 VectNext4.Set=
 >{Const ConstInt Var Lex.ReceiverMkSet=VectNext5.FindAnd
   FUListNew.ReceivedLoadOutMk=FUALUNew.Append
-  Console.OutLn="VectNext4 element added"
+  TraceCon.OutLn="VectNext4 element added"
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR VectNext4: vector element (Const or Var) expected after ','"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR VectNext4: vector element (Const or Var) expected after ','"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
 
 VectNext5.Set=
 >{Sep="," Lex.ReceiverMkSet=VectNext4.FindAnd
-  Console.OutLn="VectNext5 ,"
+  TraceCon.OutLn="VectNext5 ,"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="VectNext5 else->Root"
+  TraceCon.OutLn="VectNext5 else->Root"
 }
 
 
@@ -592,25 +601,25 @@ AtrAtr.Set=
 >{Mnemo Lex.ReceiverMkSet=AtrAtr2.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
-  Console.OutLn="AtrAtr Mnemo"
+  TraceCon.OutLn="AtrAtr Mnemo"
 }
 >{FU FUType Lex.ReceiverMkSet=FUAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
-  Console.OutLn="AtrAtr FU/FUType"
+  TraceCon.OutLn="AtrAtr FU/FUType"
 }
 >{Mk Atr Lex.ReceiverMkSet=AtrBrack.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
-  Console.OutLn="AtrAtr Mk/Atr"
+  TraceCon.OutLn="AtrAtr Mk/Atr"
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR AtrAtr: Mnemo, FU, Mk or Atr expected inside '('"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR AtrAtr: Mnemo, FU, Mk or Atr expected inside '('"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
 
 AtrAtr2.Set=
 >{Sep="(" Lex.ReceiverMkSet=AtrAtr3.FindAnd
-  Console.OutLn="AtrAtr2 ("
+  TraceCon.OutLn="AtrAtr2 ("
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
@@ -620,14 +629,14 @@ AtrAtr2.Set=
 AtrAtr3.Set=
 >{FU Lex.ReceiverMkSet=FUAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
-  Console.OutLn="AtrAtr3 FU"
+  TraceCon.OutLn="AtrAtr3 FU"
 }
 >{Mk Atr Lex.ReceiverMkSet=AtrBrack.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastAtrSet
-  Console.OutLn="AtrAtr3 Mk/Atr"
+  TraceCon.OutLn="AtrAtr3 Mk/Atr"
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR AtrAtr3: FU, Mk or Atr expected after 'Mnemo('"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR AtrAtr3: FU, Mk or Atr expected after 'Mnemo('"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
@@ -636,12 +645,12 @@ FUAfter.Set=
 >{Sep="." Lex.ReceiverMkSet=MkWait.FindOr
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MkTable.FindOr
   MkTable.SuccessProgSet={FUListNew.LineOutMk=Lex.SendToReceiver}
-  Console.OutLn="FUAfter ."
+  TraceCon.OutLn="FUAfter ."
 }
 >{Sep="(" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={MkBrack}
   MkTable.OutMk=Stack.LastLoadSet
-  Console.OutLn="FUAfter ("
+  TraceCon.OutLn="FUAfter ("
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
@@ -652,12 +661,12 @@ MkWait.Set=
 >{Mk Lex.ReceiverMkSet=AtrBrack.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Add
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MnemoTable.FindAnd
-  Console.OutLn="MkWait MkForFU"
+  TraceCon.OutLn="MkWait MkForFU"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MnemoTable.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="MkWait else->Root"
+  TraceCon.OutLn="MkWait else->Root"
 }
 
 
@@ -665,24 +674,24 @@ AtrBrack.Set=
 >{Sep=")" Lex.ReceiverMkSet=Root.FindAnd
   Stack.FindAndLast={MkBrack}
   Stack.SuccessExec={Stack.PopMkDel}
-  Console.OutLn="AtrBrack )"
+  TraceCon.OutLn="AtrBrack )"
 }
 >{0 Lex.ReceiverMkSet=EqualWait.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="AtrBrack else->EqualWait"
+  TraceCon.OutLn="AtrBrack else->EqualWait"
 }
 
 
 EqualWait.Set=
 >{Sep="=" Lex.ReceiverMkSet=EqualAfter.FindAnd
-  Console.OutLn="EqualWait ="
+  TraceCon.OutLn="EqualWait ="
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MkCalc.OutMk=CapsList.LineAtrDef
   CapsList.LineAdd
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="EqualWait else->Root"
+  TraceCon.OutLn="EqualWait else->Root"
 }
 
 
@@ -690,17 +699,17 @@ EqualAfter.Set=
 >{FU FUType Lex.ReceiverMkSet=FUAfter2.FindAnd
   MkCalc.OutMk=CapsList.LineAtrDef
   FUListNew.ReceivedLoadOutMk=MkCalc.Set
-  Console.OutLn="EqualAfter FU"
+  TraceCon.OutLn="EqualAfter FU"
 }
 >{Mk Lex.ReceiverMkSet=LoadAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
-  Console.OutLn="EqualAfter Mk"
+  TraceCon.OutLn="EqualAfter Mk"
 }
 >{Mnemo Lex.ReceiverMkSet=MnemoLoad.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
   FUListNew.ReceivedOutMk=VarKey.LineCopyAdd
-  Console.OutLn="EqualAfter Mnemo"
+  TraceCon.OutLn="EqualAfter Mnemo"
 }
 >{Const ConstInt Var Vect Lex.ReceiverMkSet=EqVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
@@ -708,7 +717,7 @@ EqualAfter.Set=
   FUListNew.ReceivedLoadOutMk=CapsList.LineAdd
   AleResult.Set=0
   FUListNew.ReceivedLoadOutMk=AleOp.Set
-  Console.OutLn="EqualAfter Const/Var/Vect"
+  TraceCon.OutLn="EqualAfter Const/Var/Vect"
 }
 >{Atr Lex.ReceiverMkSet=EqVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
@@ -716,7 +725,7 @@ EqualAfter.Set=
   FUListNew.ReceivedLoadOutMk=CapsList.LineAdd
   AleResult.Set=0
   FUListNew.ReceivedLoadOutMk=AleOp.Set
-  Console.OutLn="EqualAfter Atr"
+  TraceCon.OutLn="EqualAfter Atr"
 }
 >{Sep="{" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep="{"}
@@ -729,7 +738,7 @@ EqualAfter.Set=
     Stack.LineCopyAdd={SubCapMark}
     MkCalc.Set=0
   }
-  Console.OutLn="EqualAfter {"
+  TraceCon.OutLn="EqualAfter {"
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
   Stack.LineCopyAdd={Sep=">"}
@@ -740,20 +749,20 @@ EqualAfter.Set=
   CapsDepth.Inc
   Stack.LineCopyAdd={ListOuterMark}
   MkCalc.Set=0
-  Console.OutLn="EqualAfter > <"
+  TraceCon.OutLn="EqualAfter > <"
 }
 >{Sep="("
   AleResult.Set=0
   Lex.ReceiverPush=ALE.FindAnd
   AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("}
-  Console.OutLn="EqualAfter ( -> ALE"
+  TraceCon.OutLn="EqualAfter ( -> ALE"
 }
 >{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd
   AleTmp.OutMk=AleOp.Set
-  Console.OutLn="EqualAfter parenVal"
+  TraceCon.OutLn="EqualAfter parenVal"
 }
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR EqualAfter: value (FU, Mk, Mnemo, Const, Var, Vect, '{', '(' or '>') expected after '='"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR EqualAfter: value (FU, Mk, Mnemo, Const, Var, Vect, '{', '(' or '>') expected after '='"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
@@ -762,7 +771,7 @@ FUAfter2.Set=
 >{Sep="." Lex.ReceiverMkSet=MkWait2.FindOr
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MkTable.FindOr
   MkTable.SuccessProgSet={FUListNew.LineOutMk=Lex.SendToReceiver}
-  Console.OutLn="FUAfter2 ."
+  TraceCon.OutLn="FUAfter2 ."
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MkCalc.OutMk=OAList.LastLoadSet
@@ -775,7 +784,7 @@ MkWait2.Set=
 >{Mk Lex.ReceiverMkSet=LoadAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=MkCalc.Add
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MnemoTable.FindAnd
-  Console.OutLn="MkWait2 MkForFU"
+  TraceCon.OutLn="MkWait2 MkForFU"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   Lex.UnicAtrSet=Mnemo Lex.UnicMkSet=MnemoTable.FindAnd
@@ -793,26 +802,26 @@ MnemoLoad.Set=
                         VarStore.LineLoadOutMk=CapsList.LineAdd}
   MnemoTable.LastPop
   VarKey.LastPop
-  Console.OutLn="MnemoLoad ! consume"
+  TraceCon.OutLn="MnemoLoad ! consume"
 }
 >{Sep="(" Lex.ReceiverMkSet=LoadVar.FindAnd
-  Console.OutLn="MnemoLoad ("
+  TraceCon.OutLn="MnemoLoad ("
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
   Stack.LineCopyAdd={Sep=">"}
   OAList.PushTiedCopy
-  Console.OutLn="MnemoLoad > <"
+  TraceCon.OutLn="MnemoLoad > <"
 }
 >{Sep="{" Lex.ReceiverMkSet=Root.FindAnd
   Stack.LineCopyAdd={Sep="{"}
   OAList.LineAdd
   OAList.LineCopyAddPrevLoadSet
-  Console.OutLn="MnemoLoad {"
+  TraceCon.OutLn="MnemoLoad {"
 }
->{Sep="." Lex.Stop Console.OutLn="SYNTAX ERROR: method call (dot) on an unresolved FU in RHS/load position -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row" ProgStopAll}
+>{Sep="." Lex.Stop Cons.OutLn="SYNTAX ERROR: method call (dot) on an unresolved FU in RHS/load position -- the name before the dot is not a registered FU; declare it via NewFU and ensure its FUType has a RegPeer row" ProgStopAll}
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="MnemoLoad else->Root"
+  TraceCon.OutLn="MnemoLoad else->Root"
 }
 
 
@@ -821,7 +830,7 @@ EqVar.Set=
   Lex.ReceiverPush=ALEAfter.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
   CapsList.LastPopMk=AleTmp.Set
-  Console.OutLn="EqVar Operator -> ALE"
+  TraceCon.OutLn="EqVar Operator -> ALE"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MkCalc.OutMk=CapsList.LineAtrDef
@@ -829,18 +838,18 @@ EqVar.Set=
   AleResult.Set=0
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="EqVar else -> Root"
+  TraceCon.OutLn="EqVar else -> Root"
 }
 
 
 LoadVar.Set=
 >{Const ConstInt Var Vect Lex.ReceiverMkSet=BrackLoadVar.FindAnd
   FUListNew.ReceivedLoadOutMk=OAList.LastLoadSet
-  Console.OutLn="LoadVar Const/Var/Vect"
+  TraceCon.OutLn="LoadVar Const/Var/Vect"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="LoadVar else->Root"
+  TraceCon.OutLn="LoadVar else->Root"
 }
 
 
@@ -848,22 +857,22 @@ BrackLoadVar.Set=
 >{Operator Sep="+" Sep="-" Sep="*" Sep="/" Sep="%"
   Lex.ReceiverPush=ALEAfter.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="BrackLoadVar Operator -> ALE"
+  TraceCon.OutLn="BrackLoadVar Operator -> ALE"
 }
 >{Sep=")" Lex.ReceiverMkSet=Root.FindAnd
-  Console.OutLn="BrackLoadVar )"
+  TraceCon.OutLn="BrackLoadVar )"
 }
 >{0 Lex.ReceiverMkSet=ALE.FindAnd
   Lex.ReceiverPush=ALE.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="BrackLoadVar else -> ALE"
+  TraceCon.OutLn="BrackLoadVar else -> ALE"
 }
 
 
 LoadAfter.Set=
 >{Sep="=" Lex.ReceiverMkSet=EqualAfter.FindAnd
   MkCalc.OutMk=OAList.LastAtrAttach
-  Console.OutLn="LoadAfter ="
+  TraceCon.OutLn="LoadAfter ="
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   MkCalc.OutMk=OAList.LastLoadSet
@@ -871,7 +880,7 @@ LoadAfter.Set=
   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Bus.MkExec}}
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Root.FindAnd
-  Console.OutLn="LoadAfter else->Root"
+  TraceCon.OutLn="LoadAfter else->Root"
 }
 
 
@@ -885,19 +894,19 @@ ListAfter.Set=
   CapsList.Push
   CapsDepth.Inc
   Stack.LineCopyAdd={SubCapMark}
-  Console.OutLn="ListAfter {"
+  TraceCon.OutLn="ListAfter {"
 }
 >{Mk Atr Const ConstInt Var Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.LoadOutMk=OAList.LastLoadSet
-  Console.OutLn="ListAfter Mk/Atr/Const/Var"
+  TraceCon.OutLn="ListAfter Mk/Atr/Const/Var"
 }
 >{Mnemo Lex.ReceiverMkSet=ListAfterMnemo.FindAnd
   FUListNew.ReceivedOutMk=MnemoTable.LineCopyAdd
   MnemoTable.LastAttach={Lex.SendToReceiver}
-  Console.OutLn="ListAfter Mnemo"
+  TraceCon.OutLn="ListAfter Mnemo"
 }
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
-  Console.OutLn="ListAfter > <"
+  TraceCon.OutLn="ListAfter > <"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
@@ -906,7 +915,7 @@ ListAfter.Set=
 
 ListAfterClose.Set=
 >{Sep=">" Sep="<" Lex.ReceiverMkSet=ListAfter.FindAnd
-  Console.OutLn="ListAfterClose >"
+  TraceCon.OutLn="ListAfterClose >"
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
   Stack.FindAndLast={ListOuterMark}
@@ -915,11 +924,11 @@ ListAfterClose.Set=
                      CapsDepth.Dec
                      CapsDepth.LessEQExec={VarFlag.NEQExec={CapsList.MarkLastOutMk=VarStore.LastAttach
                                                             VarFlag.Set=0
-                                                            Console.OutLn="VARDEF-STORED"}
+                                                            TraceCon.OutLn="VARDEF-STORED"}
                                            CapsList.MarkLastCopyOutMk=Bus.MkExec}
                      Stack.LastDelMk}
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="ListAfterClose else -> Root"
+  TraceCon.OutLn="ListAfterClose else -> Root"
 }
 
 
@@ -936,11 +945,11 @@ ListAfterMnemo.Set=
   CapsList.Push
   CapsDepth.Inc
   Stack.LineCopyAdd={SubCapMark}
-  Console.OutLn="ListAfterMnemo {"
+  TraceCon.OutLn="ListAfterMnemo {"
 }
 >{0 Lex.ReceiverMkSet=ListAfter.FindAnd
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="ListAfterMnemo else"
+  TraceCon.OutLn="ListAfterMnemo else"
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -950,44 +959,44 @@ ALE.Set=
 >{Const ConstInt Var Vect
   Lex.ReceiverMkSet=ALEAfter.FindAnd
   FUListNew.ReceivedLoadOutMk=AleOp.Set
-  Console.OutLn="ALE operand"
+  TraceCon.OutLn="ALE operand"
 }
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
   AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("}
-  Console.OutLn="ALE ("
+  TraceCon.OutLn="ALE ("
 }
 >{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd
   AleTmp.OutMk=AleOp.Set
-  Console.OutLn="ALE parenVal"
+  TraceCon.OutLn="ALE parenVal"
 }
->{Sep="-" Lex.ReceiverMkSet=AleNegWait.FindAnd Console.OutLn="ALE unary"}
->{Sep="+" Lex.ReceiverMkSet=ALE.FindAnd Console.OutLn="ALE unary"}
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR ALE: operand or '(' expected"
-  FUListNew.ReceivedOutMk=Console.OutLn
+>{Sep="-" Lex.ReceiverMkSet=AleNegWait.FindAnd TraceCon.OutLn="ALE unary"}
+>{Sep="+" Lex.ReceiverMkSet=ALE.FindAnd TraceCon.OutLn="ALE unary"}
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR ALE: operand or '(' expected"
+  FUListNew.ReceivedOutMk=Cons.OutLn
   ProgStopAll
 }
 
 ALEAfter.Set=
 >{Sep="+" Lex.ReceiverMkSet=ALE.FindAnd
   AleOp.OutMk=AleResult.Add
-  Console.OutLn="ALEAfter op"
+  TraceCon.OutLn="ALEAfter op"
 }
 >{Sep="-" Lex.ReceiverMkSet=AleNegWait.FindAnd
   AleOp.OutMk=AleResult.Add
-  Console.OutLn="ALEAfter op"
+  TraceCon.OutLn="ALEAfter op"
 }
 >{Sep="*" Lex.ReceiverMkSet=AleMulWait.FindAnd
-  Console.OutLn="ALEAfter op"
+  TraceCon.OutLn="ALEAfter op"
 }
 >{Sep="/" Lex.ReceiverMkSet=AleDivWait.FindAnd
-  Console.OutLn="ALEAfter op"
+  TraceCon.OutLn="ALEAfter op"
 }
 >{Sep="%" Lex.ReceiverMkSet=AleModWait.FindAnd
-  Console.OutLn="ALEAfter op"
+  TraceCon.OutLn="ALEAfter op"
 }
 >{Operator Lex.ReceiverMkSet=ALE.FindAnd
   AleOp.OutMk=AleResult.Add
-  Console.OutLn="ALEAfter op"
+  TraceCon.OutLn="ALEAfter op"
 }
 >{Sep=")"
   Stack.FindAndLast={Sep="("}
@@ -998,7 +1007,7 @@ ALEAfter.Set=
                      Stack.LastDelMk
                      Lex.ReceiverPop
                      Lex.SendToReceiver={AleParenVal}
-                     Console.OutLn="ALEAfter )"}
+                     TraceCon.OutLn="ALEAfter )"}
   Stack.FailExec={Lex.ReceiverMkSet=Root.FindAnd
                   AleOp.OutMk=AleResult.Add
                   MkCalc.OutMk=CapsList.LineAtrDef
@@ -1006,7 +1015,7 @@ ALEAfter.Set=
                   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Bus.MkExec}}
                   MkCalc.Set=0
                   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-                  Console.OutLn="ALEAfter done -> Root"}
+                  TraceCon.OutLn="ALEAfter done -> Root"}
 }
 >{Sep="]"
   Stack.FindAndLast={Sep="["}
@@ -1016,9 +1025,9 @@ ALEAfter.Set=
                      MnemoTable.LastLoadConstVarTypeSet=0
                      MnemoTable.LastPopMk
                      Lex.ReceiverMkSet=Root.FindAnd
-                     Console.OutLn="ALEAfter ] -> var bound"}
+                     TraceCon.OutLn="ALEAfter ] -> var bound"}
   Stack.FailExec={Lex.Stop
-                  Console.OutLn="SYNTAX ERROR ALEAfter: ']' without matching '['"
+                  Cons.OutLn="SYNTAX ERROR ALEAfter: ']' without matching '['"
                   ProgStopAll}
 }
 >{0 Lex.ReceiverMkSet=Root.FindAnd
@@ -1028,43 +1037,51 @@ ALEAfter.Set=
   MkCalc.NEQExec={CapsDepth.LessEQExec={CapsList.MarkLastOutMk=Bus.MkExec}}
   MkCalc.Set=0
   FUListNew.ReceivedOutMk=Lex.SendToReceiver
-  Console.OutLn="ALEAfter done -> Root"
+  TraceCon.OutLn="ALEAfter done -> Root"
 }
 
 AleMulWait.Set=
 >{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
-  FUListNew.ReceivedLoadOutMk=AleOp.Mul Console.OutLn="AleMul operand"}
+  FUListNew.ReceivedLoadOutMk=AleOp.Mul TraceCon.OutLn="AleMul operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
-  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleMul ("}
->{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Mul Console.OutLn="AleMul parenVal"}
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '*'" ProgStopAll}
+  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} TraceCon.OutLn="AleMul ("}
+>{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Mul TraceCon.OutLn="AleMul parenVal"}
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR: operand expected after '*'" ProgStopAll}
 
 AleDivWait.Set=
 >{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
-  FUListNew.ReceivedLoadOutMk=AleOp.Div Console.OutLn="AleDiv operand"}
+  FUListNew.ReceivedLoadOutMk=AleOp.Div TraceCon.OutLn="AleDiv operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
-  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleDiv ("}
->{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Div Console.OutLn="AleDiv parenVal"}
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '/'" ProgStopAll}
+  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} TraceCon.OutLn="AleDiv ("}
+>{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Div TraceCon.OutLn="AleDiv parenVal"}
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR: operand expected after '/'" ProgStopAll}
 
 AleModWait.Set=
 >{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
-  FUListNew.ReceivedLoadOutMk=AleOp.Mod Console.OutLn="AleMod operand"}
+  FUListNew.ReceivedLoadOutMk=AleOp.Mod TraceCon.OutLn="AleMod operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
-  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleMod ("}
->{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Mod Console.OutLn="AleMod parenVal"}
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '%%'" ProgStopAll}
+  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} TraceCon.OutLn="AleMod ("}
+>{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Mod TraceCon.OutLn="AleMod parenVal"}
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR: operand expected after '%%'" ProgStopAll}
 
 AleNegWait.Set=
 >{Const ConstInt Var Vect Lex.ReceiverMkSet=ALEAfter.FindAnd
-  FUListNew.ReceivedLoadOutMk=AleOp.Set AleOp.Mul=-1 Console.OutLn="AleNeg operand"}
+  FUListNew.ReceivedLoadOutMk=AleOp.Set AleOp.Mul=-1 TraceCon.OutLn="AleNeg operand"}
 >{Sep="(" Lex.ReceiverPush=ALE.FindAnd
-  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} Console.OutLn="AleNeg ("}
->{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Set AleOp.Mul=-1 Console.OutLn="AleNeg parenVal"}
->{0 Lex.Stop Console.OutLn="SYNTAX ERROR: operand expected after '-'" ProgStopAll}
+  AleResult.Push=0 AleOp.Push=0 Stack.LineCopyAdd={Sep="("} TraceCon.OutLn="AleNeg ("}
+>{AleParenVal Lex.ReceiverMkSet=ALEAfter.FindAnd AleTmp.OutMk=AleOp.Set AleOp.Mul=-1 TraceCon.OutLn="AleNeg parenVal"}
+>{0 Lex.Stop Cons.OutLn="SYNTAX ERROR: operand expected after '-'" ProgStopAll}
 
 ////////////////////////////////////////////////////////////////////////////////
 Lex.ReceiverMkSet=Root.FindAnd
 MnemoTable.JsonSave="MnemoTable.json"
+TraceCon.OutFileSet="trace.log"
 
-//Lex.Lexing="x=1 y=2 Cons.OutLn=x+y"
+// program execution: read argv[2] (the program file) and lex it.
+Bus.ArgIndSet=2
+Bus.ArgByIndOutMk=Lex.LexFile
+
+CapsList.IndVectWrite="CompileCC.ind"
+
+// or lex it inline.
+// Lex.Lexing="NewFU={Mnemo=\"Cons\" FUType=FUConsNew Hint=\"Консоль для вывода теста\"} x=100 y=2 Cons.OutLn=x+y-(x+y)*(x+y)"

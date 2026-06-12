@@ -17,3 +17,6 @@ Cons.OutLn=E/A+C
 Cons.OutLn=E%B+A
 Cons.OutLn=E/A*B
 Cons.OutLn=A+B*C-D/A%B
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

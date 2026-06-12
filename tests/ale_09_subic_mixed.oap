@@ -12,3 +12,6 @@ Cons.OutLn={Cons.OutLn="str"}
 Cons.OutLn={Atr=99 Cons.OutLn="after-inner-atr"}
 Atr={Q=5 Cons.OutLn={Cons.OutLn="boxed-in-subgraph"}}
 Cons.OutLn=Q
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

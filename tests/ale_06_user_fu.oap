@@ -13,3 +13,6 @@ X=7
 Y=6
 A2.OutLn=X*Y
 A2.OutLn="A2 string"
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

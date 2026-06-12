@@ -20,6 +20,8 @@ NewFU={Mnemo="AleResult" FUType=FUIntAluNew Hint="Аккумулятор для 
 NewFU={Mnemo="AleOp" FUType=FUIntAluNew Hint="Текущий операнд ALE (стэшится перед применением оператора)"}
 NewFU={Mnemo="AleTmp" FUType=FUIntAluNew Hint="ALE: holds a parenthesised sub-expression result across the accumulator restore"}
 NewFU={Mnemo="CapsDepth" FUType=FUIntAluNew Hint="Sub-capsule nesting depth; top-level emits dispatch when depth==0"}
+NewFU={Mnemo="GateCtr" FUType=FUIntAluNew Hint="argc gate: emit .ind only when an output file was requested"}
+NewFU={Mnemo="ArgIndex" FUType=FUIntAluNew Hint="computes argc-1 to read the last argv (the output .ind path)"}
 NewFU={Mnemo="BackCloneCounter" FUType=FUIntAluNew Hint="Счётчик обратных клонов"}
 NewFU={Mnemo="MkTable" FUType=FUListNew Hint="ФУ для МК-таблиц"}
 NewFU={Mnemo="OAList" FUType=FUListNew Hint="ФУ для генерации ОА-графа"}
@@ -110,6 +112,7 @@ CommonMkTable // generic FU Mks (Mks available on every FU)
 ConsMkTable
 >{Mk=1   Mnemo="Out"     Hint="Вывод"}
 >{Mk=2   Mnemo="OutLn"   Hint="Вывод с переводом строки"}
+>{Mk=30  Mnemo="OutFileSet" Hint="Redirect THIS Console's output to a file (per-FU); empty Load = back to stdout"}
 >{Mk=10  Mnemo="Ln"      Hint="Перевод строки"}
 >{Mk=100 Mnemo="Input"   Hint="Read stdin, write to Load"}
 >{Mk=101 Mnemo="InputMk" Hint="Read stdin, dispatch via Load as MK"}
@@ -172,6 +175,8 @@ ListMkTable
 >{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 >{Mk=600 Mnemo="JsonSave" Hint="Dump the table to a JSON file"}
 >{Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
+>{Mk=609 Mnemo="IndFileNameSet"  Hint="Set the .ind output path"}
+>{Mk=614 Mnemo="IndVectWrite"    Hint="Write the built index vector to the .ind file"}
 
 // MnemoListMkTable: an exact duplicate of ListMkTable, used ONLY by the
 // "MnemoTable" self-row below. The .ind serializer (MakeIndexVect in
@@ -237,6 +242,8 @@ MnemoListMkTable
 >{Mk=257 Mnemo="IndexVectPopMk"     Hint="Forward this caps-manager FU to the Load MK (.ind emission)"}
 >{Mk=600 Mnemo="JsonSave" Hint="Dump the table to a JSON file"}
 >{Mk=608 Mnemo="CapsListRegister" Hint="Capture this CapsList accumulator for the emitter"}
+>{Mk=609 Mnemo="IndFileNameSet"  Hint="Set the .ind output path"}
+>{Mk=614 Mnemo="IndVectWrite"    Hint="Write the built index vector to the .ind file"}
 
 LexMkTable
 >{Mk=0   Mnemo="Reset"          Hint="Reset Lex state"}
@@ -285,6 +292,9 @@ BusMkTable
 >{Mk=40 Mnemo="LastFUMkRangeOut" Hint="Write the most-recent FU's MK range to Load"}
 >{Mk=41 Mnemo="LastFUMkRangeOutMk" Hint="Dispatch the most-recent FU's MK range via Load MK"}
 >{Mk=155 Mnemo="FUTypeCorrectSet" Hint="Set FU type correction offset"}
+>{Mk=202 Mnemo="ArgcOutMk"      Hint="Dispatch argc via Load MK"}
+>{Mk=208 Mnemo="ArgByIndOutMk"  Hint="Dispatch argv[argInd] via Load MK"}
+>{Mk=210 Mnemo="ArgIndSet"      Hint="Set argv read index from Load"}
 
 
 // SelfMkTable: the generic receiver methods, indexed by bare Mk (range 0). FUListNew points the
@@ -1096,5 +1106,14 @@ AleNegWait.Set=
 ////////////////////////////////////////////////////////////////////////////////
 Lex.ReceiverMkSet=Root.FindAnd
 MnemoTable.JsonSave="MnemoTable.json"
+
+// NOTE: the .ind emit directive (CapsList.IndVectWrite="CompileCC.ind", which now
+// builds + writes in one call) and the trace mute (TraceCon.OutFileSet) live ONLY
+// in CompileCC-self.oap -- the SELF-HOST source the canonical CompileCC.ind is
+// built from. They are deliberately NOT here: this file is the Delphi reference
+// (--bootstrap CompileCC.oap --compile-to), and in Delphi mk614 is a REAL List op
+// that would access-violate on an unprepared CapsList during bootstrap. The Delphi
+// build emits via its own --compile-to path (CapsManager.IndexVectPopMk=
+// GatewayFile.IndexVectWrite), so it needs no source-embedded emit directive.
 
 //Lex.Lexing="x=1 y=2 Cons.OutLn=x"

@@ -12,3 +12,6 @@ Cons.OutLn=42
 Cons.OutLn=3.14
 Cons.Ln
 Cons.OutLn="footer"
+
+// --- self-emit (ALE serialization test): compile this program to run.tmp.ind ---
+MnemoTable.IndVectWrite="run.tmp.ind"

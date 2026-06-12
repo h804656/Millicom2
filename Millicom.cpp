@@ -26,20 +26,17 @@ using namespace std;
 
 static void Usage()
 {
-	cerr << "Usage: millicom <index_file> [--lex-file <path>] [--lex <text>]" << endl;
-	cerr << "  --lex-file <path>  After running the index file, feed the contents of <path>" << endl;
-	cerr << "                     into Lex.Lexing (i.e. parse it through the loaded compiler)." << endl;
-	cerr << "  --lex <text>       Same, but the program text is given inline." << endl;
-	cerr << "  --run <path>       Compile & run <path>, printing only the program's output" << endl;
-	cerr << "                     (the compiler's own state-trace is suppressed)." << endl;
-	cerr << "  --out-dir <dir>    Directory prepended to both emitted files: the .ind" << endl;
-	cerr << "                     (IndVectWrite) and MnemoTable.json (JsonSave)." << endl;
+	cerr << "Usage: millicom <index_file> [program_file] [--out-dir <dir>]" << endl;
+	cerr << "  <index_file>       argv[1]: the .ind to load (the compiler/program)." << endl;
+	cerr << "  <program_file>     argv[2] (optional): a single program file fed into" << endl;
+	cerr << "                     Lex.Lexing (parsed/run live through the loaded compiler)." << endl;
+	cerr << "  --out-dir <dir>    Directory prepended to any OAP-emitted files (a .ind via" << endl;
+	cerr << "                     MnemoTable.IndVectWrite, MnemoTable.json via JsonSave)." << endl;
 }
 
 int main(int argc, char* argv[])
 {
 	std::string indPath; //= "C:\\Users\\hacker\\Downloads\\millicom\\oap2\\CompileCC.ind";
-	vector<string> lexInputs; //= {"oap2\\CompileCC-self.oap"};
 	if (argc < 2 && !indPath.size())
 	{
 		Usage();
@@ -54,17 +51,6 @@ int main(int argc, char* argv[])
 		_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 	}
-	for (string& s : lexInputs) {
-		ifstream lf(s, ios::binary);
-		if (!lf)
-		{
-			cerr << "Error: --lex-file not found: " << s << endl;
-			return 1;
-		}
-		stringstream ss;
-		ss << lf.rdbuf();
-		s = ss.str();
-	}
 
 	if (argc >= 2) {
 		string a1 = argv[1];
@@ -72,48 +58,13 @@ int main(int argc, char* argv[])
 	}
 
 	if(indPath.empty()) indPath = argv[1];
-	string outFile;
-	bool haveOutFile = false;
-	bool runMode = false;
 
+	// argv[1] is the index (.ind). argv[2], if present, is the single program file.
+	string lexFile;
 	for (int i = 2; i < argc; i++)
 	{
 		string a = argv[i];
-		if (a == "--lex-file" && i + 1 < argc)
-		{
-			ifstream lf(argv[++i], ios::binary);
-			if (!lf)
-			{
-				cerr << "Error: --lex-file not found: " << argv[i] << endl;
-				return 1;
-			}
-			stringstream ss;
-			ss << lf.rdbuf();
-			lexInputs.push_back(ss.str());
-		}
-		else if (a == "--lex" && i + 1 < argc)
-		{
-			lexInputs.push_back(argv[++i]);
-		}
-		else if (a == "--run" && i + 1 < argc)
-		{
-			ifstream rf(argv[++i], ios::binary);
-			if (!rf)
-			{
-				cerr << "Error: --run file not found: " << argv[i] << endl;
-				return 1;
-			}
-			stringstream ss;
-			ss << rf.rdbuf();
-			lexInputs.push_back(ss.str());
-			runMode = true;
-		}
-		else if (a == "--out-file" && i + 1 < argc)
-		{
-			outFile = argv[++i];
-			haveOutFile = true;
-		}
-		else if (a == "--out-dir" && i + 1 < argc)
+		if (a == "--out-dir" && i + 1 < argc)
 		{
 			string d = argv[++i];
 			if (!d.empty() && d.back() != '\\' && d.back() != '/') d += '\\';
@@ -124,14 +75,17 @@ int main(int argc, char* argv[])
 			Usage();
 			return 0;
 		}
+		else if (!a.empty() && a[0] != '-' && lexFile.empty())
+		{
+			lexFile = a; // the single positional program file (argv[2])
+		}
 		else
 		{
-			cerr << "Unknown argument: " << a << endl;
+			cerr << "Unknown or unexpected argument: " << a << endl;
 			Usage();
 			return 1;
 		}
 	}
-
 	ifstream f(indPath);
 	if (!f)
 	{
@@ -141,73 +95,13 @@ int main(int argc, char* argv[])
 	f.close();
 
 	BusFU Bus;
-	string STR;
-	StreamFloatALU ALU;
 
-	Bus.ProgFU(200, { Cint, &argc });
-	Bus.ProgFU(203, { Cchar, argv });
+	const char* busArgv[3] = { argv[0], argv[1], lexFile.c_str() };
+	int busArgc = lexFile.empty() ? 2 : 3;
+	Bus.ProgFU(200, { Cint, &busArgc });
+	Bus.ProgFU(203, { Cchar, (char**)busArgv });
 
-	STR = indPath;
-	Bus.ProgFU(10, { Cstring, &STR });
-
-	string runTempOut;
-	if (runMode)
-	{
-		for (size_t i = 0; i < Bus.FUs.size(); i++)
-			if (Bus.FUs[i] && Bus.FUs[i]->GetFuType() == 1)
-				static_cast<Console*>(Bus.FUs[i])->Quiet = true;
-		if (!haveOutFile)
-		{
-			if (!JSON_OAConeverter::OutDir.empty())
-				runTempOut = "run.tmp.ind";
-			else
-				runTempOut = indPath + ".run.tmp.ind";
-			outFile = runTempOut;
-			haveOutFile = true;
-		}
-	}
-
-	if (!lexInputs.empty())
-	{
-		// Find the Lex FU (FUtype == 3) and call its Lexing MK (=100) on the supplied text.
-		long int lexGlobalMk = -1;
-		for (size_t i = 2; i < Bus.FUs.size(); i++) // 0,1 are self/Bus stubs
-		{
-			if (Bus.FUs[i] && Bus.FUs[i]->GetFuType() == 3)
-			{
-				lexGlobalMk = Bus.FUMkRange * (long int)i;
-				break;
-			}
-		}
-		if (lexGlobalMk < 0)
-		{
-			cerr << "Error: --lex-file given but no Lex FU was registered by the .ind. "
-				"Did the index file load a compiler that creates a Lex FU?" << endl;
-			return 2;
-		}
-		for (auto& chunk : lexInputs)
-		{
-			Bus.ProgFU(lexGlobalMk + 100, { Cstring, &chunk });
-		}
-	}
-
-	if (haveOutFile && List::sCapsList != nullptr)
-	{
-		List* cl = (List*)List::sCapsList;
-		cl->ProgFU(609, { Cstring, &outFile }); // IndFileNameSet
-		cl->ProgFU(612, { Cint, nullptr });     // build (IndVectFromList)
-		cl->ProgFU(613, { Cint, nullptr });     // write (IndVectWrite)
-	}
-
-	if (runMode && !runTempOut.empty())
-	{
-		BusFU RunBus;
-		RunBus.ProgFU(200, { Cint, &argc });
-		RunBus.ProgFU(203, { Cchar, argv });
-		string rp = JSON_OAConeverter::OutDir + runTempOut;
-		RunBus.ProgFU(10, { Cstring, &rp });
-		std::remove(rp.c_str());
-	}
-
+	string STR = indPath;
+	Bus.ProgFU(10, { Cstring, &STR }); // load+execute the .ind; its baked tail lexes argv[2]
 	return 0;
 }
