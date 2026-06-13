@@ -61,6 +61,7 @@ NewFU={Mnemo="TraceCon" FUType=FUConsNew Hint="Compiler trace console -- a SEPAR
 
 Sep*-4
 Var*-14
+End*-27
 FU*-300
 MkForFU*-301
 IC*-102
@@ -243,7 +244,7 @@ LexMkTable
 >{Mk=22  Mnemo="SepErase"       Hint="Remove a Sep token literal"}
 >{Mk=70  Mnemo="SendToReceiver" Hint="Dispatch current LexBuf entry to Receiver"}
 >{Mk=100 Mnemo="Lexing"         Hint="Feed string into Lex for tokenization"}
->{Mk=101 Mnemo="LexFile"        Hint="Read the file at the path Load and lex it; re-entrant (no-op if already lexing)"}
+>{Mk=110 Mnemo="LexFile"        Hint="Read the file at the path Load and lex it; re-entrant (no-op if already lexing)"}
 >{Mk=99  Mnemo="Stop"           Hint="Stop lexing (Lex.Stop)"}
 
 IntAluMkTable
@@ -1081,7 +1082,9 @@ TraceCon.OutFileSet="trace.log"
 Bus.ArgIndSet=2
 Bus.ArgByIndOutMk=Lex.LexFile
 
-CapsList.IndVectWrite="CompileCC.ind"
+//CapsList.IndVectWrite="CompileCC22.ind"
 
 // or lex it inline.
-// Lex.Lexing="NewFU={Mnemo=\"Cons\" FUType=FUConsNew Hint=\"Консоль для вывода теста\"} x=100 y=2 Cons.OutLn=x+y-(x+y)*(x+y)"
+
+Lex.Lexing="NewFU={Mnemo=\"Cons\" FUType=FUConsNew Hint=\"Консоль для вывода теста\"} x=100 y=2 Cons.OutLn=x+y-(x+y)*(x+y)"
+// Lex.SendToReceiver={End}

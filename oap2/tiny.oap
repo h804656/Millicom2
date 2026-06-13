@@ -1,6 +1,61 @@
 NewFU={Mnemo="Cons" FUType=FUConsNew}
 Cons.OutLn="hello-from-tiny"
 
-x=1
-y=2
-Cons.OutLn=x+y-(x+y)*(x+y)
+NewFU={Mnemo="Cons" FUType=FUConsNew}    // output channel
+NewFU={Mnemo="Stk"  FUType=FUListNew}    // operand stack
+NewFU={Mnemo="Acc"  FUType=FUIntAluNew}  // ALU register: operand 'a' / result
+NewFU={Mnemo="Tmp"  FUType=FUIntAluNew}  // ALU register: operand 'b'
+NewFU={Mnemo="Ops"  FUType=FUListNew}    // the dictionary (primitives + user words)
+
+Ops.MkModeSet=1
+Ops.Set=
+>{Mnemo="add"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Add Acc.OutMk=Stk.LineAdd}   // ( a b -- a+b )
+>{Mnemo="sub"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Sub Acc.OutMk=Stk.LineAdd}   // ( a b -- a-b )
+>{Mnemo="mul"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Mul Acc.OutMk=Stk.LineAdd}   // ( a b -- a*b )
+>{Mnemo="div"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Div Acc.OutMk=Stk.LineAdd}   // ( a b -- a/b )
+>{Mnemo="mod"  Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Acc.Mod Acc.OutMk=Stk.LineAdd}   // ( a b -- a%b )
+>{Mnemo="neg"  Stk.LastPopMk=Acc.Set Acc.Mul=-1 Acc.OutMk=Stk.LineAdd}                                // ( a -- -a )
+>{Mnemo="dup"  Stk.LastPopMk=Acc.Set Acc.OutMk=Stk.LineAdd Acc.OutMk=Stk.LineAdd}                     // ( a -- a a )
+>{Mnemo="drop" Stk.LastPopMk=Acc.Set}                                                                 // ( a -- )
+>{Mnemo="swap" Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Tmp.OutMk=Stk.LineAdd Acc.OutMk=Stk.LineAdd}            // ( a b -- b a )
+>{Mnemo="over" Stk.LastPopMk=Tmp.Set Stk.LastPopMk=Acc.Set Acc.OutMk=Stk.LineAdd Tmp.OutMk=Stk.LineAdd Acc.OutMk=Stk.LineAdd}  // ( a b -- a b a )
+>{Mnemo="dot"  Stk.LastPopMk=Acc.Set Acc.OutMk=Cons.OutLn Acc.OutMk=Stk.LineAdd}                      // ( a -- a ) print top
+>{Mnemo="square"     Ops.FindAnd={Mnemo="dup"} Ops.FindAnd={Mnemo="mul"}}                                               // square = dup mul          ( a -- a*a )
+>{Mnemo="cube"       Ops.FindAnd={Mnemo="dup"} Ops.FindAnd={Mnemo="square"} Ops.FindAnd={Mnemo="mul"}}                  // cube   = dup square mul   ( a -- a*a*a )  (uses square!)
+>{Mnemo="double"     Ops.FindAnd={Mnemo="dup"} Ops.FindAnd={Mnemo="add"}}                                               // double = dup add          ( a -- 2a )
+>{Mnemo="inc"        Stk.LineAdd=1 Ops.FindAnd={Mnemo="add"}}                                                           // inc    = 1 add            ( a -- a+1 )
+>{Mnemo="sumsq"      Ops.FindAnd={Mnemo="square"} Ops.FindAnd={Mnemo="swap"} Ops.FindAnd={Mnemo="square"} Ops.FindAnd={Mnemo="add"}}  // sumsq = square swap square add  ( a b -- a*a+b*b )
+>{Mnemo="avg2"       Ops.FindAnd={Mnemo="add"} Stk.LineAdd=2 Ops.FindAnd={Mnemo="div"}}                                 // avg2   = add 2 div        ( a b -- (a+b)/2 )
+
+Cons.OutLn="square(5) = 5 square        expect 25"
+Stk.LineAdd=5
+Ops.FindAnd={Mnemo="square"}
+Ops.FindAnd={Mnemo="dot"}
+Ops.FindAnd={Mnemo="drop"}
+
+Cons.OutLn="cube(3)   = 3 cube          expect 27   (cube is built from square)"
+Stk.LineAdd=3
+Ops.FindAnd={Mnemo="cube"}
+Ops.FindAnd={Mnemo="dot"}
+Ops.FindAnd={Mnemo="drop"}
+
+Cons.OutLn="sumsq(3,4) = 3 4 sumsq      expect 25   (3*3 + 4*4)"
+Stk.LineAdd=3
+Stk.LineAdd=4
+Ops.FindAnd={Mnemo="sumsq"}
+Ops.FindAnd={Mnemo="dot"}
+Ops.FindAnd={Mnemo="drop"}
+
+Cons.OutLn="avg2(10,20) = 10 20 avg2    expect 15"
+Stk.LineAdd=10
+Stk.LineAdd=20
+Ops.FindAnd={Mnemo="avg2"}
+Ops.FindAnd={Mnemo="dot"}
+Ops.FindAnd={Mnemo="drop"}
+
+Cons.OutLn="chaining words: (4+1) squared = 4 inc square   expect 25"
+Stk.LineAdd=4
+Ops.FindAnd={Mnemo="inc"}
+Ops.FindAnd={Mnemo="square"}
+Ops.FindAnd={Mnemo="dot"}
+Ops.FindAnd={Mnemo="drop"}

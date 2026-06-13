@@ -259,6 +259,7 @@ LexMkTable
 >{Mk=22  Mnemo="SepErase"       Hint="Remove a Sep token literal"}
 >{Mk=70  Mnemo="SendToReceiver" Hint="Dispatch current LexBuf entry to Receiver"}
 >{Mk=100 Mnemo="Lexing"         Hint="Feed string into Lex for tokenization"}
+>{Mk=110 Mnemo="LexFile"        Hint="Read the file at the path Load and lex it; re-entrant (no-op if already lexing)"}
 >{Mk=99  Mnemo="Stop"           Hint="Stop lexing (Lex.Stop)"}
 
 IntAluMkTable
@@ -1107,13 +1108,8 @@ AleNegWait.Set=
 Lex.ReceiverMkSet=Root.FindAnd
 MnemoTable.JsonSave="MnemoTable.json"
 
-// NOTE: the .ind emit directive (CapsList.IndVectWrite="CompileCC.ind", which now
-// builds + writes in one call) and the trace mute (TraceCon.OutFileSet) live ONLY
-// in CompileCC-self.oap -- the SELF-HOST source the canonical CompileCC.ind is
-// built from. They are deliberately NOT here: this file is the Delphi reference
-// (--bootstrap CompileCC.oap --compile-to), and in Delphi mk614 is a REAL List op
-// that would access-violate on an unprepared CapsList during bootstrap. The Delphi
-// build emits via its own --compile-to path (CapsManager.IndexVectPopMk=
-// GatewayFile.IndexVectWrite), so it needs no source-embedded emit directive.
+Main_Bus.ArgIndSet=2
+
+Main_Bus.ArgByIndOutMk=Lex.LexFile
 
 //Lex.Lexing="x=1 y=2 Cons.OutLn=x"

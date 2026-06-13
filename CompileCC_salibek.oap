@@ -1,30 +1,18 @@
-// - обозначение переведенных в комментарии=true  старых ФУ
-\* date *\ //- последняя дата изменения или добавления строк и ФУ
+NewFU={Mnemo="Main_Bus" MkBegRange=1000 FUType=FUBusNew} // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Bus
 
-NewFU={Mnemo="Main_Bus" MkBegRange=1000 FUType=FUBusNew} // Описание Bus
-
-\\ Для создания индексного файла сначала надо запустить программу !!!!
- CapsManager.IndexVectCreate=20000
- CapsManager.IpIcIdOutMk=MainBus.IpIcIdSet
- CapsManager.IpIcIdOutMk=VariableManager.IpIcIdSet
- CapsManager.IpIcIdOutMk=ListSyntez.IpIcIdSet
- MainBus.ModeSet=1
-\\ -------------------------------------- \\
-MainBus.FUTypeCorrectSet=-96 // Корректировка номера типа ФУ для переноса на новую ОА-платформу
-
-NewFU={Mnemo="Console" FUType=FUConsNew Hint="Консоль для вывода логов"}
-NewFU={Mnemo="Str_Gen" FUType=FUStrGenNew Hint="Генератор строк"}
-NewFU={Mnemo="Stack" FUType=FUListNew Hint="Программный стек для генераци ОА-графа"}
-NewFU={Mnemo="OAList" FUType=FUListNew Hint="ФУ Список для генерации выходного ОА графа"}
-NewFU={Mnemo="MnemoTable" FUType=FUListNew Hint="Таблица мнемоник"}
-NewFU={Mnemo="MnemoPrint" FUType=FUListNew Hint="Таблица мнемоник для распечатки"}
-NewFU={Mnemo="CreateNewFU" FUType=FUListNew Hint="Список команд для создания нового ФУ"}
-NewFU={Mnemo="ServiseMk" FUType=FUListNew Hint="Список сервисных МК"} 
-NewFU={Mnemo="Lex" FUType=FULexNew Hint="Устройство лексического разбора"}
-NewFU={Mnemo="AtrCounter" FUType=FUIntAluNew Hint="Счетчик атрибутов"}
-NewFU={Mnemo="MkCalc" FUType=FUIntAluNew Hint="Калькулятор для вычисления индекса МК"}
-NewFU={Mnemo="Root" FUType=FUListNew Hint="Корневой узел графа состояний"}
-NewFU={Mnemo="RootRoot" FUType=FUListNew Hint="Самый корневой узел графа состояний"}
+NewFU={Mnemo="Console" FUType=FUConsNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="Str_Gen" FUType=FUStrGenNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="Stack" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="OAList" FUType=FUListNew Hint="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="MnemoTable" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="MnemoPrint" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="CreateNewFU" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ"}
+NewFU={Mnemo="ServiseMk" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ"} 
+NewFU={Mnemo="Lex" FUType=FULexNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="AtrCounter" FUType=FUIntAluNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="MkCalc" FUType=FUIntAluNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ"}
+NewFU={Mnemo="Root" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="RootRoot" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
 NewFU={Mnemo="MnemoAnalysis" FUType=FUListNew}
 NewFU={Mnemo="AtrWait" FUType=FUListNew}
 NewFU={Mnemo="VarIniWait" FUType=FUListNew}
@@ -41,7 +29,7 @@ NewFU={Mnemo="FUAfter" FUType=FUListNew}
 NewFU={Mnemo="FUAfter2" FUType=FUListNew}
 NewFU={Mnemo="EqualAfter" FUType=FUListNew}
 NewFU={Mnemo="EqVar" FUType=FUListNew}
-NewFU={Mnemo="EqVarTypeSet" FUType=FUListNew Hint="Установка типа указателя на нагрузку"}
+NewFU={Mnemo="EqVarTypeSet" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
 NewFU={Mnemo="MnemoLoad" FUType=FUListNew}
 NewFU={Mnemo="LoadVar" FUType=FUListNew}
 NewFU={Mnemo="BrackLoadVar" FUType=FUListNew}
@@ -50,119 +38,86 @@ NewFU={Mnemo="VectNext5" FUType=FUListNew}
 NewFU={Mnemo="VectNext4" FUType=FUListNew}
 NewFU={Mnemo="VectWait" FUType=FUListNew}
 NewFU={Mnemo="ConstWait" FUType=FUListNew}
-NewFU={Mnemo="LoadAfterMk" FUType=FUListNew Hint="Начальное состояние распознания АЛВ"}
-NewFU={Mnemo="ALEStart" FUType=FUListNew Hint="Начальное состояние распознания АЛВ"}
-NewFU={Mnemo="ICBrackAnalysis" FUType=FUListNew Hint="Анализ фигурной закрывающейся скобки"}
-NewFU={Mnemo="DelMnemoWait" FUType=FUListNew Hint="Анализ фигурной закрывающейся скобки"}
-NewFU={Mnemo="DelMnemoIcWait" FUType=FUListNew Hint="Анализ фигурной закрывающейся скобки"}
+NewFU={Mnemo="LoadAfterMk" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ"}
+NewFU={Mnemo="ALEStart" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ"}
+NewFU={Mnemo="ICBrackAnalysis" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="DelMnemoWait" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+NewFU={Mnemo="DelMnemoIcWait" FUType=FUListNew Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
 
-MainBus.PartialResetSet \\ Запомнить число созданных ФУ
-MainBus.ModeSet=2
-
-\\Console.OutLn="CompileCC"
+Console.OutLn="CompileCC"
 
 Sep*-4
 Var*-14
-MkExec*-304 // МК для последующего выполнения
-MkExtend*-25 // Расширенная МК
-End*-27 \\ Конец чего-либо
-FUTemplate*-303 \\ Ссылка на эталонное ФУ для создания нового ФУ
+MkExec*-304 // пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+MkExtend*-25 // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+End*-27 // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ
+FUTemplate*-303 // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 FU
 IC*IcPointer
 IP*-330
 ProgAtr*-331
 
-NewFUAtr \\ Флаг создания нового устройства
-\\Типы указательй на нагрзуки
-TAtrType#36
-CAtrType#37
-TMkType#26
-CMkType#27
-TIpType#14
-CIpType#15
-TIcType#16
-CIcType#17
-TIntType#6
-CIntType#7
-TBoolType#2
-CBoolType#3
-TCharType#4
-CCharType#5
-TFloatType#8
-CFloatType#9
-TDoubleType#10
-CDoubleType#11
-TStrType#12
-CStrType#13
-TFuType#22
-CFuType#23
-TLoadType#22
-CLoadType#23
-TLoadVectType#28
-CLoadVectType#29
-\\ ---------------
-
 Lex.UnicAtrSet=Mnemo
 Lex.UnicMkSet=MnemoTable.FindAnd
 Lex.StopProgSet={Str_Gen.Stop}
-AtrCounter.Set=-1000000 \\ Инициализация счетчика атриубутов
+AtrCounter.Set=-1000000 // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-CommonMkTable \\ Общие МК
-	>{Mnemo="ContextOut" Mk=995 Hint="Выдать указатель на контекст ФУ"}
-	>{Mnemo="ContextOutMk" Mk=999 Hint="Выдать милликоманду с указателем на контекст ФУ"}
+CommonMkTable // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+	>{Mnemo="ContextOut" Mk=995 Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ"}
+	>{Mnemo="ContextOutMk" Mk=999 Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ"}
 
 ConsMkList
-	>{Mnemo="Out" Mk=1 Hint="Печать"}
-	>{Mnemo="OutLn" Mk=2 Hint="Печатьс переводом строки"}
-	>{Mnemo="LnOut" Mk=3 Hint="Перевод строки и печать"}
-	>{Mnemo="LnOutLn" Mk=4 Hint="Перевод строки, печать и перевод строки"}
-	>{Mnemo="Ln" Mk=10 Hint="Перевод строки"}
-	>{Comment="Input" Hint="Запуск миллипрограмм" ListSub=
-		>{Mnemo="Input" Hint="Ввод данных"}
-		>{Mnemo="InputMk" Hint="Ввод данных и выдача МК с ними"}
+	>{Mnemo="Out" Mk=1 Hint="пїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Mnemo="OutLn" Mk=2 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Mnemo="LnOut" Mk=3 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Mnemo="LnOutLn" Mk=4 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Mnemo="Ln" Mk=10 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Comment="Input" Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" ListSub=
+		>{Mnemo="Input" Hint="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+		>{Mnemo="InputMk" Hint="пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ"}
 	}
-	>{Comment="ComonMk" Hint="Запуск миллипрограмм" ListSub=CommonMkTable}
+	>{Comment="ComonMk" Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" ListSub=CommonMkTable}
 
 BusMkList
-	>{MkExtend=1 Mnemo="MakeFU" Hint="Создать ФУ (в нагрузке передаётся тип ФУ)"}
-	>{Mk=5 Mnemo="ProgExec" Hint="Выполнить последовательность МК из ИК"}
-	>{Mk=10 Mnemo="FileOldProgExec" Hint="Выполнить последовательность МК из индексного файла старого формата"}
-	>{Mk=20 Mnemo="NFUOut" Hint="Выдать количество ФУ, подключенных к шине"}
-	>{Mk=20 Mnemo="NFUOutMk" Hint="Выдать МК с количеством ФУ, подключенных к шине"}
+	>{MkExtend=1 Mnemo="MakeFU" Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ)"}
+	>{Mk=5 Mnemo="ProgExec" Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅ"}
+	>{Mk=10 Mnemo="FileOldProgExec" Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Mk=20 Mnemo="NFUOut" Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ"}
+	>{Mk=20 Mnemo="NFUOutMk" Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ"}
 
 ListMkList
-	>{Mnemo="Set" Mk=1 Hint="Установить ссылку на список"}
-	>{Comment="ComonMk" Hint="Запуск миллипрограмм" ListSub=CommonMkTable}
+	>{Mnemo="Set" Mk=1 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+	>{Comment="ComonMk" Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" ListSub=CommonMkTable}
 
 MnemoTable.Set=
->{Mnemo="Mnemo" Atr=-2 Hint="Атрибут объекта"}
->{Mnemo="Atr" Atr=-8 Hint="Атрибут"}
->{Mnemo="End" Atr=End Hint="Атрибут конца чего-то"}
->{Mnemo="ListLine" Atr=-80 Hint="Атриут линии списка"}
->{Mnemo="Obj" Atr=-6 Hint="Атрибут объекта"}
->{Mnemo="ListSub" Atr=ListSub Hint="Подсписок"}
->{Mnemo="Mk" Atr=Mk Hint="Атрибут МК"}
->{Mnemo="Const" Atr=Const Hint="Атрибут константы"}
->{Mnemo="Var" Atr=Var Hint="Атрибут переменной"}
->{Mnemo="IC" Atr=IC Hint="Атрибут переменной"}
->{Mnemo="FUType" Atr=FUType Hint="Тип ФУ"}
->{Mnemo="FUTypeDef" Atr=FUTypeDef Hint="Определитель типа ФУ (применяется при описании типа ФУ в таблице мнемоник)"}
+>{Mnemo="Mnemo" Atr=-2 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="Atr" Atr=-8 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="End" Atr=End Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ-пїЅпїЅ"}
+>{Mnemo="ListLine" Atr=-80 Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="Obj" Atr=-6 Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="ListSub" Atr=ListSub Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="Mk" Atr=Mk Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ"}
+>{Mnemo="Const" Atr=Const Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="Var" Atr=Var Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="IC" Atr=IC Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="FUType" Atr=FUType Hint="пїЅпїЅпїЅ пїЅпїЅ"}
+>{Mnemo="FUTypeDef" Atr=FUTypeDef Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)"}
 >{Mnemo="pi" Const=3.14159}
->{Mnemo="MkBegRange" Atr=MkBegRange Hint="Начало диапазона адресов Мк для ФУ"}
->{Mnemo="Hint" Atr=Hint Hint="Всплывающая подсказка"}
->{Mnemo="Comment" Atr=Comment Hint="Всплывающая подсказка"}
->{Mnemo="FUBus" FUType=0 MkList=BusMkList Hint="Типы ФУ Шина"}
->{Mnemo="FUCons" FUType=1 MkList=ConsMkList Hint="Типы ФУ Консоль"}
->{Mnemo="FUList" FUType=5 MkList=ListMkList Hint="Типы ФУ Консоль"}
->{Mnemo="Cons" MkBegRange=10000 FUType=1 MkList=ConsMkList} \\!!!
->{Mnemo="List" MkBegRange=11000 FUType=5 MkList=ListMkList} \\!!!
->{Mnemo="Bus" MkBegRange=1000 MkList=BusMkList Hint="Главная коммуникационная шина"}
->{Mnemo="NewFU" Atr=NewFUAtr Hint="МК создания нового ФУ (на входе ссылкна и ИК с описанием ФУ)"}
+>{Mnemo="MkBegRange" Atr=MkBegRange Hint="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ"}
+>{Mnemo="Hint" Atr=Hint Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="Comment" Atr=Comment Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="FUBus" FUType=0 MkList=BusMkList Hint="пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ"}
+>{Mnemo="FUCons" FUType=1 MkList=ConsMkList Hint="пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="FUList" FUType=5 MkList=ListMkList Hint="пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"}
+>{Mnemo="Cons" MkBegRange=10000 FUType=1 MkList=ConsMkList} //!!!
+>{Mnemo="List" MkBegRange=11000 FUType=5 MkList=ListMkList} //!!!
+>{Mnemo="Bus" MkBegRange=1000 MkList=BusMkList Hint="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ"}
+>{Mnemo="NewFU" Atr=NewFUAtr Hint="пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ)"}
 ConsMkList!
 ListMkList!
 BusMkList!
 
-ServiseMk.Set= \\Сервисные МК 
+ServiseMk.Set= //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 
 >{NewFUAtr Console.OutLn="CreateNewFU" OAList.LastLoadOutMk=CreateNewFU.FindOr
 	OAList.LastLoadOutMk=Main_Bus.DelIc
 	OAList.LastDelMk
@@ -176,22 +131,22 @@ CreateNewFU.MultiLineModeSet=1
 >{FUType Console.OutLn="FUType NewFU" FUListNew.ReceivedLoadOutMk=Main_Bus.MakeFU
 	MnemoTable.LastAttach={MkBegRange}
 	Main_Bus.LastFUMkRangeOutMk=MnemoTable.LastLoadSet
-	\\FUListNew.LoadReceivedOutMk=Main_Bus.LastFUNameSet
+	//FUListNew.LoadReceivedOutMk=Main_Bus.LastFUNameSet
 	FUListNew.IpReceivedOutMk=MnemoTable.FindAnd
 	MnemoTable.FindAndLine={MkList}
 	MnemoTable.IpOutMk=MnemoTable.LastAttach
 }
 >{Hint Console.OutLn="Hint" FUListNew.IpReceivedOutMk=MnemoTable.LastAttach}
 
-\\MnemoTable.ContextOutMk=MnemoPrint.Set
-\\MnemoPrint.ContextOutMk=Console.MnemoTableSet \\ Настроить таблицу мнемоник для ФУ консоли
-\\MnemoPrint.OutMk=Console.OutLn
-\\MnemoTable.OutMk=Console.OutLn
-MnemoTable.SuccessProgSet={FUListNew.IpSecondOutMk=Lex.SendToReceiver} \\Передать описание лексемы лексеру
+//MnemoTable.ContextOutMk=MnemoPrint.Set
+//MnemoPrint.ContextOutMk=Console.MnemoTableSet // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//MnemoPrint.OutMk=Console.OutLn
+//MnemoTable.OutMk=Console.OutLn
+MnemoTable.SuccessProgSet={FUListNew.IpSecondOutMk=Lex.SendToReceiver} //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 MnemoTable.FailProgSet={Console.OutLn="Mnemo is not faund"
    FUListNew.ReceivedOutMk=Console.OutLn
    FUListNew.ReceivedOutMk=Lex.SendToReceiver}
-OAList.LineCopyAdd \\ Начальная ИК для синтезируемого ОА графа
+OAList.LineCopyAdd // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 
 \**\RootRoot.Set=
 >EndRoot{End Console.OutLn="End of compiling"}
@@ -328,7 +283,7 @@ OAList.OutMk=Console.OutLn
 \**\MkWait2.Set=
 >{Mk Lex.ReceiverMkSet=LoadAfterMk.FindAnd Console.OutLn="MkWait2 Mk"
 	FUListNew.ReceivedLoadOutMk=MkCalc.Add
-	MkCalc.OutMk=OAList.LastLoadCopySet \\ Записать значение нагрузки последней ИП линии
+	MkCalc.OutMk=OAList.LastLoadCopySet // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 	OAList.LastLoadTypeSet=CMkType
 	MnemoTable.SubUp
 	//MnemoTable.OutMk=Console.OutLn
@@ -382,9 +337,9 @@ BrackLoadVar.Set=
 >{Sep=")" Lex.ReceiverMkSet=Root.FindAnd Console.OutLn="BrackLoadVar )"
 	LoadVar.LoadReceivedOutMk=OAList.LastLoadCopySet
 	EqualAfter.ReceivedOutMk=MnemoTable.LineCopyAdd MnemoTable.LastAttach={Var}
-	OAList.LastOutMk=MnemoTable.LastLoadSet MnemoTable.LastVarTypeSet \\ Преобразовать ссылку в переменную
+	OAList.LastOutMk=MnemoTable.LastLoadSet MnemoTable.LastVarTypeSet // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 }
->{Sep="+" Sep="-" Sep="*" Sep="/" Sep="//" } \\Операторы ДОДЕЛАТЬ!!!
+>{Sep="+" Sep="-" Sep="*" Sep="/" Sep="//" } //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!!
 
 \**\EqVar.Set=
 >{Sep="}" Lex.ReceiverMkSet=Root.FindAnd
@@ -396,7 +351,7 @@ BrackLoadVar.Set=
 >{0 Console.OutLn="EqVar else" Lex.ReceiverMkSet=Root.FindAnd EqualAfter.ReceivedLoadOutMk=OAList.LastLoadSet OAList.OutMk=Console.OutLn EqualAfter.ReceivedOutMk=EqVarTypeSet.FindAnd
   FUListNew.ReceivedOutMk=Console.OutLn EqVar.ReceivedOutMk=Root.FindAnd}
 
-EqVarTypeSet.Set= // Список для простановки типа нагрузки
+EqVarTypeSet.Set= // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 >{Mk OAList.LastLoadTypeSet=CAtrType}
 >{Atr OAList.LastLoadTypeSet=CAtrType}
 
@@ -405,13 +360,13 @@ EqVarTypeSet.Set= // Список для простановки типа нагрузки
 >{Sep="}" Lex.ReceiverMkSet=Root.FindAnd Lex.SendToReceiver Console.OutLn="LoadAfterMk }"}
 >{0 Lex.ReceiverMkSet=Root.FindAnd Console.OutLn="LoadAfterMk else" Lex.OutMk=ConsoleOutLn FUListNew.ReceivedOutMk=Root.FindAnd}
 
-Lex.ReceiverMkSet=Root.FindAnd \\ Настроить начальное состояние распознающего автомата
+Lex.ReceiverMkSet=Root.FindAnd // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //Lex.ReceiverMkSet=Console.OutLn
 
-Main_Bus.FuSwapNext=Root.Reset // Поменять местами Root и RootRoot
+Main_Bus.FuSwapNext=Root.Reset // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Root пїЅ RootRoot
 
-Str_Gen.ReceiverMkSet=Lex.Lexing \\ Установить передачу с генератора строк на лексер
-\\Str_Gen.ReceiverMkSet=Console.OutLn \\ Установить передачу с генератора строк на лексер
+Str_Gen.ReceiverMkSet=Lex.Lexing // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+//Str_Gen.ReceiverMkSet=Console.OutLn // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Main_Bus.ArgIndSet=1
 Main_Bus.ArgvOutMk=Str_Gen.Start
 
@@ -419,7 +374,7 @@ Main_Bus.ArgvOutMk=Str_Gen.Start
 //Lex.Lexing="ICname={Atr=Atr} Cons.OutLn=ICName{Mnemo=""List2"" FUType=VAR(5)} Atr Atr=Atr"
 //Lex.Lexing="Atr=1"
 //Lex.Lexing="Atr=pi"
-Lex.SendToReceiver={End} \\ Посылка лексемы-маркера конца файла
+Lex.SendToReceiver={End} // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 MnemoTable.ContextOutMk=Console.MnemoTableSet
 Console.OutLn="------"
 OAList.OutMk=Console.OutLn

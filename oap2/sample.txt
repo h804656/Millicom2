@@ -1,4 +1,5 @@
 NewFU={Mnemo="Cons" FUType=FUConsNew}
+Cons.OutLn="hello"
 C=3
 D=2
 Cons.OutLn=C+D-C*D

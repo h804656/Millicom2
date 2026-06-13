@@ -96,7 +96,9 @@ int main(int argc, char* argv[])
 
 	BusFU Bus;
 
-	const char* busArgv[3] = { argv[0], argv[1], lexFile.c_str() };
+	//lexFile = "C:\\Users\\hacker\\Downloads\\millicom\\oap2\\CompileCC-self.oap";
+
+	const char* busArgv[3] = { argv[0], indPath.c_str(), lexFile.c_str()};
 	int busArgc = lexFile.empty() ? 2 : 3;
 	Bus.ProgFU(200, { Cint, &busArgc });
 	Bus.ProgFU(203, { Cchar, (char**)busArgv });

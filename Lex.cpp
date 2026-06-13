@@ -331,9 +331,7 @@
 			LexBuf[0].atr = SeperatAtr;
 			ProgLevel = 0; // ������� ���������
 			break;
-		case 101: // LexFile -- read the file at the path Load and lex it (re-entrant guard:
-		// no-op if a LexFile lex is already running, so the self-host compile of the
-		// compiler's own source -- which re-issues this MK -- does not recurse).
+		case 110: // LexFile
 		{
 			if (lexFileActive) break;
 			std::ifstream _lf(Load.toStr(), std::ios::binary);
