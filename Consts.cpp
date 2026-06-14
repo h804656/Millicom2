@@ -493,9 +493,11 @@ LoadPoint LoadPoint::IndLoadReturn(LoadPoint LP) // Возвратить ука�
 
 string LoadPoint::toStr(string define) // Перевод в bool
 {
-	if (Point == nullptr)
-		return define;
 	LoadPoint LP = *this;
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
+	if (LP.Point == nullptr)
+		return define;
 	if (Type >> 1 == DLoadVectInd) {
 		register int N = ((LoadVect_type)Point)->size();
 		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return "";
@@ -523,9 +525,11 @@ string LoadPoint::toStr(string define) // Перевод в bool
 
 bool LoadPoint::toBool(bool define) // Перевод в bool (по умолчания false)
 {
-	if (Point == nullptr)
-		return define;
 	LoadPoint LP = *this;
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
+	if (LP.Point == nullptr)
+		return define;
 	if (Type >> 1 == DLoadVectInd) {
 		register int N = ((LoadVect_type)Point)->size();
 		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return define;
@@ -538,6 +542,8 @@ bool LoadPoint::toBool(bool define) // Перевод в bool (по умолча
 		case 1: return define;
 		case 2: if (((IC_type)Point)->at(Ind / 3).Load.Point == nullptr) return define; LP = ((IC_type)Point)->at(Ind / 3).Load;
 		}
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
 	switch (LP.Type >> 1)
 	{
 	case Ddouble: return *(double*)LP.Point;
@@ -552,9 +558,11 @@ bool LoadPoint::toBool(bool define) // Перевод в bool (по умолча
 }
 
 long int LoadPoint::toInt(long int define) { // Перевод в integer
-	if (Point == nullptr)
-		return define;
 	LoadPoint LP = *this;
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
+	if (LP.Point == nullptr)
+		return define;
 	if (Type >> 1 == DLoadVectInd) {
 		register int N = ((LoadVect_type)Point)->size();
 		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return define;
@@ -567,6 +575,8 @@ long int LoadPoint::toInt(long int define) { // Перевод в integer
 		case 1: return ((IC_type)Point)->at(Ind / 3).atr;
 		case 2: if (((IC_type)Point)->at(Ind / 3).Load.Point == nullptr) return define; LP = ((IC_type)Point)->at(Ind / 3).Load;
 		}
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
 	switch (LP.Type >> 1)
 	{
 	case Ddouble: return (long int)*(double*)LP.Point; break;
@@ -582,9 +592,11 @@ long int LoadPoint::toInt(long int define) { // Перевод в integer
 	}
 }
 double LoadPoint::toDouble(double define) {// Перевод в integer
-	if (Point == nullptr)
-		return define;
 	LoadPoint LP = *this;
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
+	if (LP.Point == nullptr)
+		return define;
 	if (Type >> 1 == DLoadVectInd) {
 		register int N = ((LoadVect_type)Point)->size();
 		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return define;
@@ -597,6 +609,8 @@ double LoadPoint::toDouble(double define) {// Перевод в integer
 		case 1: return ((IC_type)Point)->at(Ind / 3).atr;
 		case 2: if (((IC_type)Point)->at(Ind / 3).Load.Point == nullptr) return define; LP = ((IC_type)Point)->at(Ind / 3).Load;
 		}
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
 	switch (LP.Type >> 1)
 	{
 	case Ddouble: return *(double*)LP.Point; break;
@@ -612,9 +626,11 @@ double LoadPoint::toDouble(double define) {// Перевод в integer
 }
 
 float LoadPoint::toFloat(float define) {// Перевод в integer
-	if (Point == nullptr)
-		return define;
 	LoadPoint LP = *this;
+	while (LP.Type >> 1 == DLoad && LP.Point != nullptr) // follow DLoad references
+		LP = *((LoadPoint*)LP.Point);
+	if (LP.Point == nullptr)
+		return define;
 	if (Type >> 1 == DLoadVectInd) {
 		register int N = ((LoadVect_type)Point)->size();
 		if (N <= Ind || N < -Ind || ((LoadVect_type)Point)->at(N * (Ind < 0) + Ind).Point == nullptr) return define;

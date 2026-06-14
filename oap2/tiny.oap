@@ -1,7 +1,6 @@
 NewFU={Mnemo="Cons" FUType=FUConsNew}
 Cons.OutLn="hello-from-tiny"
 
-NewFU={Mnemo="Cons" FUType=FUConsNew}    // output channel
 NewFU={Mnemo="Stk"  FUType=FUListNew}    // operand stack
 NewFU={Mnemo="Acc"  FUType=FUIntAluNew}  // ALU register: operand 'a' / result
 NewFU={Mnemo="Tmp"  FUType=FUIntAluNew}  // ALU register: operand 'b'

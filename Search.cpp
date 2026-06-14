@@ -153,7 +153,8 @@ bool Search::FindOr(LoadPoint obj)
 	if (i == ((IC_type)Template.Point)->end() || i->atr == Prog_atr)
 	{
 		Rez = false; IPTemplRezPoint = nullptr; IPRezPoint = nullptr;
-		MainFU->ProgExec(FailProg);
+		if(FailProg!=nullptr)
+			MainFU->ProgExec(FailProg);
 		return false;
 	}
 	else

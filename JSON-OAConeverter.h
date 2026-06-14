@@ -47,5 +47,4 @@ public:
 	void rebuildCapsFromList(class List* cl);
 	void buildIndexVector(void* busPtr);
 	void IndexVectWrite(const std::string& path);
-	static std::string OutDir; // --out-dir: prepended to .ind + .json output paths
 };

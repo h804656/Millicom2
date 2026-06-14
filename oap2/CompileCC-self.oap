@@ -1075,16 +1075,16 @@ AleNegWait.Set=
 
 ////////////////////////////////////////////////////////////////////////////////
 Lex.ReceiverMkSet=Root.FindAnd
-MnemoTable.JsonSave="MnemoTable.json"
 TraceCon.OutFileSet="trace.log"
 
-// program execution: read argv[2] (the program file) and lex it.
-Bus.ArgIndSet=2
+// program execution: read argv[1] (the program file) and lex it.
+Bus.ArgIndSet=1
 Bus.ArgByIndOutMk=Lex.LexFile
 
+MnemoTable.JsonSave="MnemoTable.json"
 //CapsList.IndVectWrite="CompileCC22.ind"
 
 // or lex it inline.
 
-Lex.Lexing="NewFU={Mnemo=\"Cons\" FUType=FUConsNew Hint=\"Консоль для вывода теста\"} x=100 y=2 Cons.OutLn=x+y-(x+y)*(x+y)"
+//Lex.Lexing="NewFU={Mnemo=\"Cons\" FUType=FUConsNew Hint=\"Консоль для вывода теста\"} x=100 y=2 Cons.OutLn=x+y-(x+y)*(x+y)"
 // Lex.SendToReceiver={End}

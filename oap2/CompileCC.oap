@@ -1108,7 +1108,7 @@ AleNegWait.Set=
 Lex.ReceiverMkSet=Root.FindAnd
 MnemoTable.JsonSave="MnemoTable.json"
 
-Main_Bus.ArgIndSet=2
+Main_Bus.ArgIndSet=1
 
 Main_Bus.ArgByIndOutMk=Lex.LexFile
 

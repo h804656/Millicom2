@@ -59,7 +59,7 @@ foreach ($lexFile in $testFiles) {
     # the .lex file through unchanged so the compiler exercises its own
     # comment-handling path -- and so `//` inside string literals (which
     # the runner's old regex would have mangled) survives intact.
-    $stripped = "tests\.last_input.lex"
+    $stripped = "tests\.last_input.oap"
     $raw = Get-Content $lexFile.FullName -Raw
     Set-Content -Path $stripped -Value $raw.Trim() -NoNewline -Encoding ASCII
 
@@ -69,7 +69,8 @@ foreach ($lexFile in $testFiles) {
     $stdinFile = Join-Path $lexFile.DirectoryName "$name.stdin"
     # The loaded .ind self-contains the compiler (MnemoTable + Lex mnemonics +
     # atr-name rows are baked in), so the test input is fed directly.
-    $argList = @($Ind, $stripped)
+    # New convention: argv[1] = .oap program to lex, argv[2] = .ind compiler to run.
+    $argList = @($stripped, $Ind)
     $procArgs = @{
         FilePath = $Exe
         ArgumentList = $argList

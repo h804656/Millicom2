@@ -636,7 +636,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 300: // Op00Set Установить операдн с индексом 0
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 0 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -656,7 +656,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 301: // Op01Set Установить операдн с индексом 1
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 1 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -676,7 +676,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 302: // Op02Set Установить операдн с индексом 2
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 2 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -696,7 +696,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 303: // Op03Set Установить операдн с индексом 3
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 3 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -716,7 +716,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 304: // Op04Set Установить операдн с индексом 4
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 4 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -736,7 +736,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 305: // Op05Set Установить операдн с индексом 5
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 5 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -756,7 +756,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 306: // Op06Set Установить операдн с индексом 6
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 6 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -776,7 +776,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 307: // Op07Set Установить операдн с индексом 7
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 7 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -796,7 +796,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 308: // Op08Set Установить операдн с индексом 8
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 8 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -816,7 +816,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 309: // Op09Set Установить операдн с индексом 9
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 0 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -836,7 +836,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 310: // Op10Set Установить операдн с индексом 10
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 10 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -856,7 +856,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 311: // Op11Set Установить операдн с индексом 11
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 11 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -876,7 +876,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 312: // Op12Set Установить операдн с индексом 12
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 12 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -896,7 +896,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 313: // Oз13Set Установить операдн с индексом 13
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 13 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;
@@ -916,7 +916,7 @@ void Console::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 	case 314: // Op14Set Установить операдн с индексом 14
 	{
 		int idx = static_cast<int>(MK) - 300;
-		if (idx + 1 >= (int)Operands.size()) {
+		if (idx >= (int)Operands.size()) {
 			ReportError("Op00Set", "index 14 out of range (total operands: "
 				+ to_string(Operands.size()) + ")");
 			break;

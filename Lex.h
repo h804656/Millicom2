@@ -28,7 +28,7 @@ private:
 	string DigitHEX_templ= "0123456789ABCDEF"; // --- ������� �����
 	string Digit_seps_templ = "."; // --- ������� ������������ �����
 	set<string> Seps_templ = {"<=>", "//=", "!!=", "&&=", "||=", "&&=", "^^=", ">>|", "|<<", \
-	">>", "<<", "<-", "->",  "==", ":=" "^=", "*=", "%=", "/=", "//", "++", "--", "-=","+=","<>", ">=", "<=", "!!", "!=", "||", "|=", "&&", "&=", "^^", "^=",\
+	">>", "<<", "<-", "->",  "==", ":=" "^=", "*=", "%=", "/=", "//", "++", "--", "-=","+=","<>", ">=", "<=", "!!", "!=", "||", "|=", "&&", "&=", "^^", "^=", "**",\
 	"<", ">", "~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "-", "{", "}", "[", "]", "?", ";", ":", ",", ".", "\\", "/", "|", "\""};// ������� ������������
 	set<char> ABC, Digit, DigitHEX, DigitOCT, DigitBIN, DigitSeps; // --- DigitSeps - ���������, �������� ����������� ����� � ������� ����� �����
 	set<string> Seps;
@@ -41,6 +41,11 @@ private:
 	void* TabErrProg = nullptr; // ��������� ��������� ������ ���������
 	void* ErrProg = nullptr; // ���������, ����������� ��� ������
 	bool TabMode = false; // ����� ����������� ������ �� ������ ���������
+	long StopPos = -1;
+	string StopMark = "^";
+	long ErrCode = 0;
+	long LexCharPos = 0; // current lexer char index (re-entrancy-safe bridge for StopPos)
+	map<long, string> ErrList = { {1,"Lexical error"}, {2, "Numdder error"}, {3, "float error"}, {4, "Mnemonic error"}, {5, "String error"}, {6, ""}, {7, ""}, {8, ""} };
 public:
 	// When true, the lexer silently skips the 4-char `\**\` prefix used by
 	// CompileCC.oap-style block declarations (`\**\Root.Set=` -> `Root.Set=`).

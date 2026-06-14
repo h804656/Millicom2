@@ -6,7 +6,6 @@
 #include <sstream>
 #include <vector>
 
-std::string JSON_OAConeverter::OutDir = "";
 void JSON_OAConeverter::Recurs(LoadPoint Load, ofstream& F, string Tab)
 {
 	F << "\n" << Tab << "[" << Tab;
@@ -149,7 +148,7 @@ void JSON_OAConeverter::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 
 void JSON_OAConeverter::ToJson(LoadPoint Graph, string FileName) // Конфертировать из ОА в JSON
 {
-	ofstream FOut(OutDir + FileName);
+	ofstream FOut(FileName);
 	Recurs(Graph, FOut, "");
 	FOut.close();
 }
@@ -352,7 +351,7 @@ void JSON_OAConeverter::buildIndexVector(void* busPtr)
 
 void JSON_OAConeverter::IndexVectWrite(const string& path)
 {
-	ofstream out(OutDir + path);
+	ofstream out(path);
 	if (!out) return;
 	out << builtRows.size() << "\n";
 	for (auto& r : builtRows) out << r << "\n";

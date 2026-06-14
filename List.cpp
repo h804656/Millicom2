@@ -1034,11 +1034,12 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 			}
 			vector<vector<ip>::iterator> i = { ListHead.back()->begin() };
 			vector<IC_type> IC = { ListHead.back() }; // Указатель на текущий уровень списка
-			long k = 0;
+			long k =-1;
 			while (i.size())
 			{
 				while (i.back() != IC.back()->end())
 				{
+					k++;
 					if (i.back()->atr != LineAtr || i.back()->Load.isNil() || !i.back()->Load.isIC())
 						continue;
 
@@ -1097,11 +1098,13 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 					ProgExec(SuссessProgs[ListHead.size() - 1]);
 				//if (ListHead.size() == DeepStartSearch)
 				{ // Обработка превывания по разности строк (например, применяется для определения приоритета АЛВ)
-					if (LineNum > LineNumOld)  ProgExec(BibberProg);
-					if (LineNum < LineNumOld)  ProgExec(LessProg);
-					if (LineNum >= LineNumOld) ProgExec(BibberEQProg);
-					if (LineNum < LineNumOld)  ProgExec(LessEQProg);
-					if (LineNum == LineNumOld) ProgExec(EQProg);
+					if (LineNum >= 0 && LineNumOld >= 0) {
+						if (LineNum > LineNumOld)  ProgExec(BibberProg);
+						if (LineNum < LineNumOld)  ProgExec(LessProg);
+						if (LineNum >= LineNumOld) ProgExec(BibberEQProg);
+						if (LineNum < LineNumOld)  ProgExec(LessEQProg);
+						if (LineNum == LineNumOld) ProgExec(EQProg);
+					}
 					//DeepStartSearch = 0;
 				}
 			}
@@ -1390,37 +1393,53 @@ void List::ProgFU(long int MK, LoadPoint Load, FU* Sender)
 		if (Searcher.IPTemplRezPoint != nullptr && IC_type(LineUk.back()->Load.Point)->size() > 1)
 			MkExec(Load, { CIP, &(*IC_type(LineUk.back()->Load.Point))[1] });
 		break;
-	case 450: // EqProgExec
-		if(Load.Point==nullptr)
-			if (LineNumOld == LineNum) ProgExec(Load.Point);
+	case 449: // NotEqExec
+		if (LineNum >= 0 && LineNumOld >= 0)
+			if (LineNumOld != LineNum)
+				if (Load.Point != 0)
+					ProgExec(Load);
+				else
+					ProgExec(Prog);
+		break;
+	case 450: // EqExec
+		if (LineNum >= 0 && LineNumOld >= 0)
+			if (LineNumOld == LineNum)
+				if (Load.Point != 0)
+					ProgExec(Load);
+				else
+					ProgExec(Prog);
 		break;
 	case 451: // BiggerExec
-		if (LineNumOld < LineNum)
-			if (Load.Point != 0)
-				ProgExec(Load);
-			else
-				ProgExec(Prog);
+		if (LineNum >= 0 && LineNumOld >= 0)
+			if (LineNumOld < LineNum)
+				if (Load.Point != 0)
+					ProgExec(Load);
+				else
+					ProgExec(Prog);
 		break;
 	case 452: // SmallerExec
-		if (LineNumOld > LineNum)
-			if (Load.Point != 0)
-				ProgExec(Load);
-			else
-				ProgExec(Prog);
+		if (LineNum >= 0 && LineNumOld >= 0)
+			if (LineNumOld > LineNum)
+				if (Load.Point != 0)
+					ProgExec(Load);
+				else
+					ProgExec(Prog);
 			break;
 	case 453: // BigerEqExec
-		if (LineNumOld <= LineNum)
-			if (Load.Point != 0)
-				ProgExec(Load);
-			else
-				ProgExec(Prog);
+		if (LineNum >= 0 && LineNumOld >= 0)
+			if (LineNumOld <= LineNum)
+				if (Load.Point != 0)
+					ProgExec(Load);
+				else
+					ProgExec(Prog);
 		break;
 	case 454: // SmallerEqExec
-		if (LineNumOld >= LineNum)
-			if (Load.Point != 0)
-				ProgExec(Load);
-			else
-				ProgExec(Prog);
+		if (LineNum >= 0 && LineNumOld >= 0)
+			if (LineNumOld >= LineNum)
+				if (Load.Point != 0)
+					ProgExec(Load);
+				else
+					ProgExec(Prog);
 		break;
 	case 455: // DifferenceOut Выдать различие старой найденной линии и новой
 		Load.Write(LineNum - LineNumOld);

@@ -69,7 +69,7 @@
 		}
 			break;
 		case 1: // ReceiverPopCend ���������� �� �������� �� ����� � ������ ������� (��� ������� �������� �������� ������� �������)
-			if (!ReceiverMK.size()) break;
+			if (ReceiverMK.size()<2) break;
 			ReceiverMK.pop_back();
 			Receiver.pop_back();
 			if (Load.Point == nullptr)
@@ -326,10 +326,32 @@
 			break;
 		case 99: // Stop ���������� ����������� ������ (��� �� ���������� ��������� ��� ����������� ����������� �������)
 			Work = false;
+			StopPos = LexCharPos;
 			ProgExec(StopProg); // ��������� ��������� �� �������� ������������ �������
 			S = 0;
 			LexBuf[0].atr = SeperatAtr;
 			ProgLevel = 0; // ������� ���������
+			break;
+		case 111: // LastPosOut
+			Load.Write(StopPos);
+			break;
+		case 112: // LastPosOutMk
+			MkExec(Load, { Cint, &StopPos });
+			break;
+		case 113: // LastPosMarkOut
+		case 114: // LastPosMarkOutMk
+		{
+			string mark;
+			for (int j = 0; j < StopPos; j++, mark += " ");
+			mark += StopMark;
+			if (MK == 113)
+				Load.Write(StopPos);
+			else
+				MkExec(Load, { Cstring, &mark });
+			break;
+		}
+		case 115: // StopMarkSet
+			StopMark = Load.toStr();
 			break;
 		case 110: // LexFile
 		{
@@ -355,6 +377,7 @@
 				LexOut();
 			}
 			Work = true;
+			ErrCode = 0;
 			if (TabMode) {
 				long int tabCounter = 0;
 				while (str[tabCounter] == '\t')
@@ -392,7 +415,7 @@
 			// Sep="" transition at end-of-input -- without this an input
 			// like `Cons.OutLn=A+B` parks in ALEAfter and the final
 			// AleEmit never fires.
-			for (auto i = str.begin(); i != str.end() && Work; i++)
+			for (auto i = str.begin(); LexCharPos = (long)(i - str.begin()), i != str.end() && Work; i++)
 				switch (S) //LEXER
 				{
 				// ��������� ���������
@@ -446,7 +469,7 @@
 						//Debug(*i, S, LexAccum); // --- �������
 						break;
 					}
-					if (*i == '/') // ������ (/); 0 -> 5
+					if (*i == '/'  || *i == '\\') // ������ (/); 0 -> 5
 					{
 						LexAccum = *i; //������ � �������� ����������
 						S = 5; //������� � ��������� 5
@@ -521,7 +544,8 @@
 						break;
 					}
 					Work = false; //��������� ����� �������� ������ ������� �� false
-					if (ErrProg != nullptr) ProgExec(ErrProg, 0, Bus, nullptr); //��������� ������
+					ErrCode = 1;
+					//if (ErrProg != nullptr) ProgExec(ErrProg, 0, Bus, nullptr); //��������� ������
 					break;
 				}
 				// ��������� ����� �����
@@ -557,7 +581,8 @@
 						break;
 					}
 					Work = false; //��������� ����� �������� ������ ������� �� false
-					ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
+					ErrCode = 2;
+					//ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
 					break;
 				// ��������� ������� �����
 				case 2:
@@ -585,7 +610,8 @@
 						break;
 					}
 					Work = false;  //��������� ����� �������� ������ ������� �� false
-					ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
+					ErrCode = 3;
+					//ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
 					break;
 				//��������� ���������
 				case 3:
@@ -629,6 +655,7 @@
 						break;
 					}
 					Work = false;  //��������� ����� �������� ������ ������� �� false
+					ErrCode = 4;
 					ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
 					break;
 				//��������� �������
@@ -660,11 +687,12 @@
 								break;
 							}
 					Work = false;  //��������� ����� �������� ������ ������� �� false
-					ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
+					ErrCode = 5;
+					//ProgExec(ErrProg, 0, Bus, nullptr); //���������� ������
 					break;
 				//��������� ��������� �����������
 				case 5:
-					if (*i == '/') //������ (/); 5 -> 11
+					if (*i == '/'  || *i == '\\') //������ (/); 5 -> 11
 					{
 						LexAccum += *i; //���������� ������� � �������� ����������
 						S = 11; //������� � ��������� 11
