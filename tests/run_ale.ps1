@@ -55,12 +55,13 @@ foreach ($oap in $testFiles) {
     # own MnemoTable.IndVectWrite="run.tmp.ind" tail (emission in the source);
     # --out-dir places it. The compiler's traces are muted to trace.log, so stage-1
     # stdout is the live run (ignored) -- we compare the SERIALIZED .ind in stage 2.
-    $emitDir = "tests\.aletmp"
-    New-Item -ItemType Directory -Path $emitDir -Force | Out-Null
-    $compiledInd = Join-Path $emitDir "run.tmp.ind"
+    # The ale_*.oap self-emits via `MnemoTable.IndVectWrite="run.tmp.ind"`, which
+    # writes relative to the CWD (the project root). New convention: argv1=.oap to
+    # lex (the ale program through CompileCC.ind=argv2).
+    $compiledInd = "run.tmp.ind"
     if (Test-Path $compiledInd) { Remove-Item $compiledInd -Force }
     $proc = Start-Process -FilePath $Exe `
-        -ArgumentList @($Ind, $oap.FullName, "--out-dir", $emitDir) `
+        -ArgumentList @($oap.FullName, $Ind) `
         -NoNewWindow -PassThru `
         -RedirectStandardOutput "tests\.last_ale_compile.txt" `
         -RedirectStandardError "tests\.last_ale_compile_err.txt"
@@ -77,7 +78,7 @@ foreach ($oap in $testFiles) {
     }
     $runStdout = "tests\.last_ale_run.txt"
     $proc = Start-Process -FilePath $Exe `
-        -ArgumentList @($compiledInd) `
+        -ArgumentList @("tests\empty.oap", $compiledInd) `
         -NoNewWindow -PassThru `
         -RedirectStandardOutput $runStdout `
         -RedirectStandardError "tests\.last_ale_run_err.txt"

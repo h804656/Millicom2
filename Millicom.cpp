@@ -26,7 +26,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) // argv[1] = .oap to lex, argv[2] = .ind to run(optional)
 {
-#if defined(_WIN32)
+#if defined(_WIN32) && 1
 	SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
 	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);

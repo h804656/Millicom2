@@ -215,6 +215,7 @@ void JSON_OAConeverter::rebuildCapsFromList(List* cl)
 	for (int i = 0; i < M; i++) {
 		if (!(CapsEntries[i].isMarker && CapsEntries[i].atr == SubCapOpenAtr)) continue;
 		long fuType = 0; bool found = false; int depth = 0; std::string fuName;
+		bool hasMkList = false;
 		for (int j = i + 1; j < M; j++) {
 			if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapOpenAtr) depth++;
 			else if (CapsEntries[j].isMarker && CapsEntries[j].atr == SubCapCloseAtr) {
@@ -224,12 +225,15 @@ void JSON_OAConeverter::rebuildCapsFromList(List* cl)
 			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -22) {
 				fuType = CapsEntries[j].load.toInt(); found = true;
 			}
+			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -21) {
+				hasMkList = true;
+			}
 			else if (depth == 0 && !CapsEntries[j].isMarker && CapsEntries[j].atr == -2) {
 				unsigned int dt = CapsEntries[j].load.Type >> 1;
 				if (dt == Dstring || dt == Dchar) fuName = CapsEntries[j].load.toStr();
 			}
 		}
-		if (found && !fuName.empty()) {
+		if (found && !fuName.empty() && !hasMkList) {
 			int p = i - 1;
 			while (p >= 0 && CapsEntries[p].isMarker) p--;
 			if (p >= 0) { CapsEntries[p].isNewFuParent = true; CapsEntries[p].newFuType = fuType; CapsEntries[p].newFuName = fuName; }
@@ -258,6 +262,13 @@ void JSON_OAConeverter::buildIndexVector(void* busPtr)
 				}
 			}
 		}
+	}
+	// Build-time directives (JsonSave=600 / IndVect* 612-614) are live side-effects, not
+	// compiler state
+	for (int _i = 0; _i < M; _i++) {
+		if (CapsEntries[_i].isMarker) continue;
+		long _m = CapsEntries[_i].atr; if (_m <= 0) continue; _m %= 1000;
+		if (_m == 600 || _m == 612 || _m == 613 || _m == 614) skip[_i] = true;
 	}
 	std::vector<int> capId(M, 0), outIdx(M, -1);
 	std::vector<int>  parentSrc;
